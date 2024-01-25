@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Contable\Cuentas;
+namespace App\Livewire\Configuracion\Financiero\TipoTransaccion;
 
 use Livewire\Component;
 
@@ -8,6 +8,6 @@ class Filtro extends Component
 {
     public function render()
     {
-        return view('livewire.contable.cuentas.filtro');
+        return view('livewire.configuracion.financiero.tipo-transaccion.filtro');
     }
 }

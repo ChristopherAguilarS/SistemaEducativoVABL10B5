@@ -1,52 +1,62 @@
 <div>
-    <div class="box">
-        <div class="box-header">
-            <h5 class="box-title">Cuentas</h5>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">Cuentas</h4>
+                    <div class="flex-shrink-0">
+                        <div class="form-check form-switch form-switch-right form-switch-md">
+                        </div>
+                    </div>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div class="table-responsive table-card">
+                        <table class="table table-nowrap table-striped-columns mb-0">
+                            <thead>
+                                <tr>
+                                <th scope="col">N°</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col" class="!text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $cuentas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cuenta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <tr>                
+                                        <td class="font-medium">
+                                            <?php echo e($loop->index+1); ?>
+
+                                        </td>
+                                        <td>
+                                            <?php echo e($cuenta->descripcion); ?>
+
+                                        </td>
+                                        <td>
+                                            <!--[if BLOCK]><![endif]--><?php if($cuenta->estado == 1): ?>
+                                                <span class="badge bg-success"><?php echo e($cuenta->nEstado); ?></span>
+                                            <?php else: ?>
+                                                <span class="badge bg-danger"><?php echo e($cuenta->nEstado); ?></span>
+                                            <?php endif; ?> <!--[if ENDBLOCK]><![endif]-->
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-info btn-animation waves-effect waves-light" data-text="Info"><span>Editar</span></button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="py-1 px-4 mt-5">
+                        <?php echo e($cuentas->links()); ?>
+
+                    </div>
+                    <div class="d-none code-view">
+                        
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
         </div>
-        <div class="box-body p-0">
-            <div class="overflow-auto">
-                <table class="ti-custom-table ti-custom-table-head ti-striped-table">
-                    <thead>
-                        <tr>
-                        <th scope="col">N°</th>
-                        <th scope="col">Descripcion</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col" class="!text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $cuentas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cuenta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <tr>                
-                                <td class="font-medium">
-                                    <?php echo e($loop->index+1); ?>
-
-                                </td>
-                                <td>
-                                    <?php echo e($cuenta->descripcion); ?>
-
-                                </td>
-                                <td>
-                                    <!--[if BLOCK]><![endif]--><?php if($cuenta->estado == 1): ?>
-                                        <span class="badge bg-green-500 text-white"><?php echo e($cuenta->nEstado); ?></span>
-                                    <?php else: ?>
-                                        <span class="badge bg-red-500 text-white"><?php echo e($cuenta->nEstado); ?></span>
-                                    <?php endif; ?> <!--[if ENDBLOCK]><![endif]-->
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="ti-btn rounded-full ti-btn-outline ti-btn-outline-danger">
-                                        Editar
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
-                    </tbody>
-                </table>
-            </div>
-            <div class="py-1 px-4 mt-5">
-                <?php echo e($cuentas->links()); ?>
-
-            </div>
-        </div>
+        <!--end col-->
     </div>
 </div>
 <?php /**PATH D:\Sistema Educativo - B5\resources\views/livewire/configuracion/contable/cuentas/table.blade.php ENDPATH**/ ?>

@@ -419,14 +419,14 @@
                     </span></li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#contable" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="contable">
+                    <a class="nav-link menu-link" href="#contable" data-bs-toggle="collapse" role="button" aria-expanded="<?php echo e(request()->route()->getPrefix() === 'configuracion/contabilidad' ? 'true' : 'false'); ?>" aria-controls="contable">
                         <i class="mdi mdi-account-circle-outline"></i> <span>Modulo Contable
                         </span>
                     </a>
-                    <div class="collapse menu-dropdown" id="contable">
+                    <div class="collapse menu-dropdown <?php echo e(request()->route()->getPrefix() === 'configuracion/contabilidad' ? 'show' : ''); ?>" id="contable">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="<?php echo e(route('cuentas')); ?>" class="nav-link">Cuentas
+                                <a href="<?php echo e(route('cuentas')); ?>" class="nav-link <?php echo e(Route::is('cuentas','cuentas/crear','cuentas/editar') ? 'active':''); ?>">Cuentas
                                 </a>
                             </li>
                         </ul>
@@ -434,18 +434,18 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#financiero" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="financiero">
+                    <a class="nav-link menu-link" href="#financiero" data-bs-toggle="collapse" role="button" aria-expanded="<?php echo e(request()->route()->getPrefix() === 'configuracion/financiero' ? 'true' : 'false'); ?>" aria-controls="financiero">
                         <i class="mdi mdi-sticker-text-outline"></i> <span>Modulo Financiero
                         </span>
                     </a>
-                    <div class="collapse menu-dropdown" id="financiero">
+                    <div class="collapse menu-dropdown <?php echo e(request()->route()->getPrefix() === 'configuracion/financiero' ? 'show' : ''); ?>" id="financiero">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="<?php echo e(route('tipo-transaccion')); ?>" class="nav-link">Tipo de Transacciones
+                                <a href="<?php echo e(route('tipo-transaccion')); ?>" class="nav-link <?php echo e(Route::is('tipo-transaccion','tipo-transaccion/crear','tipo-transaccion/editar') ? 'active':''); ?>">Tipo de Transacciones
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(route('generica')); ?>" class="nav-link">Genericas
+                                <a href="<?php echo e(route('generica')); ?>" class="nav-link <?php echo e(Route::is('generica','generica/crear','generica/editar') ? 'active':''); ?>">Genericas
                                 </a>
                             </li>
                             <li class="nav-item">
