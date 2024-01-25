@@ -11,7 +11,7 @@
                 </div><!-- end card header -->
                 <div class="card-body">
                     <div class="table-responsive table-card">
-                        <table class="table table-nowrap table-striped-columns mb-0">
+                        <table class="table table-nowrap table-striped-columns mb-4">
                             <thead>
                                 <tr>
                                 <th scope="col">N°</th>
@@ -44,7 +44,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="py-1 px-4 mt-5">
+                    <div class="d-flex justify-content-end mt-2">
                         {{ $cuentas->links() }}
                     </div>
                     <div class="d-none code-view">

@@ -449,19 +449,19 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(route('sub-generica-nivel-1')); ?>" class="nav-link">Sub Genericas 1
+                                <a href="<?php echo e(route('sub-generica-nivel-1')); ?>" class="nav-link <?php echo e(Route::is('sub-generica-nivel-1','sub-generica-nivel-1/crear','sub-generica-nivel-1/editar') ? 'active':''); ?>">Sub Genericas 1
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(route('sub-generica-nivel-2')); ?>" class="nav-link">Sub Genericas 2
+                                <a href="<?php echo e(route('sub-generica-nivel-2')); ?>" class="nav-link <?php echo e(Route::is('sub-generica-nivel-2','sub-generica-nivel-2/crear','sub-generica-nivel-2/editar') ? 'active':''); ?>">Sub Genericas 2
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(route('especifica-nivel-1')); ?>" class="nav-link">Especificas 1
+                                <a href="<?php echo e(route('especifica-nivel-1')); ?>" class="nav-link <?php echo e(Route::is('especifica-nivel-1','especifica-nivel-1/crear','especifica-nivel-1/editar') ? 'active':''); ?>">Especificas 1
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(route('especifica-nivel-2')); ?>" class="nav-link">Especificas 2
+                                <a href="<?php echo e(route('especifica-nivel-2')); ?>" class="nav-link <?php echo e(Route::is('especifica-nivel-2','especifica-nivel-2/crear','especifica-nivel-2/editar') ? 'active':''); ?>">Especificas 2
                                 </a>
                             </li>
                         </ul>

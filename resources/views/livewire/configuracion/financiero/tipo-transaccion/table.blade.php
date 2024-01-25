@@ -1,48 +1,61 @@
 <div>
-    <div class="box">
-        <div class="box-header">
-            <h5 class="box-title">Tipos de Transacciones</h5>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">Tipos de Transacciones</h4>
+                    <div class="flex-shrink-0">
+                        <div class="form-check form-switch form-switch-right form-switch-md">
+                        </div>
+                    </div>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    <div class="table-responsive table-card">
+                        <table class="table table-nowrap table-striped-columns mb-4">
+                            <thead>
+                                <tr>
+                                <th scope="col">N°</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col" class="!text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($tipoTransacciones as $tipoTransaccion)
+                                    <tr>                
+                                        <td class="font-medium">
+                                            {{ $loop->index+1 }}
+                                        </td>
+                                        <td>
+                                            {{ $tipoTransaccion->descripcion }}
+                                        </td>
+                                        <td>
+                                            @if($tipoTransaccion->estado == 1)
+                                                <span class="badge bg-success">{{ $tipoTransaccion->nEstado }}</span>
+                                            @else
+                                                <span class="badge bg-danger">{{ $tipoTransaccion->nEstado }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-info btn-animation waves-effect waves-light" data-text="Info">
+                                                Editar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        {{ $tipoTransacciones->links() }}
+                    </div>
+                    <div class="d-none code-view">
+                        
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
         </div>
-        <div class="p-0 box-body">
-            <div class="overflow-auto">
-                <table class="ti-custom-table ti-custom-table-head ti-striped-table">
-                    <thead>
-                        <tr>
-                        <th scope="col">N°</th>
-                        <th scope="col">Descripcion</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col" class="!text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($tipoTransacciones as $tipoTransaccion)
-                            <tr>                
-                                <td class="font-medium">
-                                    {{ $loop->index+1 }}
-                                </td>
-                                <td>
-                                    {{ $tipoTransaccion->descripcion }}
-                                </td>
-                                <td>
-                                    @if($tipoTransaccion->estado == 1)
-                                        <span class="text-white bg-green-500 badge">{{ $tipoTransaccion->nEstado }}</span>
-                                    @else
-                                        <span class="text-white bg-red-500 badge">{{ $tipoTransaccion->nEstado }}</span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="rounded-full ti-btn ti-btn-outline ti-btn-outline-danger">
-                                        Editar
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="px-4 py-1 mt-5">
-                {{ $tipoTransacciones->links() }}
-            </div>
-        </div>
+        <!--end col-->
     </div>
 </div>
+

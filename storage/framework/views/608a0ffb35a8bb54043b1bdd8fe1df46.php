@@ -22,34 +22,38 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($subgenericas as $subgenerica)
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $subgenericas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subgenerica): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>                
                                 <td class="font-medium">
-                                    {{ $loop->index+1 }}
+                                    <?php echo e($loop->index+1); ?>
+
                                 </td>
                                 <td>
-                                    {{ $subgenerica->descripcion }}
+                                    <?php echo e($subgenerica->descripcion); ?>
+
                                 </td>
                                 <td>
-                                    {{ optional(optional($subgenerica)->generica)->descripcion }}
+                                    <?php echo e(optional(optional($subgenerica)->generica)->descripcion); ?>
+
                                 </td>
                                 <td>
-                                    @if($subgenerica->estado == 1)
-                                        <span class="badge bg-success">{{ $subgenerica->nEstado }}</span>
-                                    @else
-                                        <span class="badge bg-danger">{{ $subgenerica->nEstado }}</span>
-                                    @endif
+                                    <!--[if BLOCK]><![endif]--><?php if($subgenerica->estado == 1): ?>
+                                        <span class="badge bg-success"><?php echo e($subgenerica->nEstado); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge bg-danger"><?php echo e($subgenerica->nEstado); ?></span>
+                                    <?php endif; ?> <!--[if ENDBLOCK]><![endif]-->
                                 </td>
                                 <td class="text-center">
                                     <button type="button" class="btn btn-info btn-animation waves-effect waves-light" data-text="Info"><span>Editar</span></button>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
                             </tbody>
                         </table>
                     </div>
                     <div class="d-flex justify-content-end mt-2">
-                        {{ $subgenericas->links() }}
+                        <?php echo e($subgenericas->links()); ?>
+
                     </div>
                     <div class="d-none code-view">
                         
@@ -60,3 +64,4 @@
         <!--end col-->
     </div>
 </div>
+<?php /**PATH D:\Sistema Educativo - B5\resources\views/livewire/configuracion/financiero/sub-generica-nivel-1/table.blade.php ENDPATH**/ ?>
