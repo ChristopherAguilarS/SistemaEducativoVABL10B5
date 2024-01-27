@@ -16,15 +16,18 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes();
 //Language Translation
 Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang']);
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {return view('inicio');})->name('inicio');
+        
+});
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
 //Update User Details
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
 Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
-
+//Route::get('/rrhh/index', function () { return view('livewire.configuracion.financiero.tipo-transaccion.index'); })->name('rrhh');
 Route::prefix('/configuracion')->group(function () {
     Route::prefix('/financiero')->group(function () {
         Route::get('/tipo-transaccion', function () {
@@ -57,3 +60,19 @@ Route::prefix('/contable')->group(function () {
         return view('livewire.contable.caja-bancos.index');
     })->name('caja-bancos');
 });
+
+Route::middleware('auth')->group(__DIR__ . '/modulos/rrhh.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/academico.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/biblioteca.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/mesa-partes.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/patrimonio.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/financiero-contable.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/administracion.php');
+Route::get('clear', function() {
+    // Artisan::call('vendor:publish');
+     Artisan::call('cache:clear');
+     Artisan::call('config:clear');
+     Artisan::call('view:clear');
+     Artisan::call('config:cache');
+     Artisan::call('key:generate');
+ });

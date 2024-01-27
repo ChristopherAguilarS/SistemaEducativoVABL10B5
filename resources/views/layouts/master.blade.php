@@ -18,7 +18,7 @@
     <!-- Begin page -->
     <div id="layout-wrapper">
         @include('layouts.topbar')
-        @include('layouts.sidebar')
+        @livewire('administracion.menus')
         <!-- ============================================================== -->
         <!-- Start right Content here -->
         <!-- ============================================================== -->
@@ -40,6 +40,17 @@
 
     <!-- JAVASCRIPT -->
     @include('layouts.vendor-scripts')
+
+<!-- apexcharts -->
+<script src="{{ URL::asset('build/libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/jsvectormap/maps/world-merc.js') }}"></script>
+<script src="{{ URL::asset('build/libs/swiper/swiper-bundle.min.js')}}"></script>
+<!-- dashboard init -->
+<script src="{{ URL::asset('build/js/pages/dashboard-ecommerce.init.js') }}"></script>
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
+
+
 </body>
 
 </html>
