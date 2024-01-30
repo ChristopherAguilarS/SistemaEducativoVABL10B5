@@ -1,25 +1,36 @@
-<x-app-layout>
-    @section('breadcrumb')
-        <div class="justify-between block page-header md:flex">
-            <div>
-                <h3 class="text-2xl font-medium text-gray-700 hover:text-gray-900 dark:text-white dark:hover:text-white"> Financiero</h3>
-            </div> 
-            <ol class="flex items-center min-w-0 whitespace-nowrap">
-                <li class="text-sm">
-                <a class="flex items-center font-semibold truncate text-primary hover:text-primary dark:text-primary" href="javascript:void(0);">
-                    Financiero
-                    <i class="flex-shrink-0 mx-3 overflow-visible text-gray-300 ti ti-chevrons-right dark:text-gray-300 rtl:rotate-180"></i>
-                </a>
-                </li>
-                <li class="text-sm text-gray-500 hover:text-primary dark:text-white/70 " aria-current="page">
-                    Especificas Nivel 1
-                </li>
-            </ol>           
-        </div>
-    @endsection
-
+@extends('layouts.master')
+@section('title')
+    Especificas Nivel 1
+@endsection
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" type="text/css" />
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Finaciero
+        @endslot
+        @slot('title')
+            Especificas Nivel 1
+        @endslot
+    @endcomponent
     @livewire('configuracion.financiero.especifica-nivel-1.filtro')
     @livewire('configuracion.financiero.especifica-nivel-1.table')
+@endsection
+@section('script')
+<!--jquery cdn-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+<!--select2 cdn-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-</x-app-layout>
+<script src="{{ URL::asset('build/js/pages/select2.init.js') }}"></script>
+
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
+<script defer>
+    $('.js-example-basic-single').select2({
+        placeholder: 'Seleccione una opcion',
+        dropdownParent: '#myModal'
+    })
+</script>
+@endsection
