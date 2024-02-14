@@ -17,7 +17,7 @@
             <span class="logo-sm">
                 <img src="{{ URL::asset('build/images/logo_vab_icono.png') }}" alt="" height="40">
             </span>
-            <span class="logo-lg">
+            <span class="logo-lg">aaaaaa
                 <img src="{{ URL::asset('build/images/logo_vab_icono.png') }}" alt="" height="40">
                 <img src="{{ URL::asset('build/images/logo_vab_icono2.png') }}" alt="" height="50">
             </span>
