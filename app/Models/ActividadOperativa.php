@@ -14,6 +14,7 @@ class ActividadOperativa extends Model
         'codigo',
         'descripcion',
         'plan_anual_trabajo_id',
+        'objetivo_estrategico_id',
         'estado',
         'created_by',
         'updated_by',

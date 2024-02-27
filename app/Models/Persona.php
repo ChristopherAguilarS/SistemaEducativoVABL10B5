@@ -36,5 +36,27 @@ class Persona extends Model
             get: fn () => $resultado,
         );
     }
+
+    protected function nNombreCompleto(): Attribute
+    {
+        $nombre = $this->nombres.' '.$this->ape_pat.' '.$this->ape_mat;
+        return Attribute::make(
+            get: fn () => $nombre,
+        );
+    }
+
+    protected function nEstado(): Attribute
+    {
+        $resultado = null;
+        if($this->estado == 1){
+            $resultado =  'Activo';
+        }
+        else{
+            $resultado = 'Inactivo';
+        }
+        return Attribute::make(
+            get: fn () => $resultado,
+        );
+    }
     
 }

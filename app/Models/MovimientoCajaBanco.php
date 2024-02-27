@@ -40,4 +40,18 @@ class MovimientoCajaBanco extends Model
     {
         return $this->belongsTo('App\Models\Cuenta', 'cuenta_id', 'id');
     }
+
+    protected function nEstado(): Attribute
+    {
+        $resultado = null;
+        if($this->estado == 1){
+            $resultado =  'Activo';
+        }
+        else{
+            $resultado = 'Inactivo';
+        }
+        return Attribute::make(
+            get: fn () => $resultado,
+        );
+    }
 }
