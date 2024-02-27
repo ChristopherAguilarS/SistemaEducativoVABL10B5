@@ -9,5 +9,6 @@
 <link href="<?php echo e(URL::asset('build/css/app.min.css')); ?>"  rel="stylesheet" type="text/css" />
 <!-- custom Css-->
 <link href="<?php echo e(URL::asset('build/css/custom.min.css')); ?>"  rel="stylesheet" type="text/css" />
+<link href="<?php echo e(URL::asset('build/libs/sweetalert2/sweetalert2.min.css')); ?>"  rel="stylesheet" type="text/css" />
 
 <?php /**PATH C:\Users\tavo_\OneDrive\Escritorio\Proyectos\SistemaEducativoVABL10B5\resources\views/layouts/head-css.blade.php ENDPATH**/ ?>

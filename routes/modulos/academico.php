@@ -10,8 +10,8 @@ Route::prefix('/academico')->group(function () {
         Route::get('/academico/ventas/mensualidades', function () { return view('livewire.rrhh.index'); })->name('academico/ventas/mensualidades');
         Route::get('/academico/reportes/ventas', function () { return view('livewire.rrhh.index'); })->name('academico/reportes/ventas');
 
-        Route::get('/academico/administracion/plan-academico', function () { return view('livewire.rrhh.index'); })->name('academico/administracion/plan-academico');
-        Route::get('/academico/administracion/niveles', function () { return view('livewire.rrhh.index'); })->name('academico/administracion/niveles');
-        Route::get('/academico/administracion/grados', function () { return view('livewire.rrhh.index'); })->name('academico/administracion/grados');
-        Route::get('/academico/administracion/secciones', function () { return view('livewire.rrhh.index'); })->name('academico/administracion/secciones');
+        Route::get('/administracion/plan-academico', function () { return view('livewire.academico.administracion.plan-academico.index'); })->name('academico/administracion/plan-academico');
+        Route::get('/administracion/carreras', function () { return view('livewire.academico.administracion.carreras.index'); })->name('academico/administracion/carreras');
+        Route::get('/administracion/semestres', function () { return view('livewire.academico.administracion.semestres.index'); })->name('academico/administracion/semestres');
+        Route::get('/administracion/secciones', function () { return view('livewire.rrhh.index'); })->name('academico/administracion/secciones');
 });

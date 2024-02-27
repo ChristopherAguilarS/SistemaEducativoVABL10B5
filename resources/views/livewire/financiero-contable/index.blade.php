@@ -1,0 +1,21 @@
+@extends('layouts.master')
+@section('title')
+    Cuentas
+@endsection
+@section('css')
+   
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Contable
+        @endslot
+        @slot('title')
+            Cuentas
+        @endslot
+    @endcomponent
+    @livewire('configuracion.contable.cuentas.filtro')
+    @livewire('configuracion.contable.cuentas.table')
+@endsection
+@section('script')
+@endsection

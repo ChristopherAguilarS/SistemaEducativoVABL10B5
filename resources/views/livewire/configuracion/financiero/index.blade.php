@@ -1,0 +1,19 @@
+@extends('layouts.master')
+@section('title')
+    Cuentas
+@endsection
+@section('css')
+   
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Configuracion
+        @endslot
+        @slot('title')
+            Cuentas
+        @endslot
+    @endcomponent
+@endsection
+@section('script')
+@endsection
