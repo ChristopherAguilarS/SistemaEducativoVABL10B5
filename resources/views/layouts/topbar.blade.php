@@ -14,7 +14,7 @@
                     </a>
 
                     <a href="index" class="logo logo-light">
-                        <span class="logo-sm">
+                        <span class="logo-sm">aaaaa
                             <img src="{{ URL::asset('build/images/logo-sm.png') }}" alt="" height="22">
                         </span>
                         <span class="logo-lg">

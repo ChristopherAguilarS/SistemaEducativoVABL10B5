@@ -34,6 +34,11 @@ class ConceptoIngreso extends Model
         return $this->belongsTo('App\Models\TipoIngreso', 'tipo_ingreso_id', 'id');
     }
 
+    public function ciclo(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\Ciclo', 'ciclo_id', 'id');
+    }
+
     protected function nEstado(): Attribute
     {
         $resultado = null;

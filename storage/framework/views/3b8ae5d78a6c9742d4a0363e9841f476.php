@@ -35,7 +35,7 @@
                             </span>
                         </a>
 
-                        <a href="index" class="logo logo-light">
+                        <a href="index" class="logo logo-light">aaaaaaaaaaaaaaaaaaaaaaaaaaa
                             <span class="logo-sm">
                                 <img src="http://127.0.0.1:8000/build/images/logo-sm.png" alt="" height="22">
                             </span>

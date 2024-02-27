@@ -26,52 +26,60 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($conceptoIngresos as $concepto_ingreso)
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $conceptoIngresos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $concepto_ingreso): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>                
                                         <td class="font-medium">
-                                            {{ $loop->index+1 }}
+                                            <?php echo e($loop->index+1); ?>
+
                                         </td>
                                         <td>
-                                            {{ $concepto_ingreso->descripcion }}
+                                            <?php echo e($concepto_ingreso->descripcion); ?>
+
                                         </td>
                                         <td>
-                                            {{ optional(optional($concepto_ingreso)->tipoIngreso)->descripcion }}
+                                            <?php echo e(optional(optional($concepto_ingreso)->tipoIngreso)->descripcion); ?>
+
                                         </td>
                                         <td>
-                                            {{ optional(optional($concepto_ingreso)->ciclo)->descripcion }}
+                                            <?php echo e(optional(optional($concepto_ingreso)->ciclo)->descripcion); ?>
+
                                         </td>
                                         <td>
-                                            {{ optional(optional($concepto_ingreso)->especificanivel2)->descripcion }}
+                                            <?php echo e(optional(optional($concepto_ingreso)->especificanivel2)->descripcion); ?>
+
                                         </td>
                                         <td>
-                                            {{ optional($concepto_ingreso)->fecha_vigencia }}
+                                            <?php echo e(optional($concepto_ingreso)->fecha_vigencia); ?>
+
                                         </td>
                                         <td>
-                                            {{ optional($concepto_ingreso)->monto }}
+                                            <?php echo e(optional($concepto_ingreso)->monto); ?>
+
                                         </td>
                                         <td>
-                                            @if($concepto_ingreso->estado == 1)
-                                                <span class="badge bg-success">{{ $concepto_ingreso->nEstado }}</span>
-                                            @else
-                                                <span class="badge bg-danger">{{ $concepto_ingreso->nEstado }}</span>
-                                            @endif
+                                            <!--[if BLOCK]><![endif]--><?php if($concepto_ingreso->estado == 1): ?>
+                                                <span class="badge bg-success"><?php echo e($concepto_ingreso->nEstado); ?></span>
+                                            <?php else: ?>
+                                                <span class="badge bg-danger"><?php echo e($concepto_ingreso->nEstado); ?></span>
+                                            <?php endif; ?> <!--[if ENDBLOCK]><![endif]-->
                                         </td>
                                         <td class="text-center">
-                                            @if($concepto_ingreso->estado == 1)
-                                                <button type="button" class="btn btn-danger bg-gradient waves-effect waves-light" wire:click='cambiarEstado({{ $concepto_ingreso->id }})'>Dar de Baja <i class="ri-thumb-down-line align-bottom me-1"></i></button>
+                                            <!--[if BLOCK]><![endif]--><?php if($concepto_ingreso->estado == 1): ?>
+                                                <button type="button" class="btn btn-danger bg-gradient waves-effect waves-light" wire:click='cambiarEstado(<?php echo e($concepto_ingreso->id); ?>)'>Dar de Baja <i class="ri-thumb-down-line align-bottom me-1"></i></button>
                                             
-                                            @else
-                                                <button type="button" class="btn btn-success bg-gradient waves-effect waves-light" wire:click='cambiarEstado({{ $concepto_ingreso->id }})'>Dar de Alta <i class="ri-thumb-up-line align-bottom me-1"></i></button>
-                                            @endif
-                                                <button type="button" class="btn btn-info bg-gradient waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal" wire:click='editar({{ $concepto_ingreso->id }})'>Editar <i class="las la-edit"></i></button>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-success bg-gradient waves-effect waves-light" wire:click='cambiarEstado(<?php echo e($concepto_ingreso->id); ?>)'>Dar de Alta <i class="ri-thumb-up-line align-bottom me-1"></i></button>
+                                            <?php endif; ?> <!--[if ENDBLOCK]><![endif]-->
+                                                <button type="button" class="btn btn-info bg-gradient waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal" wire:click='editar(<?php echo e($concepto_ingreso->id); ?>)'>Editar <i class="las la-edit"></i></button>
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
                             </tbody>
                         </table>
                     </div>
                     <div class="d-flex justify-content-end mt-2">
-                        {{ $conceptoIngresos->links() }}
+                        <?php echo e($conceptoIngresos->links()); ?>
+
                     </div>
                     <div class="d-none code-view">
                         
@@ -86,7 +94,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">{{ $titulo }}</h5>
+                    <h5 class="modal-title" id="myModalLabel"><?php echo e($titulo); ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <div class="modal-body">
@@ -95,7 +103,14 @@
                             <label for="descripcion" class="col-form-label">Descripcion:</label>
                             <input type="text" class="form-control" id="descripcion" wire:model='form.descripcion'>
                             <div>
-                                @error('form.descripcion') <span class="error">{{ $message }}</span> @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.descripcion'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                         <div class="mb-3">
@@ -110,50 +125,85 @@
                             <label for="fecha_vigencia" class="col-form-label">Fecha Vigencia:</label>
                             <input type="date" class="form-control" wire:model='form.fecha_vigencia'>
                             <div>
-                                @error('form.fecha_vigencia') <span class="error">{{ $message }}</span> @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.fecha_vigencia'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                         <div class="mb-3" wire:ignore>
                             <label for="tipo_ingreso_id" class="col-form-label">Tipo de Ingreso:</label>
                             <select class="js-example-basic-single" id="tipo_ingreso_id" name="state" wire:model='form.tipo_ingreso_id'>
                                 <option value="">Seleccionar Opcion</option>
-                                @foreach ($tipo_ingresos as $tipo)
-                                    <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
-                                @endforeach
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $tipo_ingresos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tipo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($tipo->id); ?>"><?php echo e($tipo->descripcion); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
                             </select>
                         </div>                        
                         <div>
-                            @error('form.tipo_ingreso_id') <span class="error">{{ $message }}</span> @enderror
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.tipo_ingreso_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="mb-3" wire:ignore>
                             <label for="ciclo_id" class="col-form-label">Ciclo:</label>
                             <select class="js-example-basic-single" id="ciclo_id" name="state" wire:model='form.ciclo_id'>
                                 <option value="">Seleccionar Opcion</option>
-                                @foreach ($ciclos as $ciclo)
-                                    <option value="{{ $ciclo->id }}">{{ $ciclo->descripcion }}</option>
-                                @endforeach
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $ciclos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ciclo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($ciclo->id); ?>"><?php echo e($ciclo->descripcion); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
                             </select>
                         </div>                        
                         <div>
-                            @error('form.ciclo_id') <span class="error">{{ $message }}</span> @enderror
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.ciclo_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="mb-3" wire:ignore>
                             <label for="especifica_nivel_2_id" class="col-form-label">Especifica Nivel 2:</label>
                             <select class="js-example-basic-single" id="especifica_nivel_2_id" name="state" wire:model='form.especifica_nivel_2_id'>
                                 <option value="">Seleccionar Opcion</option>
-                                @foreach ($especificas2 as $especifica)
-                                    <option value="{{ $especifica->id }}">{{ $especifica->descripcion }}</option>
-                                @endforeach
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $especificas2; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $especifica): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($especifica->id); ?>"><?php echo e($especifica->descripcion); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> <!--[if ENDBLOCK]><![endif]-->
                             </select>
                         </div>                        
                         <div>
-                            @error('form.especifica_nivel_2_id') <span class="error">{{ $message }}</span> @enderror
+                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.especifica_nivel_2_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                         </div>                         
                         <div class="mb-3">
                             <label for="monto" class="col-form-label">Monto:</label>
                             <input type="number" class="form-control" id="monto" wire:model='form.monto'>
                             <div>
-                                @error('form.monto') <span class="error">{{ $message }}</span> @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.monto'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="error"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?> <!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                     </form>
@@ -165,7 +215,10 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    @script()
+        <?php
+        $__scriptKey = '3686695558-0';
+        ob_start();
+    ?>
         <script>
             $('#tipo_ingreso_id').select2({
                 placeholder: 'Seleccione una opcion',
@@ -213,5 +266,10 @@
                 $('#especifica_nivel_2_id').val(null).trigger('change');
             });
         </script>
-    @endscript
+        <?php
+        $__output = ob_get_clean();
+
+        \Livewire\store($this)->push('scripts', $__output, $__scriptKey)
+    ?>
 </div>
+<?php /**PATH D:\Sistema Educativo - B5\resources\views/livewire/academico/concepto-ingreso/table.blade.php ENDPATH**/ ?>

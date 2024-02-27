@@ -138,8 +138,8 @@ class Table extends Component
                     'ciclo_id' => $this->form->ciclo_id,
                     'fecha_vigencia' => $this->form->fecha_vigencia,
                     'tipo_ingreso_id' => $this->form->tipo_ingreso_id,
-                    'monto'=>$this->monto,
-                    'tipo'=>$this->tipo,
+                    'monto'=>$this->form->monto,
+                    'tipo'=>$this->form->tipo,
                     'estado' => 1,
                     'condicion' =>1,
                     'created_by' => Auth::user()->id
@@ -157,6 +157,6 @@ class Table extends Component
     public function render()
     {
         $conceptoIngresos = ConceptoIngreso::paginate(10);
-        return view('livewire.academico.concepto_ingreso.table',['conceptoIngresos'=>$conceptoIngresos]);
+        return view('livewire.academico.concepto-ingreso.table',['conceptoIngresos'=>$conceptoIngresos]);
     }
 }
