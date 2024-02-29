@@ -27,4 +27,13 @@ Route::prefix('/financiero-contable')->group(function () {
                         return view('livewire.financiero-contable.presupuestal.plan-anual-trabajo.index');
                 })->name('financiero-contable/presupuestal/plan-anual-trabajo');
         });
+        Route::prefix('/compras')->group(function () {
+                Route::get('/', function () { return view('livewire.financiero-contable.contabilidad.index'); })->name('financiero-contable/compras');
+                Route::get('/pedidos', function () {
+                        return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
+                })->name('financiero-contable/compras/pedidos');
+                Route::get('/ordenes', function () {
+                        return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
+                })->name('financiero-contable/compras/ordenes');
+        });
 });
