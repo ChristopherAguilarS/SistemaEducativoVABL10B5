@@ -35,5 +35,9 @@ Route::prefix('/financiero-contable')->group(function () {
                 Route::get('/ordenes', function () {
                         return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
                 })->name('financiero-contable/compras/ordenes');
+                Route::get('/ingresos', function () {
+                        return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
+                })->name('financiero-contable/compras/ingresos');
         });
+        Route::get('/', function () { return view('livewire.financiero-contable.contabilidad.index'); })->name('financiero-contable/caja');
 });

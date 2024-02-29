@@ -3,7 +3,7 @@
 Route::prefix('/academico')->group(function () {
         Route::get('/index', function () { return view('livewire.rrhh.index'); })->name('academico');
         Route::get('/academico/inicio', function () { return view('livewire.rrhh.index'); })->name('academico/academico/inicio');
-        Route::get('/academico/matriculas', function () { return view('livewire.rrhh.index'); })->name('academico/academico/matriculas');
+        Route::get('/academico/matriculas', function () { return view('livewire.academico.academico.matriculas.index'); })->name('academico/academico/matriculas');
         Route::get('/academico/tesoreria', function () { return view('livewire.rrhh.index'); })->name('academico/tesoreria');
         Route::get('/academico/ventas/otros-conceptos', function () { return view('livewire.rrhh.index'); })->name('academico/ventas/otros-conceptos');
         Route::get('/academico/ventas/matriculas', function () { return view('livewire.rrhh.index'); })->name('academico/ventas/matriculas');
