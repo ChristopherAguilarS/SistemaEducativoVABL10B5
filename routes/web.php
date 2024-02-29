@@ -20,6 +20,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/', function () {return view('inicio');})->name('inicio');
         
 });
+Route::get('/clear', function() {
+    // Artisan::call('vendor:publish');
+     Artisan::call('cache:clear');
+     Artisan::call('config:clear');
+     Artisan::call('view:clear');
+     Artisan::call('config:cache');
+     Artisan::call('key:generate');
+ });
 
 
 //Update User Details
@@ -71,11 +79,3 @@ Route::middleware('auth')->group(__DIR__ . '/modulos/mesa-partes.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/patrimonio.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/financiero-contable.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/administracion.php');
-Route::get('clear', function() {
-    // Artisan::call('vendor:publish');
-     Artisan::call('cache:clear');
-     Artisan::call('config:clear');
-     Artisan::call('view:clear');
-     Artisan::call('config:cache');
-     Artisan::call('key:generate');
- });
