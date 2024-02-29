@@ -12,6 +12,7 @@
                 <img src="{{ URL::asset('build/images/logo_vab_icono2.png') }}" alt="" height="50">
             </span>
         </a>
+        
         <!-- Light Logo-->
         <a href="/" class="logo logo-light">
             <span class="logo-sm">
