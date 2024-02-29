@@ -5,7 +5,7 @@
                 <div class="live-preview">
                     <div class="row align-items-center g-3">
                         <div class="col-lg-4">
-                            <select class="form-select mb-3" wire:model="anio">
+                            <select class="form-select mb-3" wire:model.live="anio">
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                             </select>

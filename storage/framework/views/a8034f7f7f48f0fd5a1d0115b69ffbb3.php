@@ -3,7 +3,7 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index" class="logo logo-dark">aaaaaaaa
+        <a href="index" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="<?php echo e(URL::asset('build/images/logo_vab_icono.png')); ?>" alt="" height="40">
             </span>
@@ -13,7 +13,7 @@
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="/" class="logo logo-light">aaaaaaaa
+        <a href="/" class="logo logo-light">
             <span class="logo-sm">
                 <img src="<?php echo e(URL::asset('build/images/logo_vab_icono.png')); ?>" alt="" height="40">
             </span>
