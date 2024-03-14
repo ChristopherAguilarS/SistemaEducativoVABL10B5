@@ -30,7 +30,7 @@ Route::prefix('/financiero-contable')->group(function () {
         Route::prefix('/compras')->group(function () {
                 Route::get('/', function () { return view('livewire.financiero-contable.contabilidad.index'); })->name('financiero-contable/compras');
                 Route::get('/pedidos', function () {
-                        return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
+                        return view('livewire.financiero-contable.compras.pedidos.index');
                 })->name('financiero-contable/compras/pedidos');
                 Route::get('/ordenes', function () {
                         return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
@@ -38,6 +38,12 @@ Route::prefix('/financiero-contable')->group(function () {
                 Route::get('/ingresos', function () {
                         return view('livewire.financiero-contable.presupuestal.objetivos-estrategicos.index');
                 })->name('financiero-contable/compras/ingresos');
+        });
+        Route::prefix('/configuracion')->group(function () {
+                Route::get('/', function () { return view('livewire.financiero-contable.configuracion.catalogo-insumos.index'); })->name('financiero-contable/configuracion');
+                Route::get('/catalogo-insumos', function () {
+                        return view('livewire.financiero-contable.configuracion.catalogo-insumos.index');
+                })->name('financiero-contable/configuracion/catalogo-insumos');
         });
         Route::get('/', function () { return view('livewire.financiero-contable.contabilidad.index'); })->name('financiero-contable/caja');
 });
