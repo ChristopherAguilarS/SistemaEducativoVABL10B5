@@ -17,14 +17,5 @@
     @livewire('financiero-contable.compras.pedidos.filtro')
     @livewire('financiero-contable.compras.pedidos.table')
     @livewire('financiero-contable.compras.pedidos.ver-detalles')
-    @livewire('financiero-contable.compras.pedidos.components.listar-items')
-    <script>
-    $('#form1').on('show.bs.modal', function (e) {
-        $(this).css('z-index', 1050); // Ajusta el z-index de la primera modal al mostrarse
-    });
-
-    $('#form2').on('show.bs.modal', function (e) {
-        $(this).css('z-index', 1060); // Ajusta el z-index de la segunda modal al mostrarse
-    });
-</script>
+    @livewire('financiero-contable.compras.pedidos.editar-item')
 @endsection

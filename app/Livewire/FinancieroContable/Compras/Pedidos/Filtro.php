@@ -3,7 +3,7 @@ namespace App\Livewire\FinancieroContable\Compras\Pedidos;
 use Livewire\Component;
 use App\Models\FinancieroContable\Almacen;
 class Filtro extends Component{
-    public $txInicio, $txFin, $almacen_id = 0, $almacenes;
+    public $txInicio, $txFin, $almacen_id = 0, $almacenes, $estado;
     public function mount(){
         $this->txInicio = date('Y-m-d');
         $this->txFin = date('Y-m-d');
