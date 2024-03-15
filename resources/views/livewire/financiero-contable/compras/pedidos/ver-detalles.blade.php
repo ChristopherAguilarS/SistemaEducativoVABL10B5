@@ -18,7 +18,7 @@
                                 <div class="col-lg-8">
                                     <div class="mb-3">
                                         <label class="form-label" for="steparrow-gen-info-email-input">Solicitante <font style="color:red">(*)</font></label>
-                                        <select class="form-select" wire:model.live="state.tipoDocumento" aria-label="Default select example">
+                                        <select class="form-select" wire:model.live="state.trabajador_id" aria-label="Default select example">
                                             <option value="0">Seleccione </option>
                                             <option value="1" wire:key="1">DOCUMENTO NACIONAL DE IDENTIDAD</option>   
                                             <option value="4" wire:key="4">CARNET DE EXTRANJERÍA</option>    
@@ -31,7 +31,7 @@
                                             <option value="E" wire:key="E">TAM- TARJETA ANDINA DE MIGRCIÓN</option>    
                                             <option value="F" wire:key="F">PERMISO TEMPORAL DE PERMANENCIA - PTP</option>    
                                         </select>
-                                        @error('state.tipoDocumento')
+                                        @error('state.trabajador_id')
                                             <small style="color:red">(*) Obligatorio</small>
                                         @enderror
                                     </div>
@@ -39,11 +39,11 @@
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label class="form-label" for="steparrow-gen-info-email-input">Moneda <font style="color:red">(*)</font></label>
-                                        <select class="form-select" wire:model.live="state.tipoDocumento" aria-label="Default select example">
+                                        <select class="form-select" wire:model.live="state.moneda_id" aria-label="Default select example">
                                             <option value="0">Seleccione </option>
                                             <option value="1" wire:key="1">SOLES</option>
                                         </select>
-                                        @error('state.tipoDocumento')
+                                        @error('state.moneda_id')
                                             <small style="color:red">(*) Obligatorio</small>
                                         @enderror
                                     </div>
@@ -346,7 +346,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-info " wire:click="guardar">Guardar</button>
+                    <button type="button" class="btn btn-info " wire:click="guardarPedido" wire:loading.attr="disabled">Guardar</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

@@ -37,7 +37,7 @@ class VerDetalles extends Component
     #[On('selAlm')]
     public function selAlm($id, $local, $almacen){
         $this->nomAlmDes = '<b>Proyecto: </b>'.$local.' - <b>Almacen:</b> '.$almacen;
-        $this->emit('cerrarAlm');
+        $this->dispatch('cerrarAlm');
         $this->state['almacen_destino'] = $id;
     }
     #[On('rTabItems')]
@@ -134,38 +134,28 @@ class VerDetalles extends Component
                         ]);
                     }
                 DB::commit();
-                $this->alert('success', 'Revisión guardada correctamente.');
-                $this->emit('renderizarTbl');
+                $this->dispatch('alert_info', ['mensaje' => 'Revisión guardada correctamente.']);
+                $this->dispatch('renderizarTbl');
                 $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
             }else{
-                $this->alert('error', 'Debes seleccionar almenos 01 item');
+                $this->dispatch('alert_danger', ['mensaje' => 'Debes seleccionar almenos 01 item.']);
             }
         }catch(\Exception $e){
             DB::rollback();
             dd($e);
-            $this->alert('error', 'Ocurrio un error inesperado.');
+            $this->dispatch('alert_idanger', ['mensaje' => 'Ocurrio un error inesperado.']);
         }
     }
     public function guardarPedido() {
-        if($this->state['tipo_id'] == 1){
-            $this->validate(['state.almacen_id' => 'required|not_in:0', 'state.tipo_id' => 'required|not_in:0', 'state.trabajador_id' => 'required|not_in:0', 'state.moneda_id' => 'required|not_in:0']);
-        }else{
-            $this->validate(['state.almacen_id' => 'required|not_in:0', 'state.tipo_id' => 'required|not_in:0', 'state.trabajador_id' => 'required|not_in:0', 'state.almacen_destino' => 'required|not_in:0']);
-        }
+        $this->validate(['state.trabajador_id' => 'required|not_in:0', 'state.moneda_id' => 'required|not_in:0']);
         try{
             DB::beginTransaction();
-                if($this->state['tipo_id'] == 1){
-                    $dest = 0;
-                }else{
-                    $dest = $this->state['almacen_destino'];
-                }
                 if($this->idSel){
                     $data = Pedido::find($this->idSel);
                         $data->trabajador_id = $this->state['trabajador_id'];
                         $data->tipo_id = $this->state['tipo_id'];
                         $data->observaciones = $this->state['observaciones'];
                         $data->codigo_manual = $this->state['codigo_manual'];
-                        $data->almacen_destino = $dest;
                         $data->updated_by = auth()->user()->id;
                         $data->updated_at = date('Y-m-d H:i:s');
                     $data->save();
@@ -205,8 +195,10 @@ class VerDetalles extends Component
                         ->where('almacen_tipo', $this->almacen_tipo)
                         ->delete();
                 }else{
-                    $cant = PedidoDetalleTemp::where('log_pedidos_detalles_temp.created_by', auth()->user()->id)->where('tipo_movimiento', $this->state['tipo_id'])
-                        ->where('almacen_tipo', $this->almacen_tipo)->get()->count();
+                    $cant = PedidoDetalleTemp::where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
+                        ->where('almacen_tipo', $this->almacen_tipo)
+                        ->get()
+                        ->count();
                     if($cant){
                         $obj = new logis();
                         $corr = $obj->obtCorrelativoPedido($this->almacen_id, $this->almacen_tipo);
@@ -219,32 +211,24 @@ class VerDetalles extends Component
                         }
                         $sav = Pedido::create($this->state);
                         if($sav){
-                            if($this->state['tipo_id'] == 2){
-                                $sav2 = DB::statement("INSERT INTO log_pedidos_detalles(pedido_id, item_id, item_tipo, tarea_id, precio, almacen_id, cantidad, estado, created_by, created_at) 
+                            $sav2 = DB::statement("INSERT INTO log_pedidos_detalles(pedido_id, item_id, item_tipo, tarea_id, precio, almacen_id, cantidad, estado, created_by, created_at) 
                                         SELECT ".$sav->id.", item_id, ".$this->almacen_tipo.", tarea_id, precio, almacen_id, cantidad, 1, ".auth()->user()->id.", '".date('Y-m-d H:i')."'
-                                        FROM log_pedidos_detalles_temp WHERE created_by = ".auth()->user()->id." and tipo_movimiento = 2 and almacen_tipo = ".$this->almacen_tipo."
+                                        FROM log_pedidos_detalles_temp WHERE created_by = ".auth()->user()->id." and almacen_tipo = ".$this->almacen_tipo."
                                         ");
-                            }else{
-                                $sav2 = DB::statement("INSERT INTO log_pedidos_detalles(pedido_id, item_id, item_tipo, tarea_id, precio, almacen_id, cantidad, estado, created_by, created_at) 
-                                        SELECT ".$sav->id.", item_id, ".$this->almacen_tipo.", tarea_id, precio, almacen_id, cantidad, 1, ".auth()->user()->id.", '".date('Y-m-d H:i')."'
-                                        FROM log_pedidos_detalles_temp WHERE created_by = ".auth()->user()->id." and tipo_movimiento!=2 and almacen_tipo = ".$this->almacen_tipo."
-                                        ");
-                            }
                         }
                         $del = PedidoDetalleTemp::where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
                             ->where('almacen_tipo', $this->almacen_tipo)
-                            ->where('tipo_movimiento', $this->state['tipo_id'])
                             ->delete();
                     }
                 }
-                $this->alert('success', 'Pedido guardado correctamente.');
-                $this->emit('renderizarTbl');
+                $this->dispatch('alert_info', ['mensaje' => 'Pedido guardado correctamente.']);
+                $this->dispatch('renderizarTbl');
                 $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
             DB::commit();
         }catch(\Exception $e){
             DB::rollback();
             dd($e);
-            $this->alert('error', 'Ocurrio un error inesperado.');
+            $this->dispatch('alert_danger', ['mensaje' => 'Ocurrio un Error']);
         }
     }
     #[On('eliminarPedido')]
@@ -266,8 +250,8 @@ class VerDetalles extends Component
             $del1 = Pedido::where('id', $this->idR)->delete();
             $del1 = PedidoDetalle::where('pedido_id', $this->idR)->delete();
             $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
-            $this->emit('renderizarTbl');
-            $this->alert('success', 'Pedido eliminado correctamente');
+            $this->dispatch('renderizarTbl');
+            $this->dispatch('alert_info', ['mensaje' => 'Pedido eliminado correctamente.']);
         }
     }
     public function cancelar(){
@@ -292,13 +276,13 @@ class VerDetalles extends Component
                 $this->items[$this->idR]['eliminar'] = 1;
             }else{
                 $del1 = PedidoDetalleTemp::where('id', $this->idR)->delete();
-                $this->emit('rTab');
+                $this->dispatch('rTab');
             }
         }elseif($this->ver == 1){
             $del1 = PedidoDetalleTemp::where('id', $this->idR)->delete();
-            $this->emit('rTab');
+            $this->dispatch('rTab');
         }
-        $this->alert('success', 'Item retirado correctamente');
+        $this->dispatch('alert_info', ['mensaje' => 'Item retirado correctamente']);
     }
     public function mount(){
         $obj = new FuncionesCtrl();
@@ -417,7 +401,7 @@ class VerDetalles extends Component
                 $this->dispatch('alert_info', ['mensaje' => 'Se agregaron agregado correctamente.']);
             }catch(\Exception $e){dd($e);
                 DB::rollback();
-                $this->alert('error', 'Ocurrio un error inesperado.');
+                $this->dispatch('alert_danger', ['mensaje' => 'Ocurrio un error inesperado.']);
             }
     }
     public function render(){

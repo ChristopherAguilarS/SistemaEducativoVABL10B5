@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Livewire\FinancieroContable\Compras\Pedidos;
-use App\Models\RecursosHumanos\Persona;
+use App\Models\FinancieroContable\Pedido;
 use App\Models\SubGenericaNivel2;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -11,43 +11,43 @@ class Table extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $estado = 1, $cumple = 0, $r_val;
+    public $almacen, $search = null, $busq,$buscarPor = 2, $cbAnio, $cbMes, $cbDia, $txInicio, $txFin, $cbEstado = 0, $cbRevision = 0, $cbTipo = 0, $perPage = 20;
     public function mount(){
         $this->subgenericas = SubGenericaNivel2::where('estado',1)->orderBy('descripcion')->get();
     }
-    #[On('rTabla')]
-    public function rTabla(){
+    #[On('renderizarTbl')]
+    public function renderizarTbl(){
         $this->render();
     }
-    #[On('rTablaEstado')]
-    public function rTablaEstado($est, $cumple){
-        $this->estado = $est;
-        $this->cumple = $cumple;
+    #[On('rTabla')]
+    public function rtabla($almacen, $buscarPor, $cbAnio, $cbMes, $cbDia, $txInicio, $txFin, $cbEstado, $cbRevision, $cbTipo){
+        $this->almacen = $almacen;
+        $this->buscarPor = $buscarPor;
+        $this->cbAnio = $cbAnio;
+        $this->cbMes = $cbMes;
+        $this->cbDia = $cbDia;
+        $this->txInicio = $txInicio;
+        $this->txFin = $txFin;
+        $this->cbEstado = $cbEstado;
+        $this->cbRevision = $cbRevision;
+        $this->cbTipo = $cbTipo;
     }
-    #[On('resetFiltroDocumentoPersona')]
-    public function resetFiltroDocumentoPersona($doc){
-        $this->r_val = "numeroDocumento like '".$doc."'";
-    }
-    #[On('resetFiltroNombrePersona')]
-    public function resetFiltroNombrePersona($ap1, $ap2, $nom){
-        $this->r_val = "(apellidoPaterno like '%".$ap1."%' and apellidoMaterno like '%".$ap2."%' and nombres like '%".$nom."%')";
-    }
+   
     public function render(){
-        $especificas = Persona::select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'email', 'telefonos', 'estado', 'id', DB::raw("MONTH(fechaNacimiento) as mes"));
-        if($this->cumple){
-            $especificas = $especificas->whereMonth('fechaNacimiento', $this->cumple);
+        $data = Pedido::with('solicitante');
+        if($this->cbRevision == 1){
+            $data = $data->whereRaw('(SELECT COUNT(*) FROM log_pedidos_detalles pd WHERE pd.pedido_id = log_pedidos.id and estado = 1) = 0');
+        }elseif($this->cbRevision == 2){
+            $data = $data->whereRaw('(SELECT COUNT(*) FROM log_pedidos_detalles pd WHERE pd.pedido_id = log_pedidos.id and estado = 1) > 0');
         }
-        if($this->estado == 1){
-            $especificas = $especificas->where('estado', 1);
-        }elseif($this->estado == 2){
-            $especificas = $especificas->orderby('id', 'desc');
-        }elseif($this->estado == 3){
-            $especificas = $especificas->where('id', 0);
+        $data->whereBetween('fecha', [$this->txInicio, $this->txFin]);
+
+        if($this->almacen){
+            $data = $data->where('almacen_id', $this->almacen);
         }
-        if($this->r_val){
-            $especificas = $especificas->whereRaw($this->r_val);
+        if($this->search){
+            $data = $data->whereRaw("log_pedidos.id like '%".intval($this->search)."%'");
         }
-        $especificas = $especificas->paginate(10);
-        return view('livewire.financiero-contable.compras.pedidos.table',['especificas'=>$especificas]);
+        return view('livewire.financiero-contable.compras.pedidos.table',['posts' => $data->orderby('id', 'desc')->paginate($this->perPage)]);
     }
 }

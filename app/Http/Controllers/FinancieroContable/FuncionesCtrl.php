@@ -53,14 +53,15 @@ class FuncionesCtrl extends BaseController{
         }
         return $data;
     }
-    public function obtCorrelativoPedido($tipo){
+    public function obtCorrelativoPedido($alm, $tipo){
         if($tipo == 1 || $tipo == 3){
             $tipo = [1,3];
         }else{
             $tipo = [2];
         }
         $data = Almacen::join('log_catalogo_categorias_almacenes as cc', 'cc.id', 'log_almacenes.categoria_id')
-            ->join('log_pedidos as c', 'c.almacen_id', 'log_almacenes.id')
+            ->join('log_pedidos as c', 'c.almacen_id', 'log_almacenes.id')  
+            ->where('log_almacenes.id', $alm)
             ->whereIn('categoria_id', $tipo)
             ->max('correlativo');
         if(!$data){
