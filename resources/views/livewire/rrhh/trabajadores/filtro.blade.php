@@ -10,16 +10,16 @@
                                     <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevo', 0)">
                                         <i class="bx bx-user-plus" style="font-size:30px"></i><br>Ingreso
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevoAdenda', 0)">
                                         <i class="bx bx-book" style="font-size:30px"></i><br>Adenda
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevoMerito', 0)">
                                         <i class="bx bx-layer-plus" style="font-size:30px"></i><br>Meritos
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevoDemerito', 0)">
                                         <i class="bx bx-layer-minus" style="font-size:30px"></i><br>Demeritos
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevoSalida', 0)">
                                         <i class="bx bx-user-minus" style="font-size:30px"></i><br>Salida
                                     </button>
                                 </div>
@@ -94,6 +94,11 @@
                                         @livewire('dbo.filtros.filtro-documento-persona')
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-lg-12" style="text-align:right">
+                                <button type="button" class="btn btn-success btn-sm" wire:click="descargar">Descargar</button>
                             </div>
                         </div>
                     </div>

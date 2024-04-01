@@ -11,9 +11,13 @@ class Table extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $estado = 1, $cumple = 0, $r_val;
+    public $estado = 1, $cumple = 0, $r_val, $selTab = 0;
     public function mount(){
         $this->subgenericas = SubGenericaNivel2::where('estado',1)->orderBy('descripcion')->get();
+    }
+    public function selTab($id){
+        $this->selTab = $id;
+        $this->dispatch('selTab', $id);
     }
     #[On('rTabla')]
     public function rTabla(){

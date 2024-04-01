@@ -1,8 +1,10 @@
 <?php
 namespace App\Livewire\Rrhh\Trabajadores;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Rrhh\Trabajadores\TrabajadoresExport;
 class Filtro extends Component{
-    public $f_tipo, $f_condicion, $f_area;
+    public $f_tipo, $f_condicion, $f_area, $mes;
     public function mount(){
        // $this->anio = date('Y');
     }
@@ -11,6 +13,9 @@ class Filtro extends Component{
     }
     public function agregar(){
         $this->dispatch('agregar');
+    }
+    public function descargar(){
+        return Excel::download(new TrabajadoresExport(), 'Trabajadores al '.date('d-m-Y').'.xlsx');
     }
     public function render(){
         return view('livewire.rrhh.trabajadores.filtro');

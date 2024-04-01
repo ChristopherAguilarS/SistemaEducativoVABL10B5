@@ -3,6 +3,7 @@
 namespace App\Livewire\Academico\Academico\Matriculas;
 
 use App\Models\Academico\Carrera;
+use App\Models\Academico\Alumno;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
@@ -11,7 +12,7 @@ class VerDetalles extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $titulo, $state = [], $editar = false, $idDel;
+    public $titulo, $state = ['modalidad_ingreso'=>0], $editar = false, $idDel, $busqueda, $documento;
     #[On('nuevo')]
     public function onNuevo($id = 0){
         if($id){
@@ -20,10 +21,31 @@ class VerDetalles extends Component
             $this->editar = $id;
         }else{
             $this->titulo = "Nueva Matrícula";
-            $this->state = ['nombre' => '', 'estado' =>1];
+            $this->state = ['modalidad_ingreso' => 0];
             $this->editar = false;
         }
         $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'show']);
+    }
+    public function buscar(){
+        $this->idPers = 0;
+        $data = Alumno::leftjoin('academico_matriculas as am', 'am.persona_id', 'academico_alumnos.id')
+            ->select('academico_alumnos.id', 'academico_alumnos.apellidoPaterno', 'academico_alumnos.apellidoMaterno', 'academico_alumnos.nombres', 'am.estado')
+            ->where('academico_alumnos.numeroDocumento', $this->documento)->first();
+        if($data){
+            if($data->estado == 1){
+                $this->dispatch('alert_danger', ['mensaje' => 'El Alumno ya tiene una matricula vigente']);
+            }else{
+                $this->nombres = $data->apellidoPaterno.' '.$data->apellidoMaterno.', '.$data->nombres;
+                $this->idPers = $data->id;
+                $this->busqueda = true;
+                $this->dispatch('alert_info', ['mensaje' => 'Alumno Encontrado']);
+            }
+        }else{
+            $this->idPers = 0;
+            $this->busqueda = true;
+            $this->nombres = '';
+            $this->dispatch('alert_danger', ['mensaje' => 'Alumno no Encontrado']);
+        }
     }
     #[On('eliminar')]
     public function eliminar($id){

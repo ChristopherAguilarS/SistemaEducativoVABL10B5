@@ -17,6 +17,7 @@ class VinculoLaboral extends Model
         'catalogo_cargo_id',
         'catalogo_condiciones_id',
         'catalogo_tipo_documento',
+        'catalogo_tipo_trabajador_id',
         'fecha_inicio',
         'fecha_fin',
         'catalogo_area_id',

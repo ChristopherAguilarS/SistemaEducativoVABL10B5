@@ -10,7 +10,9 @@
                                     <th style="width:5px" scope="col">N°</th>
                                     <th scope="col">Nombre</th>
                                     <th style="width:5px" scope="col">Estado</th>
-                                    <th style="width:5px" scope="col" class="text-center">Acciones</th>
+                                    <th style="width:5px" scope="col" class="text-center"></th>
+                                    <th style="width:5px" scope="col" class="text-center"></th>
+                                    <th style="width:5px" scope="col" class="text-center"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,7 +35,12 @@
                                             
                                         </td>
                                         <td class="text-center">
+                                            <button type="button" class="btn btn-success btn-sm"  @click="$dispatch('nuevo', [{{ $especifica->id }}])"><i class="ri-edit-2-line"></i> Cursos</button>
+                                        </td>
+                                        <td class="text-center">
                                             <button type="button" class="btn btn-info btn-sm"  @click="$dispatch('nuevo', [{{ $especifica->id }}])"><i class="ri-edit-2-line"></i> Editar</button>
+                                        </td>
+                                        <td class="text-center">
                                             <button type="button" class="btn btn-danger btn-sm"  @click="$dispatch('eliminar', [{{ $especifica->id }}])"><i class="ri-delete-bin-line"></i> Eliminar</button>
                                         </td>
                                     </tr>

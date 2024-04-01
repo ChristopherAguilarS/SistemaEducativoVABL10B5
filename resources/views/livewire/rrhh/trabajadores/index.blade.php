@@ -14,8 +14,12 @@
             Personal
         @endslot
     @endcomponent
+    @livewire('rrhh.trabajadores.components.resumen')
     @livewire('rrhh.trabajadores.filtro')
     @livewire('rrhh.trabajadores.table')
-    @livewire('rrhh.trabajadores.ver-detalles')
-    
+    @livewire('rrhh.trabajadores.components.ver-ingreso')
+    @livewire('rrhh.trabajadores.components.ver-adenda')
+    @livewire('rrhh.trabajadores.components.ver-merito')
+    @livewire('rrhh.trabajadores.components.ver-demerito')
+    @livewire('rrhh.trabajadores.components.ver-salida')
 @endsection

@@ -4,6 +4,7 @@ namespace App\Livewire\Rrhh\Personal\Components;
 
 use App\Models\RecursosHumanos\Persona;
 use App\Models\RecursosHumanos\LegColegio;
+use App\Models\RecursosHumanos\CatalogoColegio;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -11,13 +12,12 @@ use Karriere\PdfMerge\PdfMerge;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use DB;
-class Colegiatura extends Component
-{
+class Colegiatura extends Component {
     use WithPagination;
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     public $titulo, $estudios, $idDel,$archivo, $numeroDocumento, $idSel, $nombres, $state = ['catalogo_colegio_id'=>  0, 'fecha'=>null,'numero'=> ''];
-    public $existe = false, $reemplaza = false;
+    public $existe = false, $reemplaza = false, $colegios;
     #[On('colegiatura')]
     public function colegiatura($id = 0){
         $this->idSel = 0;
@@ -54,7 +54,9 @@ class Colegiatura extends Component
             $this->nombres = '';
             $this->dispatch('alert_danger', ['mensaje' => 'Persona no encontrada']);
         }
-        $data = LegColegio::select('nombre_lugar', 'cargo', 'catalogo_tipo_lugar_id', 'fecha_inicio', 'fecha_fin', DB::raw("'1' as estado"))->where('persona_id', $this->idSel)->get();
+        $data = LegColegio::join('rrhh_catalogo_colegios AS cc', 'rrhh_leg_colegiaturas.catalogo_colegio_id', 'cc.id')
+            ->select('cc.descripcion as colegio', 'rrhh_leg_colegiaturas.fecha', 'rrhh_leg_colegiaturas.numero', DB::raw("'1' as estado"))
+            ->where('persona_id', $this->idSel)->get();
         if($data){
             $this->estudios = $data->toarray();
         }else{
@@ -87,6 +89,8 @@ class Colegiatura extends Component
                 'state.numero' => 'required',
             ]);
             $this->state['estado'] = 1;
+            $dd = $this->colegios->where('id', $this->state['catalogo_colegio_id'])->first();
+            $this->state['colegio'] = $dd->descripcion;
             $this->estudios[] =  $this->state;
             $this->limpiar();
             $this->dispatch('alert_info', ['mensaje' => 'Añadido Correctamente']);
@@ -131,6 +135,7 @@ class Colegiatura extends Component
         }
     }
     public function render(){
+        $this->colegios = CatalogoColegio::get();
         return view('livewire.rrhh.personal.components.colegiatura');
     }
 }

@@ -48,40 +48,11 @@
                                             <label class="form-label" for="steparrow-gen-info-email-input" >Colegio Profesional <font style="color:red">(*)</font></label>
                                             <select class="form-control form-control-sm"  wire:model.live="state.catalogo_colegio_id">
                                                     <option value="0">Seleccione un estado</option>
-                                                    <option value="1">COLEGIO DE ABOGADOS DEL PERU</option>
-                                                    <option value="2">COLEGIO DE ANTROPOLOGOS DEL PERU</option>
-                                                    <option value="3">COLEGIO DE ARQUEOLOGOS DEL PERU</option>                                                    
-                                                    <option value="4">COLEGIO DE ARQUITECTOS DEL PERU</option>                                                    
-                                                    <option value="5">COLEGIO DE BIBLIOTECOLOGOS DEL PERU</option>                                                    
-                                                    <option value="6">COLEGIO DE BIOLOGOS DEL PERU</option>                                                    
-                                                    <option value="7">COLEGIO DE CONTADORES PUBLICOS DEL PERU</option>                                                    
-                                                    <option value="8">COLEGIO DE ECONOMISTAS DEL PERU</option>                                                    
-                                                    <option value="9">COLEGIO DE ENFERMERAS (OS) DEL PERU</option>                                                    
-                                                    <option value="10">COLEGIO DE ESTADISTICOS DEL PERU</option>                                                    
-                                                    <option value="11">COLEGIO DE FISICOS DEL PERU</option>                                                    
-                                                    <option value="12">COLEGIO DE GEOGRAFOS DEL PERU</option>                                                    
-                                                    <option value="13">COLEGIO DE INGENIEROS DEL PERU</option>                                                    
-                                                    <option value="14">COLEGIO DE LICENCIADOS EN ADMINISTRACION</option>                                                    
-                                                    <option value="15">COLEGIO DE LICENCIADOS EN COOPERATIVISMO DEL PERU</option>                                                    
-                                                    <option value="16">COLEGIO DE LICENCIADOS EN TURISMO</option>                                                    
-                                                    <option value="17">COLEGIO DE MATEMATICOS DEL PERU</option>                                                    
-                                                    <option value="18">COLEGIO MEDICO DEL PERU</option>                                                    
-                                                    <option value="19">COLEGIO MEDICO VETERINARIO DEL PERU</option>                                                    
-                                                    <option value="20">JUNTA DE DECANOS DE COLEGIOS DE NOTARIOS DEL PERU</option>                                                    
-                                                    <option value="21">COLEGIO DE NUTRICIONISTAS DEL PERU</option>                                                    
-                                                    <option value="22">COLEGIO DE OBSTETRAS DEL PERU</option>                                                    
-                                                    <option value="23">COLEGIO ODONTOLOGICO DEL PERU</option>                                                    
-                                                    <option value="24">COLEGIO DE OFICIALES DE MARINA MERCANTE DEL PERU</option>                                                    
-                                                    <option value="25">COLEGIO DE PERIODISTAS DEL PERU</option>                                                   
-                                                    <option value="26">COLEGIO DE PROFESORES DEL PERU</option>                                                   
-                                                    <option value="27">COLEGIO DE PSICOLOGOS DEL PERU</option>                                                    
-                                                    <option value="28">COLEGIO DE QUIMICOS DEL PERU</option>                                                    
-                                                    <option value="29">COLEGIO QUIMICO FARMACEUTICO DEL PERU</option>                                                    
-                                                    <option value="30">COLEGIO DE RELACIONADORES INDUSTRIALES DEL PERU</option>                                                   
-                                                    <option value="31">COLEGIO DE RELACIONISTAS PUBLICOS DEL PERU</option>                                                 
-                                                    <option value="32">COLEGIO DE SOCIOLOGOS DEL PERU</option>                                                   
-                                                    <option value="33">COLEGIO TECNOLOGO MEDICO DEL PERU</option>                                                   
-                                                    <option value="34">COLEGIO DE TRABAJADORES SOCIALES DEL PERU</option>
+                                                    @if(!is_null($colegios))
+                                                        @foreach($colegios as $colegio)
+                                                            <option value="{{$colegio->id}}">{{$colegio->descripcion}}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             @error('state.catalogo_colegio_id')
                                                 <small style="color:red">(*) Obligatorio</small>
@@ -130,12 +101,9 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" style="width:5px">#</th>
-                                        <th scope="col" style="width:5px">Institución/Empresa</th>
-                                        <th scope="col">Cargo</th>
-                                        <th scope="col">Tipo</th>
-                                        <th scope="col" style="width:5px">Inicio</th>
-                                        <th scope="col" style="width:5px">Fin</th>
-                                        <th scope="col" style="width:5px"></th>
+                                        <th scope="col">Colegio Profesional</th>
+                                        <th scope="col" style="width:5px">Fecha</th>
+                                        <th scope="col" style="width:5px">Numero</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -143,24 +111,9 @@
                                         @foreach($estudios as $key => $estudio)
                                             <tr>
                                                 <th scope="row">{{$loop->iteration}}</th>
-                                                <td>
-                                                    @if($estudio['estado'])
-                                                        <span class="badge bg-success">Se Agregara</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Se Eliminara</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{$estudio['nombre_lugar']}}</td>
-                                                <td>{{$estudio['cargo']}}</td>
-                                                <td>
-                                                    @if($estudio['catalogo_tipo_lugar_id'] == 1)
-                                                        Publico
-                                                    @elseif($estudio['catalogo_tipo_lugar_id'] == 2)
-                                                        Privado
-                                                    @endif
-                                                </td>
-                                                <td>{{date('d/m/Y', strtotime($estudio['fecha_inicio']))}}</td>
-                                                <td>{{date('d/m/Y', strtotime($estudio['fecha_fin']))}}</td>
+                                                <td>{{$estudio['colegio']}}</td>
+                                                <td>{{date('d/m/Y', strtotime($estudio['fecha']))}}</td>
+                                                <td>{{$estudio['numero']}}</td>
                                             </tr>
                                         @endforeach
                                     @else

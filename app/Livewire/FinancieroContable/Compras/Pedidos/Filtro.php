@@ -3,10 +3,13 @@ namespace App\Livewire\FinancieroContable\Compras\Pedidos;
 use Livewire\Component;
 use App\Models\FinancieroContable\Almacen;
 class Filtro extends Component{
-    public $txInicio, $txFin, $almacen_id = 0, $almacenes, $estado;
+    public $almacen_id = 0, $almacenes, $buscarPor, $cbAnio, $cbMes, $cbDia, $txInicio, $txFin, $cbRevision, $cbTipo, $estado;
     public function mount(){
         $this->txInicio = date('Y-m-d');
         $this->txFin = date('Y-m-d');
+    }
+    public function buscar(){
+        $this->dispatch('rTabla', $this->almacen_id, $this->buscarPor, $this->cbAnio, $this->cbMes, $this->cbDia, $this->txInicio, $this->txFin, $this->cbRevision, $this->cbTipo);
     }
     public function cEstado(){
         $this->dispatch('rTablaEstado', $this->estado, $this->mes);

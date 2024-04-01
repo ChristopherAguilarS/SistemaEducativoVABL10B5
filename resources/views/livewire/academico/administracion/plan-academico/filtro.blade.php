@@ -4,17 +4,15 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div class="row align-items-center g-3">
-                        <div class="col-lg-4">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-4">
                             <select class="form-select mb-3" wire:model.live="anio">
                                 <option value="2023">2023</option>
                                 <option value="2024">2024</option>
                             </select>
                         </div>
-                        {{$anio}}
-                        <div class="col-lg-4">
-                            <button type="button" class="btn btn-outline-secondary btn-label waves-effect right waves-light m-3" @click="$dispatch('nuevo', 0)">
-                                <i class="ri-add-fill label-icon align-middle fs-16 ms-2"></i> AGREGAR
-                            </button>
+                        <div class="col-lg-2" style="margin-top:-2px">
+                            <button type="button" class="btn btn-info waves-effect waves-light" wire:click="buscar" style="width:100%">Añadir</button>
                         </div>
                     </div>
                 </div>

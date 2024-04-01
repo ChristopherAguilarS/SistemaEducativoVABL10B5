@@ -1,34 +1,59 @@
 <?php
 
-namespace App\Http\Livewire\Rrhh\Horarios\ProgramacionMensual;
+namespace App\Livewire\Rrhh\Horarios\ProgramacionMensual;
+
+use App\Models\RecursosHumanos\VinculoLaboral;
+use App\Models\SubGenericaNivel2;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use DB;
-
-use App\Models\Rrhh\VinculoLaboral;
-use App\Models\Rrhh\PersonaProgramacion;
 class Table extends Component
 {
     use WithPagination;
-    protected $listeners = ['renderizar', 'rtabla'];
-    public $tipo, $estado = 1, $lugar, $perPage = 20;
+    protected $paginationTheme = 'bootstrap', $r_val, $r_campo;
 
-    public function renderizar(){
+    public function mount(){
+        $this->subgenericas = SubGenericaNivel2::where('estado',1)->orderBy('descripcion')->get();
+    }
+
+    #[On('rTabla2')]
+    public function rTabla(){
         $this->render();
     }
-    public function rtabla($selectLugar, $selectTipo, $selectEstado){
-        $this->lugar = $selectLugar;
-        $this->tipo = $selectTipo;
-        $this->estado = $selectEstado;
+    #[On('resetFiltroDocumentoPersona')]
+    public function resetFiltroDocumentoPersona($doc){
+        $this->r_val = "numeroDocumento like '".$doc."'";
+    }
+    #[On('resetFiltroNombrePersona')]
+    public function resetFiltroNombrePersona($ap1, $ap2, $nom){
+        $this->r_val = "(apellidoPaterno like '%".$ap1."%' and apellidoMaterno like '%".$ap2."%' and nombres like '%".$nom."%')";
+    }
+    #[On('updTable')]
+    public function updTable($tipo, $condicion, $area){
+        $d = [];
+        if($tipo){
+            $d[] = "catalogo_tipo_trabajador_id = ".$tipo; 
+        }
+        if($condicion){
+            $d[] = "catalogo_condiciones_id = ".$condicion; 
+        }
+        if($area){
+            $d[] = "catalogo_area_id = ".$area; 
+        }
+        $d = implode(' and ', $d);
+        $this->r_val = "(".$d.")";
     }
     public function render(){
-       $data = VinculoLaboral::join('rrhh_personas as p', 'p.id', 'rrhh_vinculo_laboral.persona_id')
-        ->leftjoin('adm_locales as al', 'al.id', 'rrhh_vinculo_laboral.local_id')
-        ->leftjoin('rrhh_programaciones_personas as pph', 'pph.persona_id','p.id')
-        ->join('rrhh_catalogo_cargos as cc', 'cc.id', 'rrhh_vinculo_laboral.catalogoCargo_id')
-        ->select('p.id','pph.id as ide', 'rrhh_vinculo_laboral.estado','cc.nombre as cargo', 'catalogoTipo_id', 'al.nombre as proy', 'codigoProyecto as cod', 'fecha as inicio','numeroDocumento', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) AS nombres"));
-        $data = $data->where('rrhh_vinculo_laboral.estado', 1);
-
-        return view('livewire.rrhh.horarios.programacion-mensual.table',['posts' => $data->orderby('apellidoPaterno', 'asc')->orderby('apellidoMaterno', 'asc')->orderby('nombres', 'asc')->paginate($this->perPage)]);
+        $especificas = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
+            ->leftjoin('rrhh_programaciones_personas as pph', 'pph.persona_id','p.id')
+            ->leftjoin('rrhh_catalogo_condiciones as cc', 'cc.id', 'rrhh_vinculo_laboral.catalogo_condiciones_id')
+            ->leftjoin('rrhh_catalogo_areas as ca', 'ca.id', 'rrhh_vinculo_laboral.catalogo_area_id')
+            ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'p.id', 'pph.id as ide', 'ca.descripcion as area', 'catalogo_tipo_trabajador_id');
+        if($this->r_val){
+            $especificas = $especificas->whereRaw($this->r_val);
+        }
+        $especificas = $especificas->paginate(10);
+        return view('livewire.rrhh.horarios.programacion-mensual.table',['especificas'=>$especificas]);
     }
 }

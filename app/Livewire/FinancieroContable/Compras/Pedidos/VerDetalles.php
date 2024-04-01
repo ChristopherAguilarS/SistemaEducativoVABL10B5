@@ -15,12 +15,13 @@ use Livewire\Attributes\On;
 use DB;
 use App\Models\FinancieroContable\Insumo;
 use App\Models\FinancieroContable\Tarea;
+use App\Models\RecursosHumanos\VinculoLaboral;
 class VerDetalles extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $titulo, $monedas ,$items = [], $loc_monedas, $userCreacion, $userFecha, $cod, $todo = 0, $cant = [],$almacen_tipo,$nomAlm, $nomAlmDes, $state = ['almacen_id' => 0, 'tipo_id' => 1, 'almacen_destino' =>0], $ver = 0, $editar = false, $idR, $idSel, $codProy, $nomProy, $codTrab, $nomTrab, $aprobar, $ap = [], $tpp, $almacen_id = 0;
-    public $revisadoPor, $revisadoEl, $partidas, $prod = [];
+    public $revisadoPor, $revisadoEl, $partidas, $prod = [],  $trabajadores;
     #[On('savItem')]
     public function savItem($arr){
         $this->items[$arr['id']] = $arr;
@@ -115,7 +116,7 @@ class VerDetalles extends Component
             $this->ap[$key] = $this->todo;
         }
     }
-    public function aprobar(){
+    public function aprobar1(){
         $sav1 = Pedido::find($this->idSel);
         $sav1->update([
             'updated_at' => now(),
@@ -263,11 +264,7 @@ class VerDetalles extends Component
     public function eliminarItem($id, $tpp){
         $this->idR = $id;
         $this->tpp = $tpp;
-        $this->confirm('¿Desea retirar el Item: #'.$id.'?', [
-            'onConfirmed' => 'borrarItem',
-            'confirmButtonText' => 'Eliminar',
-            'cancelButtonText' => 'Cancelar',
-        ]);
+        $this->dispatch('confirmar', ['mensaje' => '¿Desea retirar el Item: #'.$id.'?', 'detalle' => 'Se eliminara el nivel con codigo Nro.'.$id, 'funcion' => 'borrarItem']);
     }
     #[On('borrarItem')]
     public function borrarItem(){
@@ -276,11 +273,11 @@ class VerDetalles extends Component
                 $this->items[$this->idR]['eliminar'] = 1;
             }else{
                 $del1 = PedidoDetalleTemp::where('id', $this->idR)->delete();
-                $this->dispatch('rTab');
+                $this->vItems();
             }
         }elseif($this->ver == 1){
             $del1 = PedidoDetalleTemp::where('id', $this->idR)->delete();
-            $this->dispatch('rTab');
+            $this->vItems();
         }
         $this->dispatch('alert_info', ['mensaje' => 'Item retirado correctamente']);
     }
@@ -382,6 +379,7 @@ class VerDetalles extends Component
     public function aniadir() {
         $this->prod['created_by'] = auth()->user()->id;
         $this->prod['created_at'] = date('Y-m-d H:i');
+        $this->validate(['prod.item_id' => 'required|not_in:0', 'prod.partida' => 'required|not_in:0', 'prod.cantidad' => 'required|not_in:0']);
         $data = [
             'item_id' => $this->prod['item_id'],
             'tarea_id' => $this->prod['partida'],
@@ -403,9 +401,13 @@ class VerDetalles extends Component
                 DB::rollback();
                 $this->dispatch('alert_danger', ['mensaje' => 'Ocurrio un error inesperado.']);
             }
+            $this->vItems();
     }
     public function render(){
         $this->partidas = Tarea::get();
+        $this->trabajadores = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
+        ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'p.id')
+        ->where('rrhh_vinculo_laboral.estado', 1)->get();
         $items = Insumo::get();
         return view('livewire.financiero-contable.compras.pedidos.ver-detalles', ['itemss' => $items]);
     }

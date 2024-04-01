@@ -1,109 +1,105 @@
 <?php
 
-namespace App\Http\Livewire\Rrhh\Asistencias\PermisosLicencias\Components;
+namespace App\Livewire\Rrhh\Asistencias\PermisosLicencias\Components;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
+use App\Models\RecursosHumanos\Persona;
+use Livewire\WithFileUploads;
+use Karriere\PdfMerge\PdfMerge;
+use App\Models\RecursosHumanos\Ausencia;
+use App\Models\RecursosHumanos\AusenciaMotivo;
 use DB;
-use App\Models\Rrhh\Ausencia;
-use App\Models\Rrhh\Persona;
-use App\Models\Rrhh\VinculoLaboral;
-use Carbon\Carbon;
 class NuevoPermisos extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
-    protected $listeners = ['nuevoPermiso' => 'nuevo'];
-    public $titulo, $showModal = false, $anios, $periodo, $periodos, $documento, $nombres, $state, $n_dia = 1;
-
-    public function nuevo(){
-        $this->state = ['inicio' => date('Y-m-d'), 'fin' => date('Y-m-d'), 'periodo' => 0, 'observaciones' => ''];
+    protected $paginationTheme = 'bootstrap';
+    public $titulo = "Nuevo Permiso", $tipo = 0, $state, $motivo, $fecha, $inicio, $fin, $idPers, $motivos, $existe = false, $archivo, $documento, $nombres, $observaciones;
+    #[On('nuevoPermisos')]
+    public function nuevoPermisos($id = 0){
+        $this->state = ['tipo' => 0, 'motivo' => 0, 'fecha' => date('Y-m-d'), 'inicio' => date('H:i'), 'fin' => date('H:i'), 'observaciones' => ''];
         $this->nombres = '';
+        $this->periodos = null;
         $this->documento = '';
         $this->n_dia = 1;
-        $this->showModal = true;
+        $this->dispatch('verModal', ['id' => 'form2', 'accion' => 'show']);
     }
     public function buscar(){
-        $pers = Persona::where('numeroDocumento', $this->documento)->first();
-        if($pers){
-            $contrato = VinculoLaboral::where('estado', 1)->where('persona_id', $pers->id)->first();
-            if($contrato){
-                $this->nombres = $pers->apellidoPaterno.' '.$pers->apellidoPaterno.', '.$pers->nombres;
-                $this->state['vinculoLaboral_id'] = $contrato->id;
-                $c=0;
-                for ($i = date('Y',strtotime($contrato->fecha)); $i <= date('Y'); $i++) {
-                    $this->anios[$c]=$i;
-                    $c++;
-                    $vacaciones=Ausencia::select(DB::raw("sum(dias) as total"))
-                        ->where('vinculoLaboral_id', $contrato->id)
-                        ->where('periodo', $i)
-                        ->where('motivoAusencia_id', 1)->first();  
-
-                    $tomadas=$vacaciones->total;
-                    $disponibles=30-$vacaciones->total;
-
-                    if ($i>=date("Y",strtotime(date('Y')."- 2 year"))) { 
-                        if($disponibles>0){
-                            if(!$this->periodo){$this->periodo=$i;}
-                        }
-                    }
-                    
-                    if($i==date('Y')){
-                        $currentDate = Carbon::createFromFormat('Y-m-d', date($i.'-m-d',strtotime($contrato->fecha)));
-                        $shippingDate = Carbon::createFromFormat('Y-m-d', date('Y-m-d'));
-                        $interval = $currentDate->diffInDays($shippingDate);
-
-                        $disponibles= number_format(($interval+1)*0.0833333333333333,1);
-                        $this->periodos[$i]=array($i,date('d/m/'.$i,strtotime($contrato->fecha)),date('d/m/Y'),$tomadas,$disponibles);
-                    }else{
-                        $this->periodos[$i]=array($i,date('d/m/'.$i,strtotime($contrato->fecha)),date('d/m/'.($i+1),strtotime('+1 year '.$contrato->fecha)),$tomadas,$disponibles);
-                    }
+        $this->idPers = 0;
+        $data = Persona::leftjoin('rrhh_vinculo_laboral as vl', 'vl.persona_id', 'rrhh_personas.id')
+            ->select('vl.id', 'rrhh_personas.apellidoPaterno', 'rrhh_personas.apellidoMaterno', 'rrhh_personas.nombres', 'vl.estado', 'vl.fecha_inicio as fecha')
+            ->where('numeroDocumento', $this->documento)->first();
+        if($data){
+            if($data->estado == 1){
+                $this->nombres = $data->apellidoPaterno.' '.$data->apellidoMaterno.', '.$data->nombres;
+                $this->idPers = $data->id;
+                $archivo = 'legajos/'.$this->idPers.'/permisos.pdf';
+                $rutaCompleta = public_path($archivo);
+                if (file_exists($rutaCompleta)) {
+                    $this->existe = true;
+                } else {
+                    $this->existe = false;
                 }
+                $this->dispatch('alert_info', ['mensaje' => 'Trabajador Encontrado']);
             }else{
-                $this->alert('error', 'El D.N.I. '.$this->documento.', no tiene contrato activo.');
+                $this->dispatch('alert_danger', ['mensaje' => 'Trabaja no tiene un contrato vigente']);
             }
         }else{
             $this->nombres = '';
-            $this->state['persona_id'] = 0;
-            $this->alert('error', 'Nro. de documento no existe');
+            $this->dispatch('alert_danger', ['mensaje' => 'Trabajador no Encontrado']);
         }
+    }
+    public function mount(){
+        $this->fecha = date('Y-m-d');
+        $this->inicio = date('h:i');
+        $this->fin = date('h:i');
     }
     public function guardar(){
-        $validatedData = $this->validate(['state.inicio' => 'required', 'state.fin' => 'required', 'state.periodo' => 'required|not_in:0']);
-        $dias = (strtotime($this->state['inicio'])-strtotime($this->state['fin']))/86400;
-        $dias = abs($dias); 
-        $dias = floor($dias)+1;
-        if ($this->periodo==0) {
-            $this->alert('error', 'Seleccione un trabajador válido.');
-        }else{
-            $tt=Ausencia::select(DB::raw("sum(dias) as total"))
-                ->where('vinculoLaboral_id','=', $this->state['vinculoLaboral_id'])
-                ->where('periodo','=',$this->periodo)
-                ->where('motivoAusencia_id','=',1)->first();
-            
-            $res=30-$tt->total;
-
-            if (intval($res)<intval($dias)) {
-                $this->alert('error', 'Los dias programados exceden a los disponibles.');
-            }else{
-                $this->state['dias'] = $dias;
-                $this->state['motivoAusencia_id'] = 1;
-                $this->state['created_by'] = auth()->user()->id;
-                $this->state['created_at'] = date('Y-m-d H:i');
-                $insertado = Ausencia::create($this->state);
-                
-                if($insertado){
-                    $this->alert('success', 'Vacaciones guardadas correctamente');
-                    $this->showModal = false;
+        $this->validate(['fecha' => 'required', 'inicio' => 'required', 'fin' => 'required', 'tipo' => 'required', 'motivo' => 'required|not_in:0']);
+        try {
+            $this->state = [
+                'vinculoLaboral_id' => $this->idPers,
+                'tipo' => 2, 
+                'dias' =>1,
+                'motivoAusencia_id' => $this->motivo, 
+                'fecha' => $this->fecha, 
+                'inicio' => $this->fecha.' '.$this->inicio, 
+                'fin' => $this->fecha.' '.$this->fin, 
+                'observaciones' => $this->observaciones,
+                'created_by' => auth()->user()->id,
+                'created_at' => date('Y-m-d H:i')
+            ];
+            $insertado = Ausencia::create($this->state);
+                    
+            if($insertado){
+                $this->dispatch('alert_info', ['mensaje' => 'Permiso guardado correctamente']); 
+            }
+            if ($this->archivo) {
+                if($this->existe && !$this->reemplaza){
+                    $rutaTemporalA = $this->archivo->store('temp', 'public');
+                    $pdfMerge = new PdfMerge();
+                    $pdfMerge->add(Storage::disk('public')->path($rutaTemporalA));
+                    $pdfPathB = public_path('legajos/'.$this->idPers.'/permisos.pdf');
+                    $pdfMerge->add($pdfPathB);
+                    $pdfMerge->merge(public_path('legajos/'.$this->idPers.'/permisos.pdf'));
+                    Storage::disk('public')->delete($rutaTemporalA);
+                }else{
+                    $file = $this->archivo->getClientOriginalName();
+                    $extension = pathinfo($file, PATHINFO_EXTENSION);
+                    $nombre = 'permisos.'.$extension;
+                    $this->archivo->storeAs('legajos/'.$this->idPers.'/',$nombre, 'public');
                 }
             }
+            $this->dispatch('verModal', ['id' => 'form2', 'accion' => 'hide']);
+            $this->dispatch('rTabla');
+        } catch (\Exception $e) {
+            dd($e);
+           //$this->mensajedeError();
         }
     }
-    public function render() {
+    public function render(){
+        $this->motivos = AusenciaMotivo::where('tipoAusencia_id', 2)->where('pagado', $this->tipo)->get();
         return view('livewire.rrhh.asistencias.permisos-licencias.components.nuevo-permisos');
     }
 }

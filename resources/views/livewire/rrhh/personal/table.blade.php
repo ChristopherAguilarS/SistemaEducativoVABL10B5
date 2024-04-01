@@ -23,7 +23,7 @@
                                         $meses = ['', 'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
                                     ?>
                                     @foreach ($especificas as $especifica)
-                                        <tr>                
+                                        <tr class="@if($selTab == $especifica->id) bg-info-subtle @endif">                
                                             <td class="font-medium align-middle">
                                                 {{ $loop->iteration}}
                                             </td>

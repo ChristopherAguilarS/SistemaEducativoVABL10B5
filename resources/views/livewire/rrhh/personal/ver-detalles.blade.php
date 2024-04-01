@@ -16,9 +16,14 @@
                                 <div class="card-body p-4">
                                     <div class="text-center">
                                         <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                                            <img src="assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xl img-thumbnail user-profile-image material-shadow" alt="user-profile-image">
+                                            @if($foto)
+                                                <img src="{{ $foto->temporaryUrl() }}" class="rounded-circle avatar-xl img-thumbnail user-profile-image material-shadow" alt="user-profile-image">
+                                            @else
+                                                <img src="{{ asset($urlFoto) }}" class="rounded-circle avatar-xl img-thumbnail user-profile-image material-shadow" alt="user-profile-image">
+                                            @endif
+                                            
                                             <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                                <input id="profile-img-file-input" type="file" wire:model.live="Foto" class="profile-img-file-input">
+                                                <input id="profile-img-file-input" type="file" wire:model.live="foto" class="profile-img-file-input">
                                                 <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
                                                     <span class="avatar-title rounded-circle bg-light text-body material-shadow">
                                                         <i class="ri-camera-fill"></i>
@@ -26,8 +31,18 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <h5 class="fs-16 mb-1">Anna Adame</h5>
-                                        <p class="text-muted mb-0">Lead Designer / Developer</p>
+                                        <!--
+                                        <h5 class="fs-16 mb-1">Anna Adame</h5>-->
+                                        <p class="text-muted mb-0">
+                                            <?php
+                                                if($foto){
+                                                    echo $foto->getClientOriginalName();
+                                                }else{
+                                                    echo ' Click para subir archivo';
+                                                }
+                                            ?>
+                                        </p>
+
                                     </div>
                                 </div>
                             </div>
@@ -178,24 +193,44 @@
                                 <div class="col-lg-6">
                                     <div class="col-md-8 offset-md-2">
                                         <span class="btn btn-light" style="width: 100%">
-                                            <i class="mdi mdi-file-pdf"></i> Click, subir PDF
-                                            <div wire:loading="" wire:target="Ficha">
+                                            @if($ficha)
+                                                <i class="bx bx-check-square" style="color:green"></i>
+                                            @else
+                                                <i class="bx bxs-file-pdf"></i>
+                                            @endif
+                                            @php
+                                                if($ficha){
+                                                    echo $ficha->getClientOriginalName();
+                                                }else{
+                                                    echo ' Click para subir archivo';
+                                                }
+                                            @endphp
+                                            <div wire:loading="" wire:target="ficha">
                                                 <i class="fas fa-spinner fa-spin"></i>
                                             </div>
-                                            <input type="file" style="width:100%;height:100%;position:absolute;top:0;left:0;opacity:0;cursor:pointer;" wire:model.live="Ficha" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="El archivo debe ser en formato pdf y no debe ser mayor a 100 MB. 
-                                                            Si ya cuenta con un archivo guardado anteriormente el sistema lo actualizara con el nuevo archivo" aria-describedby="tooltip692752">
+                                            <input type="file" style="width:100%;height:100%;position:absolute;top:0;left:0;opacity:0;cursor:pointer;" wire:model.live="ficha">
                                         </span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="col-md-8 offset-md-2">
                                         <span class="btn btn-light" style="width: 100%">
-                                            <i class="mdi mdi-file-pdf"></i> Click, subir PDF
-                                            <div wire:loading="" wire:target="Ficha">
+                                            @if($dni)
+                                                <i class="bx bx-check-square" style="color:green"></i>
+                                            @else
+                                                <i class="bx bxs-file-pdf"></i>
+                                            @endif
+                                            @php
+                                                if($dni){
+                                                    echo $dni->getClientOriginalName();
+                                                }else{
+                                                    echo ' Click para subir archivo';
+                                                }
+                                            @endphp
+                                            <div wire:loading="" wire:target="dni">
                                                 <i class="fas fa-spinner fa-spin"></i>
                                             </div>
-                                            <input type="file" style="width:100%;height:100%;position:absolute;top:0;left:0;opacity:0;cursor:pointer;" wire:model.live="Ficha" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="El archivo debe ser en formato pdf y no debe ser mayor a 100 MB. 
-                                                            Si ya cuenta con un archivo guardado anteriormente el sistema lo actualizara con el nuevo archivo" aria-describedby="tooltip692752">
+                                            <input type="file" style="width:100%;height:100%;position:absolute;top:0;left:0;opacity:0;cursor:pointer;" wire:model.live="dni">
                                         </span>
                                     </div>
                                 </div>

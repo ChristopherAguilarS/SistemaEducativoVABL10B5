@@ -1,54 +1,69 @@
 <?php
 
-namespace App\Http\Livewire\Rrhh\Asistencias\PermisosLicencias;
+namespace App\Livewire\Rrhh\Asistencias\PermisosLicencias;
+
+use App\Models\RecursosHumanos\VinculoLaboral;
+use App\Models\SubGenericaNivel2;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use DB;
-
-use App\Models\Rrhh\VinculoLaboral;
-use App\Models\Administracion\Local;
-
 class Table extends Component
 {
     use WithPagination;
-    protected $listeners = ['renderizar', 'rtabla'];
-    public $anio, $mes, $tipo = 0, $estado = 2, $lugar, $perPage = 20;
+    protected $paginationTheme = 'bootstrap', $r_val, $r_campo;
 
-    public function renderizar(){
+    public function mount(){
+        $this->subgenericas = SubGenericaNivel2::where('estado',1)->orderBy('descripcion')->get();
+    }
+
+    #[On('rTabla')]
+    public function rTabla(){
         $this->render();
     }
-    public function rtabla($lugar, $mes, $anio, $estado, $tipo){
-        $this->lugar = $lugar;
-        $this->mes = $mes;
-        $this->anio = $anio;
-        $this->estado = $estado;
-        $this->tipo = $tipo;
+    #[On('resetFiltroDocumentoPersona')]
+    public function resetFiltroDocumentoPersona($doc){
+        $this->r_val = "numeroDocumento like '".$doc."'";
+    }
+    #[On('resetFiltroNombrePersona')]
+    public function resetFiltroNombrePersona($ap1, $ap2, $nom){
+        $this->r_val = "(apellidoPaterno like '%".$ap1."%' and apellidoMaterno like '%".$ap2."%' and nombres like '%".$nom."%')";
+    }
+    #[On('updTable')]
+    public function updTable($tipo, $condicion, $area){
+        $d = [];
+        if($tipo){
+            $d[] = "catalogo_tipo_trabajador_id = ".$tipo; 
+        }
+        if($condicion){
+            $d[] = "catalogo_condiciones_id = ".$condicion; 
+        }
+        if($area){
+            $d[] = "catalogo_area_id = ".$area; 
+        }
+        $d = implode(' and ', $d);
+        $this->r_val = "(".$d.")";
     }
     public function render(){
-       $data = VinculoLaboral::join('rrhh_personas as p', 'p.id', 'rrhh_vinculo_laboral.persona_id')
-        ->join('adm_locales as al', 'al.id', 'rrhh_vinculo_laboral.local_id')
-        ->join('rrhh_catalogo_cargos as cc', 'cc.id', 'rrhh_vinculo_laboral.catalogoCargo_id')
-        ->select('rrhh_vinculo_laboral.id', 'nombreCorto','cc.nombre as cargo', DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.motivoAusencia_id = 1) AS vacaciones'), DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.motivoAusencia_id = 2) AS permisos'), DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.motivoAusencia_id = 3) AS licencias'),'catalogoTipo_id', 'al.nombre as proy', 'codigoProyecto as cod', 'numeroDocumento', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) AS nombres"), 'rrhh_vinculo_laboral.fecha', 'rrhh_vinculo_laboral.acuerdoTipo', 'rrhh_vinculo_laboral.estado');
-        if($this->lugar){
-            $data = $data->where('rrhh_vinculo_laboral.local_id', $this->lugar);
-        }else{
-            if(!auth()->user()->master){
-                $data = $data->whereRaw('rrhh_vinculo_laboral.local_id in (SELECT local_id FROM users_locales WHERE user_id='.auth()->user()->id.')');
-            }
+        $especificas = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
+            ->leftjoin('rrhh_catalogo_condiciones as cc', 'cc.id', 'rrhh_vinculo_laboral.catalogo_condiciones_id')
+            ->leftjoin('rrhh_catalogo_areas as ca', 'ca.id', 'rrhh_vinculo_laboral.catalogo_area_id')
+            ->select(
+                DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 
+                'numeroDocumento AS dni', 
+                'rrhh_vinculo_laboral.id', 
+                'rrhh_vinculo_laboral.fecha_inicio', 
+                'ca.descripcion as area', 
+                'catalogo_tipo_trabajador_id',
+                DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.tipo = 1) AS vacaciones'), 
+                DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.tipo = 2) AS permisos'), 
+                DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.tipo = 3) AS licencias'),
+                DB::raw('(SELECT sum(dias) FROM rrhh_ausencias ra where ra.vinculoLaboral_id = rrhh_vinculo_laboral.id and ra.tipo = 4) AS comisiones')
+            );
+        if($this->r_val){
+            $especificas = $especificas->whereRaw($this->r_val);
         }
-        if ($this->tipo) {
-            $data = $data->where('catalogoTipo_id', $this->tipo);
-        }
-        if ($this->estado == 1) {
-            $data = $data->where('rrhh_vinculo_laboral.estado', 1);
-        }elseif($this->estado == 0){
-            $data = $data->whereIn('rrhh_vinculo_laboral.estado', [1, 2]);
-        }
-        /*
-        if ($this->tipo) {
-            $data = $data->where('grado_id', $this->grado);
-        }
-*/
-       return view('livewire.rrhh.asistencias.permisos-licencias.table',['posts' => $data->orderby('nombres', 'asc')->paginate($this->perPage)]);
+        $especificas = $especificas->paginate(10);
+        return view('livewire.rrhh.asistencias.permisos-licencias.table',['especificas'=>$especificas]);
     }
 }

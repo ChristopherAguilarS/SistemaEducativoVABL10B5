@@ -20,16 +20,11 @@
                                         <label class="form-label" for="steparrow-gen-info-email-input">Solicitante <font style="color:red">(*)</font></label>
                                         <select class="form-select" wire:model.live="state.trabajador_id" aria-label="Default select example">
                                             <option value="0">Seleccione </option>
-                                            <option value="1" wire:key="1">DOCUMENTO NACIONAL DE IDENTIDAD</option>   
-                                            <option value="4" wire:key="4">CARNET DE EXTRANJERÍA</option>    
-                                            <option value="6" wire:key="6">REGISTRO UNICO DE CONTRIBUYENTES</option>    
-                                            <option value="7" wire:key="7">PASAPORTE</option>    
-                                            <option value="A" wire:key="A">CÉDULA DIPLOMATICA DE IDENTIDAD</option>    
-                                            <option value="B" wire:key="B">DOC.IDENT.PAIS.RESIDENCIA-NO.D</option>    
-                                            <option value="C" wire:key="C">TAX IDENTIFICATION NUMBER - TIN – DOC TRIB PP.NN</option>    
-                                            <option value="D" wire:key="D">IDENTIFICATION NUMBER - IN – DOC TRIB PP. JJ</option>    
-                                            <option value="E" wire:key="E">TAM- TARJETA ANDINA DE MIGRCIÓN</option>    
-                                            <option value="F" wire:key="F">PERMISO TEMPORAL DE PERMANENCIA - PTP</option>    
+                                            @if($trabajadores)
+                                                @foreach($trabajadores as $trabajador)
+                                                    <option value="{{$trabajador->id}}">{{$trabajador->dni.'-'.$trabajador->nombres}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                         @error('state.trabajador_id')
                                             <small style="color:red">(*) Obligatorio</small>
@@ -55,6 +50,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @if($ver != 3)
                             <h6 style="display: flex; align-items: center;">
                                 <i class="bx bxs-user-voice" style="font-size: 22px; margin-right: 5px;"></i>
                                 <span style="margin-right: 5px;">ITEMS</span>
@@ -73,11 +69,14 @@
                                                     @endforeach
                                                 @endif
                                             </select>
+                                            @error('prod.item_id')
+                                                <small style="color:red">(*) Obligatorio</small>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-3">
-                                            <label class="form-label" for="steparrow-gen-info-email-input">Partida de Control</label>
+                                            <label class="form-label" for="steparrow-gen-info-email-input">Tarea</label>
                                             <select wire:model="prod.partida" class="form-select form-select-sm">
                                                 <option value="0">Seleccione</option>
                                                 @if($partidas)
@@ -86,12 +85,18 @@
                                                     @endforeach
                                                 @endif
                                             </select>
+                                            @error('prod.partida')
+                                                <small style="color:red">(*) Obligatorio</small>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="mb-3">
                                             <label class="form-label" for="steparrow-gen-info-email-input">Cantidad</label>
                                             <input type="number" wire:model="prod.cantidad" class="form-control form-control-sm text-center">
+                                            @error('prod.cantidad')
+                                                <small style="color:red">(*) Obligatorio</small>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-lg-2 mt-4 text-center">
@@ -101,32 +106,36 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="table-responsive table-card">
-                                                <table class="table table-nowrap table-striped-columns mb-4">
+                                                <table class="table table-hover align-middle table-nowrap mb-0">
                                                     <thead>
                                                         <tr>
                                                             @if($ver == 3)
                                                                 <th
                                                                     style="width:5px"
+                                                                    class="text-center"
                                                                 >
-                                                                    <i class="fa fa-hourglass-half"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="1" name="todo" class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:!border-warning checked:bg-warning hover:!border-warning focus:!border-warning dark:border-navy-400" type="radio">
+                                                                    <i class="bx bx-hourglass text-warning" style="font-size:18px"></i><br>
+                                                                    <input wire:model="todo" wire:click="toggleAll" value="1" name="todo" type="radio">
                                                                 </th>
                                                                 <th
                                                                     style="width:5px"
+                                                                    class="text-center"
                                                                 >
-                                                                    <i class="fa fa-check"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="2" name="todo" class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:!border-success checked:bg-success hover:!border-success focus:!border-success dark:border-navy-400" type="radio">
+                                                                    <i class="bx bx-check text-success" style="font-size:18px"></i><br>
+                                                                    <input wire:model="todo" wire:click="toggleAll" value="2" name="todo" type="radio">
                                                                 </th>
                                                                 <th
                                                                     style="width:5px"
+                                                                    class="text-center"
                                                                 >
-                                                                    <i class="fa fa-ban"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="3" name="todo" class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:!border-error checked:bg-error hover:!border-error focus:!border-error dark:border-navy-400" type="radio">
+                                                                    <i class="bx bx-no-entry text-danger" style="font-size:18px"></i><br>
+                                                                    <input wire:model="todo" wire:click="toggleAll" value="3" name="todo" type="radio">
                                                                 </th>
                                                             @else
                                                                 <th
@@ -136,14 +145,10 @@
                                                                     Estado
                                                                 </th>
                                                                 @endif
-                                                                <th
-                                                                    class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                                                                >
+                                                                <th>
                                                                     Item
                                                                 </th>
-                                                                <th
-                                                                    class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                                                                >
+                                                                <th>
                                                                     Partida
                                                                 </th>
                                                             @if($ver == 2)
@@ -210,14 +215,10 @@
                                                                             </td>
                                                                         @else
                                                                             <td>
-                                                                                <label class="inline-flex items-center space-x-2">
-                                                                                    <input wire:model="ap.{{$item['id']}}" value="1" name="ap{{$item['id']}}" class="form-radio mt-2 is-basic h-5 w-5 rounded-full border-slate-400/70 checked:!border-warning checked:bg-warning hover:!border-warning focus:!border-warning dark:border-navy-400" type="radio">
-                                                                                </label>
+                                                                                <input wire:model="ap.{{$item['id']}}" value="1" name="ap{{$item['id']}}" class="form-radio mt-2 is-basic h-5 w-5 rounded-full border-slate-400/70 checked:!border-warning checked:bg-warning hover:!border-warning focus:!border-warning dark:border-navy-400" type="radio">
                                                                             </td>
                                                                             <td>
-                                                                                <label class="inline-flex items-center space-x-2">
-                                                                                    <input wire:model="ap.{{$item['id']}}" value="2" name="ap{{$item['id']}}" class="form-radio mt-2 is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-success checked:bg-success hover:border-success focus:border-success dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent" type="radio">
-                                                                                </label>
+                                                                                <input wire:model="ap.{{$item['id']}}" value="2" name="ap{{$item['id']}}" class="form-radio mt-2 is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-success checked:bg-success hover:border-success focus:border-success dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent" type="radio">
                                                                             </td>
                                                                             <td>
                                                                                 <label class="inline-flex items-center space-x-2">
@@ -293,9 +294,7 @@
                                                                             </div>
                                                                         </td>
                                                                         <td class="text-center ">
-                                                                            <label class="inline-flex items-center space-x-2">
-                                                                                <input wire:model.lazy="cant.apro.{{$item['id']}}" @if($ver != 3) disabled @endif  type="number" class="text-center form-input w-full h-8 rounded border border-slate-300 bg-transparent px-3 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
-                                                                            </label>
+                                                                            <input wire:model.lazy="cant.apro.{{$item['id']}}" @if($ver != 3) disabled @endif  type="number" class="text-center form-input w-full h-8 rounded border border-slate-300 bg-transparent px-3 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
                                                                         </td>
                                                                     @else
                                                                         <td class="text-center">
@@ -304,9 +303,7 @@
                                                             
                                                                             @if($ver == 3 || $ver == 2)
                                                                                 <td class="text-center ">
-                                                                                    <label class="inline-flex items-center space-x-2">
-                                                                                        <input wire:model.lazy="cant.apro.{{$item['id']}}" @if($ver != 3) disabled @endif  type="number" class="text-center form-input w-full h-8 rounded border border-slate-300 bg-transparent px-3 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
-                                                                                    </label>
+                                                                                    <input wire:model.lazy="cant.apro.{{$item['id']}}" @if($ver != 3) disabled @endif  type="number" class="text-center form-input w-full h-8 rounded border border-slate-300 bg-transparent px-3 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
                                                                                 </td>
                                                                             @endif
                                                                     
@@ -345,8 +342,24 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <?php
+                            if($ver == 3){
+                                $fun = 'aprobar1';
+                            }else{
+                                $fun = 'guardarPedido';
+                            }
+                            if($ver == 2){
+                                $est = 'disabled';
+                            }else{
+                                $est = '';
+                            }
+                        ?>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-info " wire:click="guardarPedido" wire:loading.attr="disabled">Guardar</button>
+                    <button type="button" class="btn btn-info " wire:click="{{$fun}}" wire:loading.attr="disabled">
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
+                        Guardar
+                    </button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

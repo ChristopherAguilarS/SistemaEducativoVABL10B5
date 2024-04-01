@@ -5,10 +5,10 @@ namespace App\Models\FinancieroContable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Rrhh\Persona;
-use App\Models\Logistica\PedidoDetalle;
-use App\Models\Logistica\Almacen;
-use App\Models\Logistica\Compra;
+use App\Models\RecursosHumanos\Persona;
+use App\Models\FinancieroContable\PedidoDetalle;
+use App\Models\FinancieroContable\Almacen;
+use App\Models\FinancieroContable\Compra;
 class Pedido extends Authenticatable
 {
     use HasFactory, Notifiable;
