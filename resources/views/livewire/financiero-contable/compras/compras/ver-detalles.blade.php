@@ -15,14 +15,14 @@
                             </h6>
                             <hr style="margin: 10px; flex-grow: 1; border: none; border-top: 1px solid #000;">
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label class="form-label" for="steparrow-gen-info-email-input">Solicitante <font style="color:red">(*)</font></label>
-                                        <select class="form-select" wire:model.live="state.trabajador_id" aria-label="Default select example">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Apellidos y Nombres del Gestor de la Compra:<font style="color:red">(*)</font></label>
+                                        <select class="form-select form-select-sm" wire:model.defer="state.trabajador_id" aria-label="Default select example">
                                             <option value="0">Seleccione </option>
-                                            @if($trabajadores)
-                                                @foreach($trabajadores as $trabajador)
-                                                    <option value="{{$trabajador->id}}">{{$trabajador->dni.'-'.$trabajador->nombres}}</option>
+                                            @if($gestores)
+                                                @foreach($gestores as $trabajador)
+                                                    <option value="{{$trabajador->id}}">{{$trabajador->dni.'-'.$trabajador->nombres.' '.$trabajador->apellidoPaterno.', '.$trabajador->apellidoMaterno}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -31,74 +31,163 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Proveedor:<font style="color:red">(*)</font></label>
+                                        <select class="form-select form-select-sm" wire:model.live="state.proveedor_id" aria-label="Default select example">
+                                            <option value="0">Seleccione </option>
+                                            @if($proveedores)
+                                                @foreach($proveedores as $proveedor)
+                                                    <option value="{{$proveedor->id}}">{{$proveedor->nombre}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('state.proveedor_id')
+                                            <small style="color:red">(*) Obligatorio</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Fecha <font style="color:red">(*)</font></label>
+                                        <input type="date" wire:model="state.fecha" class="form-control form-control-sm">
+                                        @error('state.fecha')
+                                            <small style="color:red">(*) Obligatorio</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Fecha Entrega<font style="color:red">(*)</font></label>
+                                        <input type="date" wire:model="state.fecha_entrega" class="form-control form-control-sm">
+                                        @error('state.fecha_entrega')
+                                            <small style="color:red">(*) Obligatorio</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                
                                 <div class="col-lg-4">
                                     <div class="mb-3">
-                                        <label class="form-label" for="steparrow-gen-info-email-input">Moneda <font style="color:red">(*)</font></label>
-                                        <select class="form-select" wire:model.live="state.moneda_id" aria-label="Default select example">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Forma de Pago <font style="color:red">(*)</font></label>
+                                        <select class="form-select form-select-sm" wire:model="state.forma_pago_id" aria-label="Default select example">
                                             <option value="0">Seleccione </option>
-                                            <option value="1" wire:key="1">SOLES</option>
+                                            @foreach($formas as $forma)
+                                                <option value="{{$forma['id']}}">{{$forma['descripcion']}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('state.forma_pago_id')
+                                            <small style="color:red">(*) Obligatorio</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-<?php if($state['moneda_id'] == 2){echo '2';}else{echo '4';}?>">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Moneda <font style="color:red">(*)</font></label>
+                                        <select class="form-select form-select-sm" wire:model="state.moneda_id" aria-label="Default select example">
+                                            <option value="0">Seleccione </option>
+                                            @foreach($monedas as $moneda)
+                                                <option value="{{$moneda['id']}}">{{$moneda['nombre']}}</option>
+                                            @endforeach
                                         </select>
                                         @error('state.moneda_id')
                                             <small style="color:red">(*) Obligatorio</small>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
+                                @if($state['moneda_id'] == 2)
+                                    <div class="col-lg-4">
+                                        <b>T.C:</b>
+                                        <input type="text" wire:model="state.tipo_cambio" class="form-control form-control-sm">
+                                        @error('state.tipo_cambio')
+                                            <small style="color:red">(*) Obligatorio</small>
+                                        @enderror
+                                    </div>
+                                @endif
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="steparrow-gen-info-email-input">Lugar de Entrega</label>
+                                        <textarea class="form-control form-control-sm" wire:model="state.lugar_entrega" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
                                     <div class="mb-3">
                                         <label class="form-label" for="steparrow-gen-info-email-input">Observaciones</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea5" rows="3"></textarea>
+                                        <textarea class="form-control form-control-sm" wire:model="state.observaciones" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>
                             @if($ver != 3)
                             <h6 style="display: flex; align-items: center;">
                                 <i class="bx bxs-user-voice" style="font-size: 22px; margin-right: 5px;"></i>
-                                <span style="margin-right: 5px;">ITEMS</span>
+                                <span style="margin-right: 5px;">Ordenes de Compra/Servicio</span>
                             </h6>
                             <hr style="margin: 10px; flex-grow: 1; border: none; border-top: 1px solid #000;">
                             <div class="card-header bg-light">
                                 <div class="row" style="padding: 10px 20px;">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-10">
                                         <div class="mb-3">
-                                            <label class="form-label" for="steparrow-gen-info-email-input">Item</label>
-                                            <select wire:model="prod.item_id" class="form-select form-select-sm">
+                                            <label class="form-label" for="steparrow-gen-info-email-input">Compra/Servicio</label>
+                                            <select wire:model="pedido_id" class="form-select form-select-sm">
                                                 <option value="0">Seleccione</option>
-                                                
+                                                @if($pedidos_pend)
+                                                    @foreach($pedidos_pend as $pend)
+                                                        <option value="{{$pend->id}}">{{str_pad($pend->correlativo, 6, "0", STR_PAD_LEFT)}} - {{$pend->solicitante}}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
-                                            @error('prod.item_id')
-                                                <small style="color:red">(*) Obligatorio</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="steparrow-gen-info-email-input">Tarea</label>
-                                            <select wire:model="prod.partida" class="form-select form-select-sm">
-                                                <option value="0">Seleccione</option>
-                                                
-                                            </select>
-                                            @error('prod.partida')
-                                                <small style="color:red">(*) Obligatorio</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="steparrow-gen-info-email-input">Cantidad</label>
-                                            <input type="number" wire:model="prod.cantidad" class="form-control form-control-sm text-center">
-                                            @error('prod.cantidad')
+                                            @error('pedido_id')
                                                 <small style="color:red">(*) Obligatorio</small>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-lg-2 mt-4 text-center">
                                         <div class="mb-3">
-                                            <button type="button" class="btn btn-info btn-sm" wire:click="aniadir">+ Añadir Item</button>
+                                            <button type="button" class="btn btn-info btn-sm" wire:click="selPedido">+ Añadir</button>
                                         </div>
                                     </div>
+                                    <div class="col-lg-12">
+                                        <table class="table table-hover align-middle table-nowrap mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5px">Cód</th>
+                                                    <th>Solicitante</th>
+                                                    @if($ver == 1 || $ver == 4)
+                                                        <th style="width:5px">Acc.</th>
+                                                    @endif
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if(count($pedidos)>0)
+                                                    @foreach($pedidos as $item)
+                                                        <tr>
+                                                            <td>{{str_pad($item['correlativo'], 6, "0", STR_PAD_LEFT)}}</td>                                                   
+                                                            <td>{{$item['solicitante']}}</td>
+                                                            @if($ver == 1 || $ver == 4)
+                                                                <td>
+                                                                    <button wire:click="delPedido({{$item['id']}})" class="btn btn-danger btn-sm">
+                                                                        <i class="bx bx-trash"></i>
+                                                                    </button>
+                                                                </td>
+                                                            @endif
+                                                        </tr>
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="6"><i>No hay pedidos agregados</i></td>
+                                                    </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div> 
                                 </div>
                             </div>
                             @endif
+                            <h6 class="mt-4" style="display: flex; align-items: center;">
+                                <i class="bx bxs-user-voice" style="font-size: 22px; margin-right: 5px;"></i>
+                                <span style="margin-right: 5px;">Listado de Items</span>
+                            </h6>
+                            <hr style="margin: 10px; flex-grow: 1; border: none; border-top: 1px solid #000;">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="card">
@@ -107,93 +196,107 @@
                                                 <table class="table table-hover align-middle table-nowrap mb-0">
                                                     <thead>
                                                         <tr>
-                                                            @if($ver == 3)
-                                                                <th
-                                                                    style="width:5px"
-                                                                    class="text-center"
-                                                                >
-                                                                    <i class="bx bx-hourglass text-warning" style="font-size:18px"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="1" name="todo" type="radio">
-                                                                </th>
-                                                                <th
-                                                                    style="width:5px"
-                                                                    class="text-center"
-                                                                >
-                                                                    <i class="bx bx-check text-success" style="font-size:18px"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="2" name="todo" type="radio">
-                                                                </th>
-                                                                <th
-                                                                    style="width:5px"
-                                                                    class="text-center"
-                                                                >
-                                                                    <i class="bx bx-no-entry text-danger" style="font-size:18px"></i><br>
-                                                                    <input wire:model="todo" wire:click="toggleAll" value="3" name="todo" type="radio">
-                                                                </th>
-                                                            @else
-                                                                <th
-                                                                    style="width:5px"
-                                                                    
-                                                                >
-                                                                    Estado
-                                                                </th>
-                                                                @endif
-                                                                <th>
-                                                                    Item
-                                                                </th>
-                                                                <th>
-                                                                    Partida
-                                                                </th>
-                                                            @if($ver == 2)
-                                                                <th
-                                                                    style="width:5px"
-                                                                >
-                                                                    Solicita
-                                                                </th>
-                                                                <th
-                                                                    style="width:5px"
-                                                                >
-                                                                    En Almacen
-                                                                </th>
-                                                                <th
-                                                                    style="width:5px"
-                                                                >
-                                                                    Stock Actual
-                                                                </th>
-                                                                <th
-                                                                    style="width:120px"
-                                                                >
-                                                                    Aceptado
-                                                                </th>
-                                                            @else
-                                                                <th
-                                                                    style="width:120px"
-                                                                >
-                                                                    Solicitado
-                                                                </th>
-                                                                @if($ver == 2 || $ver == 3)
-                                                                    <th
-                                                                        style="width:120px"
-                                                                    >
-                                                                        Aceptado
-                                                                    </th>
-                                                                    @endif
+                                                            <th style="width:5px" rowspan="2">Cód</th>
+                                                            <th style="width:5px" rowspan="2">Pedido</th>
+                                                            <th rowspan="2">Item</th>
+                                                            <th style="width:5px" rowspan="2">Cantidad</th>
+                                                            <th style="width:5px" rowspan="2">Medida</th>
+                                                            <th style="width:120px" colspan="3">Precio Unitario</th>
+                                                            <th style="width:120px" colspan="2">Parcial</th>
+                                                            <th style="width:5px" rowspan="2">Tipo</th>
+                                                            @if($ver == 1 || $ver == 4)
+                                                                <th style="width:5px" rowspan="2">Acc.</th>
                                                             @endif
-                                                            <th
-                                                                style="width:5px"
-                                                            >
-                                                                Medida
-                                                            </th>
-                                                            @if($ver==4 || $ver==1)
-                                                                <th
-                                                                    style="width:5px"
-                                                                >
-                                                                    Acciones
-                                                                </th>
-                                                            @endif
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="width:120px">SIN IGV</th>
+                                                            <th style="width:5px">IGV</th>
+                                                            <th style="width:120px">Con IGV</th>
+                                                            <th style="width:120px">Sin IGV</th>
+                                                            <th style="width:120px">Con IGV</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        
+                                                    @if(count($items)>0)
+                                                        <?php $tt1 = 0; $tt2 = 0; ?>
+                                                        @foreach($items as $item)
+                                                            <tr style="background-color: @if(!$item['tpp']) #cffbd5 @elseif($item['eliminar']) #ffe0dd @endif"> 
+                                                                <td>
+                                                                    {{str_pad($item['idpd'], 6, "0", STR_PAD_LEFT)}}
+                                                                    @if(!$item['tpp'])
+                                                                        <br>
+                                                                        <i><b style="color:green">Se añadira</b></i>
+                                                                    @elseif($item['eliminar'])
+                                                                        <br>
+                                                                        <i><b style="color:red">Se Eliminara</b></i>
+                                                                    @endif
+                                                                </td>  
+                                                                <td>{{str_pad($item['correlativo'], 6, "0", STR_PAD_LEFT)}}</td>                                                       
+                                                                <td>{{$item['nom']}}</td>
+                                                                <td>
+                                                                    <button wire:click="$emit('editarCantidad',{{$item['id']}}, {{$almacen_tipo}}, {{$ver}})" class="btn btn-info btn-sm">
+                                                                        {{$item['mod_cant']?$item['mod_cant']:$item['cant']}} {{$item['mod_cant']?'(pend: '.($item['cant']-$item['mod_cant']).')':''}}
+                                                                    </button>
+                                                                </td>
+                                                                <td>
+                                                                    {{$item['medida']}}
+                                                                </td>
+                                                                <td>
+                                                                
+                                                                    {{$mon.number_format($item['com_sin_igv'], 2)}}
+                                                                </td>
+                                                                <td>
+                                                                    {{$item['com_igv']?'si':'no'}}
+                                                                </td>
+                                                                <td>
+                                                                    {{$mon.number_format($item['com_con_igv'], 2)}}
+                                                                </td>
+                                                                <td>
+                                                                <?php $tt1+=$item['com_par_sin_igv'];?>
+                                                                    {{$mon.number_format($item['com_par_sin_igv'], 2)}}
+                                                                </td>
+                                                                <td>
+                                                                <?php $tt2+=$item['com_par_con_igv'];?>
+                                                                    {{$mon.number_format($item['com_par_con_igv'], 2)}}
+                                                                </td>
+                                                                <td>
+                                                                    @if($item['tipo_seleccion'] == 1)
+                                                                        <span class="badge bg-info">
+                                                                            Pedido
+                                                                        </span>
+                                                                    @elseif($item['tipo_seleccion'] == 2)
+                                                                        <span class="badge bg-success">
+                                                                            Recurso
+                                                                        </span>
+                                                                    @endif
+                                                                </td>
+                                                                @if($ver == 1 || $ver == 4)
+                                                                <td>
+                                                                    <button wire:click="editarItem({{$item['id']}})" class="btn btn-info btn-sm">
+                                                                        <i class="bx bx-edit-alt"></i>
+                                                                    </button>
+                                                                    @if(($ver == 1 || $ver == 4) && !$item['eliminar'] && $item['tipo_seleccion'] == 2)
+                                                                        <button wire:click="delRecurso({{$item['id']}}, {{$item['tpp']}})" class="btn btn-danger btn-sm">
+                                                                            <i class="bx bx-trash"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                </td>
+                                                                @endif
+                                                            </tr>
+                                                        @endforeach
+                                                        <tr>
+                                                            <td colspan="5"><b>TOTAL</b></td>
+                                                            <td><b></b></td>
+                                                            <td></td>
+                                                            <td><b></b></td>
+                                                            <td><b>{{$mon.number_format($tt1, 2)}}</b></td>
+                                                            <td><b>{{$mon.number_format($tt2, 2)}}</b></td>
+                                                        </tr>
+                                                    @else
+                                                        <tr class="border border-transparent border-b-slate-200 dark:border-b-navy-500">
+                                                            <td colspan="13"><i>No hay pedidos agregados</i></td>
+                                                        </tr>
+                                                    @endif
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -205,20 +308,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <?php
-                            if($ver == 3){
-                                $fun = 'aprobar1';
-                            }else{
-                                $fun = 'guardarPedido';
-                            }
-                            if($ver == 2){
-                                $est = 'disabled';
-                            }else{
-                                $est = '';
-                            }
-                        ?>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-info " wire:click="{{$fun}}" wire:loading.attr="disabled">
+                    <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
                         <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
                         <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                         Guardar

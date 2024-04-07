@@ -17,5 +17,6 @@
     @livewire('financiero-contable.compras.compras.filtro')
     @livewire('financiero-contable.compras.compras.table')
     @livewire('financiero-contable.compras.compras.ver-detalles')
+    @livewire('financiero-contable.compras.compras.components.ver-recurso')
     @livewire('financiero-contable.compras.compras.editar-item')
 @endsection

@@ -4,25 +4,24 @@ use App\Models\FinancieroContable\Compra;
 use App\Models\FinancieroContable\CatalogoFormaPago;
 use App\Models\FinancieroContable\CompraPedido;
 use App\Models\FinancieroContable\CompraPedidoTemp;
-use App\Models\FinancieroContable\Almacen;
 use App\Models\FinancieroContable\Pedido;
 use App\Models\FinancieroContable\PedidoDetalle;
+use App\Models\FinancieroContable\CatalogoProveedor;
 use App\Models\FinancieroContable\GestorCompra;
 use App\Models\FinancieroContable\CompraDetalleTemp;
-use App\Http\Controllers\Rrhh\FuncionesCtrl;
-use App\Models\RecursosHumanos\Persona;
+use App\Http\Controllers\FinancieroContable\FuncionesCtrl;
 use App\Models\FinancieroContable\Moneda;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
 use DB;
 use App\Http\Controllers\Controller;
-use App\Models\RecursosHumanos\VinculoLaboral;
+use App\Models\FinancieroContable\Almacen;
 class VerDetalles extends Component {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $titulo, $items = [], $codEmp,$nomProv, $facturado = 0, $lugar_entrega,$monedas,$codProv,$pedidos = [],$cod, $almacen_tipo,$nomAlm, $nomAlmDes, $estado = 0,$state = ['almacen_id' => 0, 'tipo_id' => 1, 'estado' => 0, 'moneda_id' =>1], $ver = 0, $showModal = false, $editar = false, $idR, $idSel, $codProy, $nomProy, $codTrab, $nomTrab, $aprobar, $igv = [], $precio = ['monto', 'conIgv', 'sinIGV', 'pConIGV', 'pSinIGV'];
-    public $proveedores, $mon = '',$gestores, $formas, $tpp, $local_id, $idCorr, $ordenes_ids, $pedidos_ids, $trabajadores;
+    public $proveedores, $mon = '',$gestores, $formas, $tpp, $local_id, $idCorr, $ordenes_ids, $pedidos_ids, $pedidos_pend, $pedido_id;
     #[On('savPedido')]
     public function savPedido($cabecera, $detalle){
         if($this->items){
@@ -38,6 +37,45 @@ class VerDetalles extends Component {
         $this->pedidos = $this->pedidos + $cabecera;
         $this->dispatch('alert_info', ['mensaje' => 'Pedido añadido correctamente.']);
     }
+    public function selPedido(){
+        try{
+            DB::beginTransaction();
+                $sav = CompraPedidoTemp::updateorcreate(
+                    ['pedido_id' => $this->pedido_id], 
+                    [
+                        'almacen_id' => $this->local_id, 
+                        'almacen_tipo' => $this->almacen_tipo, 
+                        'created_by' => auth()->user()->id, 
+                        'created_at' => date('Y-m-d')
+                    ]);
+                if($sav){
+                    $ddtt = PedidoDetalle::where('pedido_id', $this->pedido_id)->whereRaw('estado = 2 and (compra_id is null or compra_id = 0)')->get();
+                    foreach ($ddtt as $item) {
+                        $sav = CompraDetalleTemp::updateorcreate(
+                            [
+                                'pedido_detalle_id' => $item->id,
+                                'created_by' => auth()->user()->id
+                            ], [
+                                'pedido_detalle_id' => $item->id, 
+                                'tipo_seleccion' => 1, 
+                                'almacen_id' => $this->local_id,
+                                'almacen_tipo' => $this->almacen_tipo, 
+                                'created_by' => auth()->user()->id, 
+                                'created_at' => date('Y-m-d')
+                            ]);
+                    }
+                }
+                $this->dispatch('rTab');
+            DB::commit();
+            $this->dispatch('alert_info', ['mensaje' => 'Pedido agregado correctamente.']);
+            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
+            $this->showModal = false;
+        }catch(\Exception $e){
+            DB::rollback();
+            dd($e);
+            $this->dispatch('alert_danger', ['mensaje' => 'Ocurrio un error inesperado.']);
+        }
+    }
     #[On('savItem')]
     public function savItem($arr){
         $this->items[$arr['id']] = $arr;
@@ -48,72 +86,22 @@ class VerDetalles extends Component {
         $this->items[$arr['id']]['mod_cant'] = $arr['mod_cant'];
         $this->dispatch('alert_info', ['mensaje' => 'Cantidad actualizada correctamente.']);
     }
-    #[On('savNewItem')]
-    public function savNewItem($arr){
-        $this->items[$arr['id']] = $arr;
-        $this->dispatch('alert_info', ['mensaje' => 'Item añadido correctamente.']);
-    }
-    #[On('selProv')]
-    public function selProv($id, $nom){
-        $this->proveedor_nom = $nom;
-        $this->dispatch('cerrarProv');
-        $this->state['proveedor_id'] = $id;
-    }
     public function editarItem($id){
         $this->dispatch('verRecurso',$this->items[$id], $this->ver);
-    }
-    #[On('selTrab')]
-    public function selTrab($cod, $doc = '', $nom = ''){
-        if ($cod) {
-            $this->codTrab = $doc;
-            $this->nomTrab = $nom;
-            $this->state['trabajador_id'] = $cod;
-            $this->dispatch('cerrarTrab');
-        }else{
-            $this->validate(['codTrab' => 'required']);
-            $data = Persona::join('rrhh_vinculo_laboral as v', 'v.persona_id', 'rrhh_personas.id')->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nom"), 'rrhh_personas.id')->where('v.estado', 1)->where('numeroDocumento', $this->codTrab)->first();
-            if ($data) {
-                $this->nomTrab = $data->nom;
-                $this->state['trabajador_id'] = $data->id;
-            }else{
-                $this->dispatch('alert_danger', ['mensaje' => 'El Documento no existe.']);
-            }
-        }
     }
     #[On('rTab')]
     public function rTab(){
         $this->obtItems($this->idSel);
         $this->obtPedidos($this->idSel);
     }
-
-    #[On('delRecurso')]
-    public function delRecurso($id, $tpp){
-        $this->idR = $id;
-        $this->tpp = $tpp;
-        $this->confirm('¿Desea eliminar el Recurso: #'.str_pad($id, 6, "0", STR_PAD_LEFT).'?', [
-            'onConfirmed' => 'brRecurso',
-            'confirmButtonText' => 'Eliminar',
-            'cancelButtonText' => 'Cancelar',
-        ]);
-    }
     public function cancelar(){
         $del1 = PedidoDetalle::where('compra_id', $this->idSel)->update(['eliminar' => 0]);
         $del2 = CompraDetalleTemp::where('created_by', auth()->user()->id)->delete();
         $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
-    }
-    #[On('brRecurso')]
-    public function brRecurso(){
-        if($this->editar){
-            $this->items[$this->idR]['eliminar'] = 1;
-            $this->items[$this->idR]['tpp'] = 1;
-        }else{
-            $del2 = CompraDetalleTemp::where('id', $this->idR)->delete();
-            $this->obtItems($this->idSel);
-        }
-        $this->dispatch('alert_success', ['mensaje' => 'Estado cambiado correctamente']);
+        $this->showModal = false;
     }
     #[On('brPedido')]
-    public function brPedido($id){
+    public function brPedido(){
         if($this->editar){
             $this->pedidos[$this->idR]['eliminar'] = 1;
             $this->pedidos[$this->idR]['tpp'] = 1;
@@ -132,17 +120,18 @@ class VerDetalles extends Component {
                 $ids = CompraDetalleTemp::whereIn('pedido_detalle_id', $ids)->delete();
             }
             $this->obtPedidos($this->idSel);
-        $this->obtItems($this->idSel);
+            $this->obtItems($this->idSel);
         }
-        $this->dispatch('alert_success', ['mensaje' => 'Pedido retirado correctamente']);
+        $this->dispatch('rTab');
+        $this->dispatch('alert_info', ['mensaje' => 'Pedido retirado correctamente']);
     }
     #[On('delPedido')]
     public function delPedido($id){
         $this->idR = $id;
-        $this->confirm('¿Desea eliminar el Pedido: #'.str_pad($id, 6, "0", STR_PAD_LEFT).'?', [
-            'onConfirmed' => 'brPedido',
-            'confirmButtonText' => 'Eliminar',
-            'cancelButtonText' => 'Cancelar',
+        $this->dispatch('confirmar', [
+            'mensaje' => '¿Desea eliminar el Pedido: #'.str_pad($id, 6, "0", STR_PAD_LEFT).'?', 
+            'detalle' => 'Se eliminara el nivel con codigo Nro.'.$id, 
+            'funcion' => 'brPedido'
         ]);
     }
     public function updatedStateMonedaId($id){
@@ -151,6 +140,7 @@ class VerDetalles extends Component {
         $this->state['tipo_cambio'] = $data['valor'];
     }
     public function obtItems($id){
+        $this->items = [];
         if($this->almacen_tipo == 1 || $this->almacen_tipo == 2){
             $l = 'log_insumos as l';
         }elseif($this->almacen_tipo == 3){
@@ -219,6 +209,7 @@ class VerDetalles extends Component {
         $this->items = $items->pluck(null, 'id')->toarray();
     }
     public function obtPedidos($id){
+        $this->pedidos = [];
         if($this->pedidos_ids){
             $pedidos = Pedido::leftjoin('rrhh_personas as p', 'p.id', 'log_pedidos.trabajador_id')
                     ->select(
@@ -241,12 +232,16 @@ class VerDetalles extends Component {
         $this->editar = false;
         if($ver == 1){
             $this->titulo = "Nueva Orden de Compra";
-            $nn =  $nn = Almacen::join('log_catalogo_categorias_almacenes as cc', 'cc.id', 'log_almacenes.categoria_id')
-                ->select('cc.tipo', 'log_almacenes.nombre as almacen')
-                ->where('log_almacenes.id', $loc)->first();
+            $nn = Almacen::join('log_catalogo_categorias_almacenes as cc', 'cc.id', 'log_almacenes.categoria_id')
+                ->select('cc.tipo', 'log_almacenes.nombre as almacen', 'log_almacenes.id')
+                ->where('log_almacenes.id', $loc)
+                ->first();
+            $this->codEmp = $nn->empRuc.' - '.$nn->empNom;
             $this->idSel = 0;
             $this->idCorr = 0;
             $this->almacen_tipo= $nn->tipo;
+            $this->local_id = $nn->id;
+            $this->nomAlm = $nn->almacen;
             $this->codTrab = '';
             $this->proveedor_nom = '';
             $this->codProv = '';
@@ -263,10 +258,14 @@ class VerDetalles extends Component {
             $this->editar = $id;
             $this->titulo = "Edición de Orden de Compra";
         }
+        $this->formas = CatalogoFormaPago::get()->toArray();
+        $this->monedas = Moneda::get()->toArray();
         if($id){
             $data= Compra::leftjoin('log_almacenes as la', 'la.id', 'log_compras.almacen_id')
                 ->leftjoin('log_catalogo_categorias_almacenes as cc', 'cc.id', 'la.categoria_id')
                 ->leftjoin('log_catalogo_proveedores as pp', 'pp.id', 'log_compras.proveedor_id')
+                ->leftjoin('adm_locales as l', 'l.id', 'la.local_id')
+                ->leftjoin('adm_empresas as ae', 'ae.id', 'l.empresa_id')
                 ->leftjoin('rrhh_personas as p', 'log_compras.trabajador_id', 'p.id')
                 ->leftjoin('adm_catalogo_monedas as m', 'log_compras.moneda_id', 'm.id')
                 ->select(
@@ -291,6 +290,7 @@ class VerDetalles extends Component {
                     'log_compras.fecha_entrega',
                     'codigoProyecto',
                     'log_compras.id',
+                    'l.nombre as local',
                     'la.id as almacen_id',
                     'log_compras.trabajador_id as trabajador_id',
                     'numeroDocumento',
@@ -299,6 +299,7 @@ class VerDetalles extends Component {
                     'la.nombre as almacen', 
                     'cc.tipo')
                 ->where('log_compras.id', $id)->first();
+                
             if(isset($data->ingreso_id) && $data->ingreso_id && $this->ver == 4){
                 $this->dispatchBrowserEvent('info', ['texto' => 'Ingreso Registrado ['.$data->codigoProyecto.'-'.$data->ingreso_id.']', 'footer' => 'No se puede editar una OC/OS que ya tiene un ingreso registrado.', 'icon' => 'warning']);
                 return;
@@ -333,7 +334,8 @@ class VerDetalles extends Component {
         $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'show']);
     }
     public function guardar() {
-        $this->validate(['state.fecha' => 'required', 'state.fecha_entrega' => 'required', 'state.lugar_entrega' => 'required|not_in:0', 'state.empresa_id' => 'required|not_in:0', 'state.proveedor_id' => 'required|not_in:0', 'state.almacen_id' => 'required|not_in:0', 'state.trabajador_id' => 'required|not_in:0']);
+        $this->validate(['state.fecha' => 'required', 'state.fecha_entrega' => 'required', 'state.proveedor_id' => 'required|not_in:0', 'state.almacen_id' => 'required|not_in:0', 'state.trabajador_id' => 'required|not_in:0']);
+        
         $err = 0;
         if($this->state['moneda_id'] == 2){
             $this->validate(['state.tipo_cambio' => 'required|not_in:0']);
@@ -425,7 +427,7 @@ class VerDetalles extends Component {
                     ]);
                 }
                 $this->obtItems($this->idSel);
-                $this->dispatch('renderizar');
+                $this->dispatch('renderizarTbl');
                 $this->dispatch('alert_info', ['mensaje' => 'OC/OS editada correctamente.']);
             }else{
                 $obj = new FuncionesCtrl();
@@ -479,6 +481,7 @@ class VerDetalles extends Component {
                                     $dt1_ids = $dt1->pluck('pedido_id');
                                     $dt2_ids = $dt2->pluck('pedido_detalle_id');
                                     $sav3 = Pedido::whereIn('id', $dt1_ids)->update(['compra_id' =>$sav->id]);
+                                    $sav4 = PedidoDetalle::whereIn('pedido_id', $dt1_ids)->whereRaw("(compra_id is null or compra_id =0)")->update(['compra_id' =>$sav->id]);
                                     $del1 = CompraPedidoTemp::whereIn('pedido_id', $dt1_ids)->delete();
                                     $del2 = CompraDetalleTemp::whereIn('pedido_detalle_id', $dt2_ids)->delete();
                                 }
@@ -509,12 +512,13 @@ class VerDetalles extends Component {
                         }
                     DB::commit();
                     $this->dispatch('alert_info', ['mensaje' => 'OC/OS guardada correctamente.']);
-                    $this->dispatch('renderizar');
-                    $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);            
+                    $this->dispatch('renderizarTbl');
+                    $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
+                               
                 }catch(\Exception $e){
                     DB::rollback();
                     dd($e);
-                    $this->dispatch('alert_info', ['mensaje' => 'Ocurrio un error inesperado.']);
+                    $this->dispatch('alert_danger', ['mensaje' => 'Ocurrio un error inesperado.']);
                 }
             }
         }
@@ -529,8 +533,8 @@ class VerDetalles extends Component {
             $del3 = PedidoDetalle::whereIn('compra_id', $ids)->update(['compra_id'=> 0]);
             $del4 = Pedido::whereIn('compra_id', $ids)->update(['compra_id'=> 0]);
         }
-        $this->dispatch('renderizar');
-        $this->dispatch('alert_info', ['mensaje' => 'Orden de Compra eliminado correctamente.']);
+        $this->dispatch('renderizarTbl');
+        $this->dispatch('alert_info', ['mensaje' => 'Orden de Compra eliminado correctamente']);
     }
     #[On('delCompra')]
     public function delCompra($id){
@@ -561,7 +565,7 @@ class VerDetalles extends Component {
     public function desaprobar(){
         $veri = Compra::where('id', $this->idSel)->first();
         if($veri->facturacion){
-            $this->dispatch('alert_info', ['mensaje' => 'Error: La OC/OS ya tiene una venta asociada.']);
+            $this->dispatch('alert_danger', ['mensaje' => 'Error: La OC/OS ya tiene una venta asociada.']);
         }else{
             $this->confirm('¿Desea Desaprobar la O/C: #'.str_pad($this->idCorr, 6, "0", STR_PAD_LEFT).'?', [
                 'onConfirmed' => 'desCompra',
@@ -580,8 +584,9 @@ class VerDetalles extends Component {
             ]);
         if($sav){
             $this->dispatch('alert_info', ['mensaje' => 'Compra aprobada correctamente.']);
-            $this->dispatch('renderizar');
-            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);  
+            $this->dispatch('renderizarTbl');
+            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
+             
         }
     }
     #[On('desCompra')]
@@ -594,17 +599,28 @@ class VerDetalles extends Component {
             ]);
         if($sav){
             $this->dispatch('alert_info', ['mensaje' => 'Compra desaprobada correctamente.']);
-            $this->dispatch('renderizar');
-            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);  
+            $this->dispatch('renderizarTbl');
+            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
+             
         }
     }
     public function render() {
-        $this->trabajadores = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
-        ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'p.id')
-        ->where('rrhh_vinculo_laboral.estado', 1)->get();
         $this->gestores = GestorCompra::join('rrhh_personas as p', 'p.id', 'log_gestores_compras.persona_id')
-        ->select('apellidoPaterno', 'apellidoMaterno', 'nombres', 'numeroDocumento', 'log_gestores_compras.estado', 'p.id')
-        ->get();
+            ->select('apellidoPaterno', 'apellidoMaterno', 'nombres', 'numeroDocumento', 'log_gestores_compras.estado', 'p.id')
+            ->get();
+            $this->proveedores = CatalogoProveedor::get();
+            $this->pedidos_pend = Pedido::join('log_almacenes as a', 'a.id', 'log_pedidos.almacen_id')
+                ->join('log_pedidos_detalles as pd', 'pd.pedido_id', 'log_pedidos.id')
+                ->leftjoin('log_compras_pedidos_temp as cp', 'cp.pedido_id', 'log_pedidos.id')
+                ->join('log_catalogo_categorias_almacenes as cc', 'cc.id', 'a.categoria_id')
+                ->join('rrhh_personas as p', 'p.id', 'log_pedidos.trabajador_id')
+                ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as solicitante"), 'log_pedidos.id', 'fecha', 'log_pedidos.correlativo', 'codigo_manual',)
+                ->where('cp.id', null)
+                ->where('log_pedidos.almacen_id', $this->local_id)
+                ->where('tipo_id', 1)
+                ->whereRaw('pd.estado = 2 and (pd.compra_id is null or pd.compra_id = 0)')
+                ->distinct()
+                ->get();
         return view('livewire.financiero-contable.compras.compras.ver-detalles');
     }
 }
