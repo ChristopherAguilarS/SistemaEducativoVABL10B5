@@ -264,10 +264,8 @@ class VerDetalles extends Component {
             $data= Compra::leftjoin('log_almacenes as la', 'la.id', 'log_compras.almacen_id')
                 ->leftjoin('log_catalogo_categorias_almacenes as cc', 'cc.id', 'la.categoria_id')
                 ->leftjoin('log_catalogo_proveedores as pp', 'pp.id', 'log_compras.proveedor_id')
-                ->leftjoin('adm_locales as l', 'l.id', 'la.local_id')
-                ->leftjoin('adm_empresas as ae', 'ae.id', 'l.empresa_id')
                 ->leftjoin('rrhh_personas as p', 'log_compras.trabajador_id', 'p.id')
-                ->leftjoin('adm_catalogo_monedas as m', 'log_compras.moneda_id', 'm.id')
+                ->leftjoin('log_catalogo_monedas as m', 'log_compras.moneda_id', 'm.id')
                 ->select(
                     'log_compras.correlativo',
                     'log_compras.id as idcompra',
@@ -276,10 +274,6 @@ class VerDetalles extends Component {
                     'log_compras.proveedor_id',
                     'pp.nombre as nomp',
                     'pp.id as idp',
-                    'ae.ruc as empRuc',
-                    'ae.id as empId',
-                    'ae.nombre as empNom',
-                    'ae.direccion as empDir',
                     'log_compras.observaciones',
                     'lugar_entrega',
                     'log_compras.fecha',
@@ -288,9 +282,7 @@ class VerDetalles extends Component {
                     'log_compras.fecha_entrega',
                     'log_compras.forma_pago_id',
                     'log_compras.fecha_entrega',
-                    'codigoProyecto',
                     'log_compras.id',
-                    'l.nombre as local',
                     'la.id as almacen_id',
                     'log_compras.trabajador_id as trabajador_id',
                     'numeroDocumento',
@@ -301,10 +293,10 @@ class VerDetalles extends Component {
                 ->where('log_compras.id', $id)->first();
                 
             if(isset($data->ingreso_id) && $data->ingreso_id && $this->ver == 4){
-                $this->dispatchBrowserEvent('info', ['texto' => 'Ingreso Registrado ['.$data->codigoProyecto.'-'.$data->ingreso_id.']', 'footer' => 'No se puede editar una OC/OS que ya tiene un ingreso registrado.', 'icon' => 'warning']);
+                $this->dispatch('info', ['mensaje' => 'Ingreso Registrado ['.$data->codigoProyecto.'-'.$data->ingreso_id.']', 'detalle' => 'No se puede editar una OC/OS que ya tiene un ingreso registrado.', 'icon' => 'warning']);
                 return;
             }elseif($data->estado == 2 && $ver == 4){
-                $this->dispatchBrowserEvent('info', ['texto' => 'Aprobado el '.date('d/m/Y', strtotime($data->usuario_aprueba_fecha)), 'footer' => 'Se debe retirar la aprobación para poder editar.', 'icon' => 'warning']);
+                $this->dispatch('info', ['mensaje' => 'Aprobado el '.date('d/m/Y', strtotime($data->usuario_aprueba_fecha)), 'detalle' => 'Se debe retirar la aprobación para poder editar.', 'icon' => 'warning']);
                 return;
             }else{
                 $this->proveedor_nom = $data->nomp;	
@@ -555,12 +547,8 @@ class VerDetalles extends Component {
         $this->formas = CatalogoFormaPago::where('estado', 1)->get();
         $this->monedas = Moneda::where('estado', 1)->get();
     }
-    public function aprobar(){
-        $this->confirm('¿Desea Aprobar la O/C: #'.str_pad($this->idCorr, 6, "0", STR_PAD_LEFT).'?', [
-            'onConfirmed' => 'apCompra',
-            'confirmButtonText' => 'Aprobar',
-            'cancelButtonText' => 'Cancelar',
-        ]);
+    public function aprobar2(){
+        $this->dispatch('confirmar', ['mensaje' => '¿Desea Aprobar la O/C: #'.str_pad($this->idCorr, 6, "0", STR_PAD_LEFT).'?', 'detalle' => '', 'funcion' => 'apCompra']);
     }
     public function desaprobar(){
         $veri = Compra::where('id', $this->idSel)->first();

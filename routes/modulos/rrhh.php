@@ -2,7 +2,7 @@
 //Dashboard Principal
 
 Route::prefix('/rrhh')->group(function () {
-        Route::get('/index', function () { return view('livewire.rrhh.index'); })->name('rrhh');
+        Route::get('/index', function () { return view('livewire.rrhh.index'); })->name('rrhh/index');
         Route::get('/personal/personal', function () { return view('livewire.rrhh.personal.index'); })->name('rrhh/personal/personal');
         Route::get('/personal/escalafon', function () { return view('livewire.rrhh.personal.escalafon.index'); })->name('rrhh/personal/escalafon');
         Route::get('/trabajadores', function () { return view('livewire.rrhh.trabajadores.index'); })->name('rrhh/trabajadores');

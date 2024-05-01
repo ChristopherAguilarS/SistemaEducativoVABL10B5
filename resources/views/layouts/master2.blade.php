@@ -175,7 +175,7 @@
                             @endphp
                             @foreach ($menus as $prin)
                                 <div class="col-xl-3 col-md-6">
-                                    <a href="{{ route($prin->vista) }}" class="card card-animate" style="background-color:{{$prin->color}}">
+                                    <a href="{{ route($prin->vista.'/index') }}" class="card card-animate" style="background-color:{{$prin->color}}">
                                         <div class="card-body text-center">
                                             <i class='bx bxs-{{$prin->icon}}' style="font-size:60px; color:white"></i>
                                             <br>

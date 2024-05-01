@@ -308,12 +308,39 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
-                        <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
-                        Guardar
+                    <?php
+                        if($ver == 3){
+                            if($estado == 2){
+                                $icon = 'ban';
+                                $fun = 'desaprobar';
+                                $nom = 'Desaprobar';
+                                $color = 'error';
+                            }else{
+                                $icon = 'check';
+                                $fun = 'aprobar2';
+                                $nom = 'Aprobar';
+                                $color = 'info';
+                            }
+                        }else{
+                            $icon = 'save';
+                            $fun = 'guardar';
+                            $nom = 'Guardar';
+                            $color = 'info';
+                        }
+                    ?>
+                    <button type="button" class="@if($ver==2) hidden @endif btn btn-{{$color}} " wire:click="{{$fun}}" wire:loading.attr="disabled">
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="{{$fun}}" style="display:none"></span>
+                        <i class="bx bx-{{$icon}}" wire:loading.remove="" wire:target="{{$fun}}"></i>
+                        {{$nom}}
                     </button>
+
+                    <button type="button" class="@if($estado!=2) hidden @endif btn btn-info " wire:click="$emit('verArchivo', {{$idSel}})" wire:loading.attr="disabled">
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <i class="bx bx-print" wire:loading.remove="" wire:target="guardar"></i>
+                        Imprimir
+                    </button>
+
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

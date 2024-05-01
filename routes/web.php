@@ -37,7 +37,7 @@ Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 //Route::get('/rrhh/index', function () { return view('livewire.configuracion.financiero.tipo-transaccion.index'); })->name('rrhh');
 Route::prefix('/configuracion')->group(function () {
-    Route::get('/index', function () { return view('livewire.configuracion.index'); })->name('configuracion');
+    Route::get('/index', function () { return view('livewire.configuracion.index'); })->name('configuracion/index');
     Route::prefix('/financiero')->group(function () {
         Route::get('/', function () { return view('livewire.configuracion.financiero.index'); })->name('configuracion/financiero');
         Route::get('/tipo-transaccion', function () {

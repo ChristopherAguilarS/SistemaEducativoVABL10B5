@@ -22,7 +22,12 @@ class Menus extends Component
             $this->prefix = $modulo;
         }
         $this->url = $modulo;
-        $this->modulo = vMenus::where('raiz', $modulo)->where('tipo', 1)->first()->nombre;
+        if($modulo == 'qr'){
+
+        }else{
+            $this->modulo = vMenus::where('raiz', $modulo)->where('tipo', 1)->first()->nombre;
+        }
+        
         $menus = vMenus::where('raiz', $modulo)->where('tipo', 2)->where('estado', 1)->orderby('pos', 'asc')->get();
         $sub_menus = vMenus::where('raiz', $modulo)->where('tipo', 3)->where('estado', 1)->get();
         foreach ($menus as $menu) {

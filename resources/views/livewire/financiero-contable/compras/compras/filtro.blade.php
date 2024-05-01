@@ -22,7 +22,7 @@
                             <div class="row g-2">
                                 <div class="col-lg-4">
                                     <b>Tipo</b>
-                                    <select wire:model="estado" class="form-select  mb-3 mt-2">
+                                    <select wire:model="tipo" class="form-select  mb-3 mt-2">
                                         <option value="1">Materiales y  Herramientas</option>
                                         <option value="2">Servicios</option>
                                         <option value="3">Equipos</option>

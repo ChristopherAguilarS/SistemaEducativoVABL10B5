@@ -76,6 +76,14 @@
                 }
             })
         });
+        window.addEventListener('info', event => {
+            console.log(event.detail[0]);
+            Swal.fire({
+                title: "<strong>"+ event.detail[0].mensaje +"</u></strong>",
+                icon: event.detail[0].icon,
+                html: event.detail[0].detalle
+            })
+        });
         window.addEventListener('alert_info', event => {
             Toastify({
                 text: event.detail[0].mensaje,

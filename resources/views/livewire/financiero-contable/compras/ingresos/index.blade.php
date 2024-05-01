@@ -1,0 +1,21 @@
+@extends('layouts.master')
+@section('title')
+    Ingresos
+@endsection
+@section('css')
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Compras
+        @endslot
+        @slot('title')
+            Ingresos
+        @endslot
+    @endcomponent
+    @livewire('financiero-contable.compras.ingresos.filtro')
+    @livewire('financiero-contable.compras.ingresos.table')
+    @livewire('financiero-contable.compras.ingresos.ver-detalles')
+    @livewire('financiero-contable.compras.ingresos.components.ver-recurso')
+    @livewire('financiero-contable.compras.ingresos.editar-item')
+@endsection

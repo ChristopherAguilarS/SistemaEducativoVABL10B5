@@ -1,57 +1,53 @@
 <?php
 
 namespace App\Livewire\FinancieroContable\Compras\Compras;
-use App\Models\FinancieroContable\Pedido;
-use App\Models\SubGenericaNivel2;
+use App\Models\FinancieroContable\Compra;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Carbon\Carbon;
 class Table extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $almacen, $search = null, $busq,$buscarPor = 2, $cbAnio, $cbMes, $cbDia, $txInicio, $txFin, $cbEstado = 0, $cbRevision = 0, $cbTipo = 0, $perPage = 20;
-    public function mount(){
-        $this->subgenericas = SubGenericaNivel2::where('estado',1)->orderBy('descripcion')->get();
-        $this->txInicio = date('Y-m-d');
-       $this->txFin = date('Y-m-d');
-    }
-    #[On('renderizarTbl')]
-    public function renderizarTbl(){
+    public $almacen, $search, $busq, $perPage = 20, $cbRevision,$txInicio, $txFin, $estado, $cbIngreso;
+    #[On('renderizar')]
+    public function renderizar(){
         $this->render();
     }
-    #[On('rTabla')]
-    public function rtabla($almacen, $buscarPor, $cbAnio, $cbMes, $cbDia, $txInicio, $txFin, $cbRevision, $cbTipo){
-        $this->almacen = $almacen;
-        $this->buscarPor = $buscarPor;
-        $this->cbAnio = $cbAnio;
-        $this->cbMes = $cbMes;
-        $this->cbDia = $cbDia;
+    public function buscar(){
+        $this->search = $this->busq;
+    }
+    public function mount(){
+        $this->txInicio = date('Y-m-d');
+        $this->txFin = date('Y-m-d');
+    }
+    #[On('rtabla')]
+    public function rtabla($tipo, $almacen_id, $cbRevision, $estado, $txInicio, $txFin){
+        $this->almacen = $almacen_id;
+        $this->tipo = $tipo;
+        $this->cbRevision = $cbRevision;
+        $this->estado = $estado;
         $this->txInicio = $txInicio;
         $this->txFin = $txFin;
-        $this->cbRevision = $cbRevision;
-        $this->cbTipo = $cbTipo;
     }
-   
     public function render(){
-        $inicio = Carbon::parse($this->txInicio)->startOfDay();
-        $fin = Carbon::parse($this->txFin)->endOfDay();
+        $data = Compra::leftjoin('log_catalogo_proveedores as cp', 'cp.id', 'log_compras.proveedor_id')
+            ->leftjoin('log_catalogo_monedas as m', 'log_compras.moneda_id', 'm.id')
+            ->select('log_compras.id', 'log_compras.correlativo','cp.nombre as proveedor', 'log_compras.almacen_id', 'log_compras.fecha', 'log_compras.estado', 'ingreso_id as ingreso', 'created_ingreso_at as fech_ingreso', 'log_compras.total', 'simbolo')
+             ->where('log_compras.ingreso_tipo', 2);
 
-        $data = Pedido::with('solicitante');
-        
-        if($this->cbRevision == 1){
-            $data = $data->whereRaw('(SELECT COUNT(*) FROM log_pedidos_detalles pd WHERE pd.pedido_id = log_pedidos.id and estado = 1) = 0');
-        }elseif($this->cbRevision == 2){
-            $data = $data->whereRaw('(SELECT COUNT(*) FROM log_pedidos_detalles pd WHERE pd.pedido_id = log_pedidos.id and estado = 1) > 0');
-        }
-        $data = $data->whereBetween('fecha', [$inicio, $fin]);
+        $data = $data->whereBetween('log_compras.fecha', [$this->txInicio, $this->txFin]);
+//dd($data->get());
         if($this->almacen){
-            $data = $data->where('almacen_id', $this->almacen);
+            $data = $data->where('log_compras.almacen_id', $this->almacen);
+        }elseif($this->estado == 2){
+
         }
+    
         if($this->search){
-            $data = $data->whereRaw("log_pedidos.id like '%".intval($this->search)."%'");
+            $data = $data->whereRaw("(log_compras.correlativo like '%".$this->search."%' or cp.nombre like '%".$this->search."%' or cp.id like '%".$this->search."%')");
         }
-        return view('livewire.financiero-contable.compras.compras.table',['posts' => $data->orderby('id', 'desc')->paginate($this->perPage)]);
+        
+       return view('livewire.financiero-contable.compras.compras.table',['posts' => $data->orderby('id', 'desc')->paginate($this->perPage)]);
     }
 }
