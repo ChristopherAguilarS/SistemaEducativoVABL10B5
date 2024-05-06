@@ -2,7 +2,7 @@
         <div class="modal-dialog  modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">{{ $titulo }}</h5>
+                    <h5 class="modal-title" id="myModalLabel">{{ $tituloModal }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <div class="modal-body"><hr style="width:100%; margin-top:-10px">

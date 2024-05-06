@@ -68,7 +68,6 @@ class VerDetalles extends Component {
                 $this->dispatch('rTab');
             DB::commit();
             $this->dispatch('alert_info', ['mensaje' => 'Pedido agregado correctamente.']);
-            $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
             $this->showModal = false;
         }catch(\Exception $e){
             DB::rollback();

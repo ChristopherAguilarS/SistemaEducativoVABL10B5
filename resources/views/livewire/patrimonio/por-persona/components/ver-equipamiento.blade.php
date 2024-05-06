@@ -229,7 +229,7 @@
                 </div>
             </div>
             <div class="modal-footer"><br><hr style="width:100%; margin-top:-10px">
-                <a type="button" class="btn btn-outline-info" href="/patrimonio/inventariado/{{$anio}}/{{$persona}}" target="_blank">
+                <a type="button" class="btn btn-outline-info" href="/inventariado/{{$anio}}/{{$persona}}" target="_blank">
                 <i class="fa fa-print mr-1"></i>Imprimir Ficha</a>
                 <button type="button" class="btn btn-light material-shadow-none" data-bs-dismiss="modal">Cerrar</button>
             </div>

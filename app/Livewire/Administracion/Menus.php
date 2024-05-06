@@ -29,7 +29,7 @@ class Menus extends Component
         }
         
         $menus = vMenus::where('raiz', $modulo)->where('tipo', 2)->where('estado', 1)->orderby('pos', 'asc')->get();
-        $sub_menus = vMenus::where('raiz', $modulo)->where('tipo', 3)->where('estado', 1)->get();
+        $sub_menus = vMenus::where('raiz', $modulo)->where('tipo', 3)->where('estado', 1)->orderby('pos', 'asc')->get();
         foreach ($menus as $menu) {
             $this->menus[$menu->id] = ['nombre' => $menu->nombre, 'icon' => $menu->icon, 'vista' => $menu->vista];
             $c = 0;

@@ -1,18 +1,16 @@
-<div class="modal fade" id="form2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog">
+<div wire:ignore.self id="form1" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog  modal-l">
         <div class="modal-content">
-            <div class="modal-header modal-colored-header bg-info">
-                <h5 class="text-white modal-title" id="exampleModalLabel">{{$titulo}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">{{ $titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"><hr style="width:100%; margin-top:-10px">
                 @if(!$edicion)
                     <div class="form-group row">
-                        <label class="text-left col-sm-3 control-label col-form-label"><b>Tipo</b></label>
-                        <div class="col-sm-9">
-                            <select class="form-control" wire:model="tipo">
+                        <label class="text-left col-3 control-label col-form-label"><b>Tipo</b></label>
+                        <div class="col-9">
+                            <select class="form-select" wire:model.live="tipo">
                                 <option value="1">Inventariar</option>
                                 <option value="2">Desplazar</option>
                             
@@ -21,10 +19,10 @@
                     </div>
                 @endif
                 
-                <div class="form-group row">
-                    <label class="text-left col-sm-3 control-label col-form-label"><b>Estado</b></label>
-                    <div class="col-sm-9">
-                        <select class="form-control" wire:model="estado">
+                <div class="form-group row mt-2">
+                    <label class="text-left col-3 control-label col-form-label"><b>Estado</b></label>
+                    <div class="col-9">
+                        <select class="form-select" wire:model="estado">
                             <option value="1">Bueno</option>
                             <option value="2">Regular</option>
                             <option value="3">Malo</option>
@@ -36,29 +34,28 @@
                     </div>
                 </div>
                 @if($tipo == 2)
-                    <div class="col-md-12">
+                    <div class="col-12">
                         <br>
-                        <h4 class="mb-0"><i class="mdi mdi-account-switch"></i> Información del Desplazamiento</h4>
-                        <br>
+                        <h5 class="mb-0"><i class="mdi mdi-account-switch"></i> Información del Desplazamiento</h5>
+                        <hr>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-12 mb-2">
                         <label><b>Busq. D.N.I</b></label>
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" wire:model="dni">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" wire:click="buscar" type="button"><i class="ti-search"></i></button>
-                            </div>
+                        <div class="input-group">
+                            <input type="text" wire:model="dni" class="form-control">
+                            <a class="input-group-text cursor-pointer" wire:click="buscar"><i class="bx bx-search-alt-2"></i></a>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-12">
                         <label><b>Apellidos y Nombres</b></label>
                         <input type="text" class="form-control" wire:model.defer="nombres" disabled>
                         <input type="hidden" wire:model="persona_id">
                     </div>
                 @endif
-                <div class="modal-footer">
-                    
-                    <button type="button" class="btn btn-outline-danger" wire:click="delInv"><i class="fa fa-times mr-1"></i>Eliminar</button>
+                @error('persona_id') <span class="text-danger-emphasis">(*)Debes Asignar el equipo a un trabajador</span> @enderror
+            </div>
+            <div class="modal-footer"><br><hr style="width:100%; margin-top:-10px">
+                <button type="button" class="btn btn-outline-danger" wire:click="delInv"><i class="fa fa-times mr-1"></i>Eliminar</button>
                     @if($edicion)
                         <button type="button" class="btn waves-effect waves-light btn-info" wire:click="save2">
                             <i class="fa fa-edit"></i> | Editar
@@ -72,9 +69,8 @@
                             @endif
                         </button>
                     @endif
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Cancelar</button>
-                </div>
+                <button type="button" class="btn btn-light material-shadow-none" data-bs-dismiss="modal">Cerrar</button>
             </div>
-        </div>
-    </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>

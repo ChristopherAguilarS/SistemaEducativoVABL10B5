@@ -15,6 +15,7 @@ class ComisionInventariado extends Model
         'anio',
         'tipo',
         'personaDni',
+        'persona_id',
         'personaNombres',
         'created_by',
         'created_at'

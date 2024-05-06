@@ -76,6 +76,7 @@ Route::middleware('auth')->group(__DIR__ . '/modulos/rrhh.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/academico.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/biblioteca.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/mesa-partes.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/expedientes.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/patrimonio.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/financiero-contable.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/administracion.php');

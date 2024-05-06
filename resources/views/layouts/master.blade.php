@@ -54,6 +54,8 @@
 <script src="{{ URL::asset('build/js/pages/dashboard-ecommerce.init.js') }}"></script>
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ URL::asset('build/libs/rater-js/index.js') }}"></script>
+<script src="{{ URL::asset('build/js/pages/rating.init.js') }}"></script>
     <script>
         window.addEventListener('confirmar', event => {
             console.log(event.detail[0]);
@@ -85,6 +87,28 @@
             })
         });
         window.addEventListener('alert_info', event => {
+            Toastify({
+                text: event.detail[0].mensaje,
+                className: "info",
+                gravity: "bottom", // `top` or `bottom`
+                position: "left", // `left`, `center` or `right`
+                style: {
+                    background: "#05ad64",
+                },
+            }).showToast()
+        });
+        window.addEventListener('alert_warning', event => {
+            Toastify({
+                text: event.detail[0].mensaje,
+                className: "info",
+                gravity: "bottom", // `top` or `bottom`
+                position: "left", // `left`, `center` or `right`
+                style: {
+                    background: "#fdda4b",
+                },
+            }).showToast()
+        });
+        window.addEventListener('alert_success', event => {
             Toastify({
                 text: event.detail[0].mensaje,
                 className: "info",

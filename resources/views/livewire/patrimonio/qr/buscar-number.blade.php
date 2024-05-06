@@ -1,17 +1,15 @@
-<div class="modal fade" id="form3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog">
+<div wire:ignore.self id="form2" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog  modal-l">
         <div class="modal-content">
-            <div class="modal-header modal-colored-header bg-info">
-                <h5 class="text-white modal-title" id="exampleModalLabel">Buscar por Código</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Buscar Equipo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
             </div>
-            <div class="modal-body">
-                <div class="row">
+            <div class="modal-body"><hr style="width:100%; margin-top:-10px">
+            <div class="row">
                     <div class="col-sm-12 col-md-12 mb-3 text-left">
                         <label><b>Tipo de busqueda</b></label>
-                        <select class="form-control" wire:model="tipo">
+                        <select class="form-control" wire:model.live="tipo">
                             <option value="1">Por Código Patrimonial</option>
                             <option value="2">Por Número de Serie</option>
                             <option value="3">Por Código de Barras</option>
@@ -19,10 +17,8 @@
                     </div>
                     <div class="col-sm-12 col-md-12 mb-3 text-left">
                         <div class="input-group">
-                            <input type="text" class="form-control" wire:model.defer="codigo">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" wire:click="buscar" type="button"><i class="ti-search"></i></button>
-                            </div>
+                            <input type="text" wire:model="codigo" class="form-control">
+                            <a class="input-group-text cursor-pointer" wire:click="buscarEq(1)"><i class="bx bx-search-alt-2"></i></a>
                         </div>
                     </div>
                     @if(!$existe && $buscar)
@@ -102,13 +98,18 @@
                         @endif
                     @endif
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal"><i class="fa fa-times mr-1"></i>Cancelar</button>
-                    <button type="button" class="btn waves-effect waves-light btn-info" wire:click="save">
-                        <i class="fa fa-save"></i> | GUARDAR
-                    </button>
-                </div>
             </div>
-        </div>
-    </div>
+            <div class="modal-footer"><br><hr style="width:100%; margin-top:-10px">
+                <button type="button" class="btn btn-outline-info" wire:click="save"><i class="fa fa-times mr-1"></i>Eliminar</button>
+
+                <button type="button" class="btn btn-light material-shadow-none" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>
+
+
+
+
+
+

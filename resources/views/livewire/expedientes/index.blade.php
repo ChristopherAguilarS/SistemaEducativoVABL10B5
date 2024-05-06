@@ -1,0 +1,20 @@
+@extends('layouts.master')
+@section('title')
+    Inicio
+@endsection
+@section('css')
+   
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Expedientes
+        @endslot
+        @slot('title')
+            Inicio
+        @endslot
+    @endcomponent
+    @livewire('expedientes.inicio.cards')
+@endsection
+@section('script')
+@endsection

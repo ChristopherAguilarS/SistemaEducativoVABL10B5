@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Equipamiento;
+namespace App\Models\Patrimonio;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ class CatalogoEquipo extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table='equipamiento.CatalogoEquipos';
+    protected $table='log_catalogo_equipos';
     protected $fillable=[
         'grupo',
         'clase',

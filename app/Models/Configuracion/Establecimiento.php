@@ -13,6 +13,7 @@ class Establecimiento extends Model
     protected $primaryKey = 'id';
     protected $fillable=[
         'id',
-        'inventariado_anio'
+        'inventariado_anio',
+        'estado'
     ];
 }

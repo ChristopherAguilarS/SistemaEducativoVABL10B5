@@ -99,7 +99,7 @@
                                                 @error('state.fecha_fin') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-4">
                                             <div class="mb-3">
                                                 <label class="form-label" for="steparrow-gen-info-email-input">Area</label>
                                                 <select class="form-select" wire:model.live="state.catalogo_area_id">
@@ -111,7 +111,19 @@
                                                 @error('state.catalogo_area_id') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-4">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="steparrow-gen-info-email-input">Tipo</label>
+                                                <select class="form-select" wire:model.live="state.catalogo_tipo_personal">
+                                                    <option value="0" selected="">Seleccione </option>
+                                                    @foreach($areas as $area)
+                                                        <option value="{{$area->id}}">{{$area->descripcion}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('state.catalogo_area_id') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
                                             <div class="mb-3">
                                                 <label class="form-label" for="steparrow-gen-info-email-input">Cargo</label>
                                                 <select class="form-select" wire:model.live="state.catalogo_cargo_id">

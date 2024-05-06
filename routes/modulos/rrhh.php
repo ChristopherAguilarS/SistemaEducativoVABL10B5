@@ -14,4 +14,5 @@ Route::prefix('/rrhh')->group(function () {
         Route::get('/asistencias/asistencia', function () { return view('livewire.rrhh.asistencias.asistencias.index'); })->name('rrhh/asistencias/asistencia');
         Route::get('/asistencias/permisos-licencias', function () { return view('livewire.rrhh.asistencias.permisos-licencias.index'); })->name('rrhh/asistencias/permisos-licencias');
         Route::get('/reportes', function () { return view('livewire.rrhh.index'); })->name('rrhh/reportes');
+        Route::get('/configuracion/catalogo-areas', function () { return view('livewire.rrhh.configuracion.catalogo-areas.index'); })->name('rrhh/configuracion/catalogo-areas');
 });

@@ -19,4 +19,5 @@
     @livewire('patrimonio.por-persona.filtro')
     @livewire('patrimonio.por-persona.table')
     @livewire('patrimonio.por-persona.components.ver-equipamiento')
+    @livewire('patrimonio.por-persona.components.ver-comision')
 @endsection

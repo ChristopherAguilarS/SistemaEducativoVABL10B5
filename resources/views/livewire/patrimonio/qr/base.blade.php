@@ -11,16 +11,16 @@
                                         <div class="col-md-12 mb-2">
                                             @if($state['anio'] != $anioCurso)
                                                 <div class="alert alert-warning" role="alert">
-                                                    <i class="mdi mdi-alert-outline mr-2"></i> Este <strong>equipo</strong> no se encuentra inventariado para el año en curso <strong>({{$anioCurso}})</strong>, click <a href="javascript:void(0);" wire:click="$emit('inventa', {{$state['id']}})">AQUI</a>, para inventariar.
+                                                    <i class="mdi mdi-alert-outline mr-2"></i> Este <strong>equipo</strong> no se encuentra inventariado para el año en curso <strong>({{$anioCurso}})</strong>, click <a href="javascript:void(0);" @click="$dispatch('inventa', [{{$state['id']}}])">AQUI</a>, para inventariar.
                                                 </div>
                                             @else
                                                 <div class="alert alert-info" role="alert">
-                                                    <i class="mdi mdi-bookmark-check mr-2"></i> <strong>Equipo</strong> inventariado para el año <strong>({{$anioCurso}})</strong>, click <a href="javascript:void(0);" wire:click="$emit('inventa', {{$state['id']}}, 1)">AQUI</a>, para editar inventario.
+                                                    <i class="mdi mdi-bookmark-check mr-2"></i> <strong>Equipo</strong> inventariado para el año <strong>({{$anioCurso}})</strong>, click <a href="javascript:void(0);" @click="$dispatch('inventa', [{{$state['id']}}, 1])">AQUI</a>, para editar inventario.
                                                 </div>
                                             @endif
 
                                             <div class="col-lg-12 mb-3" style="text-align: center;">
-                                                <img src="/equipamiento/CatalogoEquipos/{{ $urlFoto }}" alt="img" class="img-fluid blog-img-height">
+                                                <img src="/images/equipamiento/catalogo_equipos/{{ $urlFoto }}" alt="img" class="img-fluid blog-img-height">
                                                 <center><small>Código Patrimonial</small><h4><b>{{$state['CODIGO_ACTIVO']}}</b></h4></center>
                                             </div>
                                             <?php 
@@ -51,29 +51,27 @@
                                             <input type="text" wire:model.defer="trabajador" class="form-control" readonly>
                                         </div>
                                         <div class="col-md-12 mb-2">
-                                            <label><b>Área</b></label>
+                                            <label><b>AMBIENTE</b></label>
                                             <textarea class="form-control" wire:model.defer="state.area" readonly></textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-2">
-                                            <div id="accordion" style="margin-bottom:0rem!important" class="custom-accordion mb-4">
-                                                <div class="card mb-3" style="border: 1px solid #dee2e6;">
-                                                    <div class="card-header" id="headingOne">
-                                                        <h5 class="m-0">
-                                                            <a class="custom-accordion-title d-block d-flex align-items-center collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                                                Ver Mas <span class="ml-auto"><i class="mdi mdi-chevron-down accordion-arrow"></i></span>
-                                                            </a>
-                                                        </h5>
-                                                    </div>
-                                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                                        <div class="card-body" style="padding: 6px;">
+                                            <div class="accordion" id="default-accordion-example">
+                                                <div class="accordion-item material-shadow">
+                                                    <h2 class="accordion-header" id="headingTwo">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                            Ver Mas
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#default-accordion-example">
+                                                        <div class="accordion-body">
                                                             <div class="row">
                                                                 <div class="col-md-12 mb-2">
-                                                                    <label><b>AREA</b></label>
-                                                                    <select class="form-control" wire:model="state.area_id">
+                                                                    <label><b>AMBIENTE</b></label>
+                                                                    <select class="form-select" wire:model="state.ambiente_id">
                                                                         @if(!is_null($areas))
                                                                         @foreach($areas as $area)
-                                                                            <option value="{{$area->Id}}">{{$area->Descripcion}}</option>
+                                                                            <option value="{{$area->id}}">{{$area->nombre}}</option>
                                                                         @endforeach
                                                                         @endif
                                                                     </select>
@@ -124,14 +122,13 @@
                                                                     <label><b>Observaciones</b></label>
                                                                     <input type="text" wire:model.defer="state.OBSERVACIONES" class="form-control">
                                                                 </div>
-                                                            </div>                  
+                                                                <button type="button" class="btn waves-effect waves-light btn-info" wire:click="editar">
+                                                                    <i class="fa fa-edit"></i> | EDITAR
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    
-                                                </div> <!-- end card-->
-                                                <button type="button" class="btn waves-effect waves-light btn-info" wire:click="editar">
-                                                        <i class="fa fa-edit"></i> | EDITAR
-                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     @else
@@ -148,7 +145,7 @@
         </div>
     </div>
     <div class="contenedor btn-flotante">
-        <button class="botonF2" wire:click="$emit('buscarnum')">
+        <button class="botonF2" @click="$dispatch('buscarnum')">
             <span id="txtBtn2"><i class="mdi mdi-tab-search"></i></span>
         </button>
         <button class="botonF1" onclick="iniciar();">
@@ -231,4 +228,81 @@
             left:0;
         }
     </style>
+
+        <script>
+            function iniciar(){
+                var btn = $('#txtBtn').html();
+                if (btn == "X") {
+                    $('#txtBtn').html('<i class="mdi mdi-barcode-scan"></i>');
+                    Quagga.stop();
+                }else{
+                    $('#txtBtn').html('X');
+                    $('#form3').modal('show')
+                    Quagga.init({
+                        inputStream: {
+                            constraints: {
+                                width: 1920,
+                                height: 1920,
+                            },
+                            name: "Live",
+                            type: "LiveStream",
+                            target: document.querySelector('#contenedor'), // Pasar el elemento del DOM
+                        },
+                        decoder: {
+                            readers: ["code_128_reader"]
+                        }
+                    }, function (err) {
+                        if (err) {
+                            console.log(err);
+                            return
+                        }
+                        console.log("Iniciado correctamente");
+                        Quagga.start();
+                    });
+                }
+            }
+            function cerrar(){
+                    $('#txtBtn').html('<i class="mdi mdi-barcode-scan"></i>');
+                    $('#form3').modal('hide');
+                    Quagga.stop();
+            }
+
+                const $resultados = document.querySelector("#resultado");
+                
+                
+
+                Quagga.onDetected((data) => {
+                    Quagga.stop();
+                    window.location.href = "https://sir.diresacajamarca.gob.pe:8002/qr/equipo/" + data.codeResult.code;
+                   // $('#resultado').val(data.codeResult.code);
+                    // Imprimimos todo el data para que puedas depurar
+                    console.log(data);
+                });
+
+                Quagga.onProcessed(function (result) {
+                    var drawingCtx = Quagga.canvas.ctx.overlay,
+                        drawingCanvas = Quagga.canvas.dom.overlay;
+
+                    if (result) {
+                        if (result.boxes) {
+                            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                            result.boxes.filter(function (box) {
+                                return box !== result.box;
+                            }).forEach(function (box) {
+                                Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 });
+                            });
+                        }
+
+                        if (result.box) {
+                            Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+                        }
+
+                        if (result.codeResult && result.codeResult.code) {
+                            Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+                        }
+                    }
+                });
+ 
+        </script>
+
 </div>

@@ -10,7 +10,7 @@
                                     <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('nuevoIngreso', 0)">
                                         <i class="mdi mdi-archive-plus" style="font-size:30px"></i><br>Nuevo
                                     </button>
-                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('verComision', 0)">
+                                    <button type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none" @click="$dispatch('verComision')">
                                         <i class="mdi mdi-account-multiple-check" style="font-size:30px"></i><br>Comision
                                     </button>
                                 </div>

@@ -11,12 +11,13 @@ use App\Models\Patrimonio\Familia;
 use App\Models\Patrimonio\Clase;
 use App\Models\Patrimonio\Grupo;
 use App\Models\Configuracion\Establecimiento;
-use App\Models\RecursosHumanos\CatalogoArea;
+use App\Models\Patrimonio\Ambiente;
 
 class Base extends Component
 {
     use WithPagination;
     public $state, $trabajador, $salida, $urlFoto, $clase, $familia, $ubicacion, $anioCurso = 0, $areas; 
+    public $equipo, $dni, $tipo;
     protected $paginationTheme = "bootstrap";
 
     public function mount(Request $request){
@@ -26,8 +27,8 @@ class Base extends Component
                         ->on('lr.estado', '=', DB::raw('1'));
                 })
                 ->leftjoin('rrhh_personas as p', 'lr.persona_id', '=', 'p.id')
-                ->leftjoin('rrhh_catalogo_areas as a', 'log_equipos.area_id', '=', 'a.id')
-                ->select('log_equipos.id', 'equipo_id', 'lr.ambiente_id', 'lr.estado', 'anio', 'created_at as fecha', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno,', ', nombres) as nombrePersona"), 'p.id as IdPersonas', 'GRUPO_BIEN', 'CLASE_BIEN', 'FAMILIA_BIEN', 'SALIDA_ID', 'Equipos.DESCRIPCION', 'CODIGO_ACTIVO', 'ESTADO_CONSERV', 'p.Id', 'MARCA', 'MODELO', 'NRO_SERIE', 'COLOR', 'OBSERVACIONES', 'ITEM_BIEN', 'log_equipos.area_id', 'a.descripcion as area')
+                ->leftjoin('log_ambientes as a', 'log_equipos.ambiente_id', '=', 'a.id')
+                ->select('log_equipos.id', 'equipo_id', 'lr.estado', 'anio', 'log_equipos.created_at as fecha', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno,', ', nombres) as nombrePersona"), 'p.id as IdPersonas', 'GRUPO_BIEN', 'CLASE_BIEN', 'FAMILIA_BIEN', 'SALIDA_ID', 'log_equipos.DESCRIPCION', 'CODIGO_ACTIVO', 'ESTADO_CONSERV', 'p.Id', 'MARCA', 'MODELO', 'NRO_SERIE', 'COLOR', 'log_equipos.OBSERVACIONES', 'ITEM_BIEN', 'log_equipos.ambiente_id', 'a.nombre as area')
                 ->where('log_equipos.id', $request->id)
                 ->orderby('lr.id', 'desc')
                 ->first()->toArray();
@@ -43,18 +44,25 @@ class Base extends Component
                     $this->clase = $this->clase->descripcion;
                 }
                 $data = Familia::where('grupo', $this->state['GRUPO_BIEN'])->where('clase', $this->state['CLASE_BIEN'])->where('familia', $this->state['FAMILIA_BIEN'])->first();
+     
                 if ($data) {
                     $this->familia  = $data->denominacion;
                 }
             }
             
-            $this->urlFoto = $this->state['GRUPO_BIEN'].$this->state['CLASE_BIEN'].$this->state['FAMILIA_BIEN']; 
+            $this->urlFoto = $this->state['GRUPO_BIEN'].$this->state['CLASE_BIEN'].$this->state['FAMILIA_BIEN'].'.'.$data->imagen; 
+            $rutaCompleta = public_path('images/equipamiento/catalogo_equipos/'.$this->urlFoto);
+
+            if (!file_exists($rutaCompleta)) {
+                $this->urlFoto = 'sin_foto.jpeg';
+            }
+
             if ($this->state['SALIDA_ID']) {
                 $this->salida = EquipoSalida::join('users as u', 'u.id', 'log_equipos_salidas.created_by')->select('name', 'inicio', 'fin')->where('equipo_id', $request->id)->first();
 
             }
             $this->trabajador = $this->state['nombrePersona'];
-            $this->areas = CatalogoArea::get();
+            $this->areas = Ambiente::where('estado', 1)->get();
         }else{
             $this->state['id'] = 0;
         }
@@ -69,10 +77,10 @@ class Base extends Component
                 'NRO_SERIE' => $this->state['NRO_SERIE'],
                 'OBSERVACIONES' => $this->state['OBSERVACIONES'],
                 'COLOR' => $this->state['COLOR'],
-                'area_id' => $this->state['area_id']
+                'ambiente_id' => $this->state['ambiente_id']
             ]
         );
-        $this->dispatchBrowserEvent('alert', ['type' => 'success',  'message' => 'Equipo Editado Correctamente']);
+        $this->dispatch('alert_info', ['mensaje' => 'Equipo actualizado Correctamente']);
     }
     public function render(Request $request)
     {
