@@ -26,18 +26,18 @@
                                             <td style="vertical-align:middle">{{$data->remitente_nombre}}</td>
                                             <td style="vertical-align:middle">{{$data->asunto}}</td>
                                             <td style="vertical-align:middle; text-align:Center">
-                                                <button type="button" class="btn btn-outline-success btn-icon waves-effect waves-light material-shadow-none">
+                                                <a href="/pdf/expedientes/{{$data->id.'.pdf'}}" target="_blank" type="button" class="btn btn-outline-success btn-icon waves-effect waves-light material-shadow-none">
                                                     <i class="bx bxs-file-pdf" style="font-size:30px"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                             <td style="vertical-align:middle">
-                                                @if($data->estado == 0)
+                                                @if($data->estado == 1)
                                                     <h4><div class="badge bg-danger">Pendiente</div></h4>
-                                                @elseif($data->estado == 1)
-                                                    <h4><div class="badge bg-success">Atendido</div></h4>
                                                 @elseif($data->estado == 2)
-                                                    <h4><div class="badge bg-warning">En Tramite</div></h4>
+                                                    <h4><div class="badge bg-success">Atendido</div></h4>
                                                 @elseif($data->estado == 3)
+                                                    <h4><div class="badge bg-warning">Derivado</div></h4>
+                                                @elseif($data->estado == 4)
                                                     <h4><div class="badge bg-dark">Denegado</div></h4>
                                                 @endif
                                             </td>
@@ -47,7 +47,8 @@
                                                         ...
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 2])"><i class="ri-mail-check-line"></i> Atender</a>
+                                                    <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 0])"><i class="ri-mail-check-line"></i> Ver</a>
+                                                        <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 1])"><i class="ri-mail-check-line"></i> Atender</a>
                                                         <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 2])"><i class="ri-mail-send-line"></i> Derivar</a>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 3])"><i class="ri-mail-close-line"></i> Denegar</a>

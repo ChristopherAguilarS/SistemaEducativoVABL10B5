@@ -11,7 +11,7 @@ class Filtro extends Component{
         $documentFileName = "fun.pdf";
         $document = new PDF([
             'mode' => 'utf-8',
-            'format' => [80, 100], // Ancho: 80mm, Altura: 100mm (ajusta según tus necesidades)
+            'format' => [100, 80], // Ancho: 80mm, Altura: 100mm (ajusta según tus necesidades)
             'margin_header' => '0',
             'margin_top' => '0',
             'margin_left' => '0',
@@ -19,7 +19,6 @@ class Filtro extends Component{
             'margin_bottom' => '0',
             'margin_footer' => '0',
         ]);
-        $document->setFooter('página: {PAGENO} de {nbpg}');
         $header = [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$documentFileName.'"'
@@ -30,7 +29,7 @@ class Filtro extends Component{
             <table style="width:100%;  border-spacing: 0px; border-collapse: separate; padding: 15px; font-size:14px; " cellpadding="5">
                 <tr>
                     <td colspan="2" style="text-align:center">
-                        <b style="text-align:center">FOTOCHECK</b>
+                        <b style="text-align:center">CARNÉ DE BIBLIOTECA</b>
                     </td>
                 </tr>
             </table>';

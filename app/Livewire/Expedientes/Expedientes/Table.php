@@ -26,7 +26,7 @@ class Table extends Component
         $this->hasta = date('Y-m-d');
     }
     public function render(){
-        $data = Expediente::query();
+        $data = Expediente::where('persona_id', auth()->user()->id);
         if($this->desde && $this->hasta){
             $data = $data->whereBetween(DB::raw('DATE(created_at)'), [$this->desde, $this->hasta]);
         }

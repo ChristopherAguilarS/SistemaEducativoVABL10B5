@@ -9,31 +9,50 @@
                 <hr>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xxl-12">
-                            
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre de Tipo de Ambiente</label>
-                                        <input type="text" class="form-control" wire:model.live="state.descripcion">
-                                        @error('state.descripcion')
-                                            <small style="color:red">(*) Obligatorio</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-lg-6"></div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Estado</label>
-                                        <select wire:model="state.estado" class="form-select">
-                                            <option value="1">Activo</option>
-                                            <option value="0">Inactivo</option>
-                                        </select>
-                                        @error('state.estado')
-                                            <small style="color:red">(*) Obligatorio</small>
-                                        @enderror
-                                    </div>
-                                </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Documento</label>
+                                <input type="text" class="form-control" wire:model="documento" disabled>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Estado</label>
+                                <input type="text" class="form-control" wire:model="estado" disabled>
+                            </div>
+                        </div>
+                        @if($tipo == 2)
+                            <div class="col-lg-12">
+                                <label><b>Área:</b></label> 
+                                <select class="form-select" wire:model.live="area">
+                                    <option value="0">Seleccione</option>
+                                    @if(!is_null($areas))
+                                        @foreach($areas as $area)
+                                            <option value="{{$area['id']}}">{{$area['descripcion']}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('area') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
+                            </div>
+                            <div class="col-lg-12"></div>
+                            <div class="col-lg-12 mt-3">
+                                <label><b>Trabajador:</b></label>    
+                                <select class="form-select" wire:model.live="persona">
+                                    <option value="0">Seleccione</option>
+                                    @if(!is_null($personas))
+                                        @foreach($personas as $persona)
+                                            <option value="{{$persona['id']}}">{{$persona['apellidoPaterno'].' '.$persona['apellidoMaterno'].' '.$persona['nombres']}}</option>
+                                        @endforeach
+                                     @endif
+                                </select>
+                                @error('persona') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
+                            </div>
+                        @endif
+                        <div class="col-lg-12"></div>
+                        <div class="col-lg-12 mt-3">
+                            <div class="mb-3">
+                                <label class="form-label">Observaciones</label>
+                                <textarea wire:model="observaciones" class="form-control" rows="3" @if(!$tipo) disabled @endif></textarea>
                             </div>
                         </div>
                     </div>
@@ -41,7 +60,7 @@
                 <hr>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                    @if($tipo == 1 || $tipo == 3)
+                    @if($tipo)
                         <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
                             <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
                             <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>

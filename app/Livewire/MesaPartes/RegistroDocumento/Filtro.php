@@ -6,7 +6,9 @@ use App\Models\MesaPartes\CatalogoTipoDocumento;
 use App\Models\MesaPartes\Expediente;
 use App\Models\RecursosHumanos\CatalogoArea;
 use App\Models\RecursosHumanos\Persona;
+use Livewire\WithFileUploads;
 class Filtro extends Component{
+    use WithFileUploads;
     public $tipos, $state = [], $pdf, $areas, $personas, $guardado = false;
     public function buscar(){
         $class = new FuncionesCtrl();
@@ -24,6 +26,7 @@ class Filtro extends Component{
     }
     public function updatedStateCatalogoAreaId($id){
         $this->personas = Persona::join('rrhh_vinculo_laboral as vl', 'rrhh_personas.id', 'vl.persona_id')
+            ->select('rrhh_personas.id', 'apellidoPaterno', 'apellidoMaterno', 'nombres')
             ->where('catalogo_area_id', $id)->get()->toArray();
     }
     public function limpiar(){
@@ -55,9 +58,15 @@ class Filtro extends Component{
                 'state.catalogo_area_id' => 'required|not_in:0',
                 'state.persona_id' => 'required|not_in:0',
             ]);
+            $this->state['estado'] = 1;
             $this->state['created_by'] = auth()->user()->id;
             $this->state['created_at'] = date('Y-m-d H:i:s');
             $sav = Expediente::Create($this->state);
+            if($this->pdf){
+                $ruta = 'pdf/expedientes/';
+                $nombre = $sav->id.'.pdf';
+                $this->pdf->storeAs($ruta, $nombre, 'public');
+            }
             $this->guardado = $sav->id;
             $this->dispatch('info', ['mensaje' => 'Expediente Guardado, Nro:'.$this->guardado]);
         }

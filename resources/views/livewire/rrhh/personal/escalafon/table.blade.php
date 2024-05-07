@@ -7,7 +7,7 @@
             <div class="simplebar-content" style="padding: 0px 24px;">
                 <ul class="to-do-menu list-unstyled" id="projectlist-data">
                     <li>
-                    <a data-bs-toggle="collapse" href="#v1" class="nav-link fs-13 collapsed" aria-expanded="false">1.- Filiacion e Identificacion Personal</a>
+                    <a data-bs-toggle="collapse" href="#v1" class="nav-link fs-13 collapsed" aria-expanded="false">1.- Filiación e Identificación</a>
                         <div class="collapse @if($m == 1) show @endif" id="v1" style="">
                             <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
                                 <li class="p-1 @if($sel == 1) bg-light @endif">
@@ -20,7 +20,7 @@
                         </div>
                     </li>
                     <li>
-                        <a data-bs-toggle="collapse" href="#v2" class="nav-link fs-13 collapsed" aria-expanded="false">2.- Estudios y Capacitaciones</a>
+                        <a data-bs-toggle="collapse" href="#v2" class="nav-link fs-13 collapsed" aria-expanded="false">2.- Situación Académica</a>
                         <div class="collapse @if($m == 2) show @endif" id="v2" style="">
                             <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
                                 <li class="p-1 @if($sel == 3) bg-light @endif">
@@ -49,7 +49,7 @@
                         </div>
                     </li>
                     <li>
-                        <a data-bs-toggle="collapse" href="#v4" class="nav-link fs-13 collapsed" aria-expanded="false">4.- Licencias y Vacaciones</a>
+                        <a data-bs-toggle="collapse" href="#v4" class="nav-link fs-13 collapsed" aria-expanded="false">4.- Ingreso o Reingreso</a>
                         <div class="collapse @if($m == 4) show @endif" id="v4" style="">
                             <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
                                 <li class="p-1 @if($sel == 8) bg-light @endif">
@@ -68,7 +68,7 @@
                         </div>
                     </li>
                     <li>
-                        <a data-bs-toggle="collapse" href="#v5" class="nav-link fs-13 collapsed" aria-expanded="false">5.- Experiencia Laboral</a>
+                        <a data-bs-toggle="collapse" href="#v5" class="nav-link fs-13 collapsed" aria-expanded="false">5.- Trayectoria Laboral</a>
                         <div class="collapse @if($m == 5) show @endif" id="v5" style="">
                             <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
                                 <li class="p-1 @if($sel == 10) bg-light @endif">
@@ -78,7 +78,72 @@
                         </div>
                     </li>
                     <li>
-                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">6.- Meritos, Demeritos</a>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">6.- Asignaciones e Incentivos</a>
+                        <div class="collapse @if($m == 6) show @endif" id="v6" style="">
+                            <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
+                                <li class="p-1 @if($sel == 11) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(13, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Meritos</span>
+                                </li>
+                                <li class="p-1 @if($sel == 12) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(14, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Demeritos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">7.- Retiro y Régimen Pensionario</a>
+                        <div class="collapse @if($m == 6) show @endif" id="v6" style="">
+                            <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
+                                <li class="p-1 @if($sel == 11) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(13, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Meritos</span>
+                                </li>
+                                <li class="p-1 @if($sel == 12) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(14, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Demeritos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">8.- Premios y Estímulos</a>
+                        <div class="collapse @if($m == 6) show @endif" id="v6" style="">
+                            <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
+                                <li class="p-1 @if($sel == 11) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(13, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Meritos</span>
+                                </li>
+                                <li class="p-1 @if($sel == 12) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(14, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Demeritos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">9.- Sanciones</a>
+                        <div class="collapse @if($m == 6) show @endif" id="v6" style="">
+                            <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
+                                <li class="p-1 @if($sel == 11) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(13, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Meritos</span>
+                                </li>
+                                <li class="p-1 @if($sel == 12) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(14, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Demeritos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">9.- Licencias y Vacaciones</a>
+                        <div class="collapse @if($m == 6) show @endif" id="v6" style="">
+                            <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
+                                <li class="p-1 @if($sel == 11) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(13, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Meritos</span>
+                                </li>
+                                <li class="p-1 @if($sel == 12) bg-light @endif">
+                                    <span class="cursor-pointer" wire:click="vSel(14, 6)"><i class="ri-stop-mini-fill align-middle fs-15 text-primary"></i>Demeritos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="collapse" href="#v6" class="nav-link fs-13 collapsed" aria-expanded="false">10.- Otros</a>
                         <div class="collapse @if($m == 6) show @endif" id="v6" style="">
                             <ul class="mb-0 sub-menu list-unstyled ps-3 vstack gap-2 mb-2">
                                 <li class="p-1 @if($sel == 11) bg-light @endif">
