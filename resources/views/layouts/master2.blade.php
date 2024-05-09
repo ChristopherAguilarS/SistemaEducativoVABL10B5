@@ -153,7 +153,7 @@
                                 <div class="col-12">
                                     <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                         <div class="flex-grow-1">
-                                            <h4 class="fs-16 mb-1">Buenos dias, Anna!</h4>
+                                            <h4 class="fs-16 mb-1">Buenos dias, {{ucwords(strtolower(auth()->user()->name))}}!</h4>
                                             <p class="text-muted mb-0">A donde deseas acceder hoy?.</p>
                                         </div>
                     
@@ -170,7 +170,7 @@
                                 if(auth()->user()->master==1){
                                     $menus=collect(DB::select("SELECT * FROM menu WHERE tipo=1 and estado=1 order by pos asc"));
                                 }else{
-                                    $menus=collect(DB::select("SELECT * FROM menu u WHERE estado =1 and EXISTS ( SELECT * FROM roles r inner join role_user ru on r.id=ru.role_id WHERE CONCAT(',',menu,',') LIKE CONCAT('%,',u.id,',%') and user_id=".auth()->user()->id.") and tipo=1 and (privado=0 and tipo=1) order by Pos asc"));
+                                    $menus=collect(DB::select("SELECT * FROM menu u WHERE estado =1 and id in ( SELECT rm.menu_id FROM roles r inner join role_user ru on r.id=ru.role_id join role_menus rm on ru.role_id=rm.role_id WHERE user_id=".auth()->user()->id.") and tipo=1 and estado = 1 order by Pos asc"));
                                 }
                             @endphp
                             @foreach ($menus as $prin)

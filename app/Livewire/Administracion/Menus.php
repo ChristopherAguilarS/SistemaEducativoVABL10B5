@@ -27,9 +27,24 @@ class Menus extends Component
         }else{
             $this->modulo = vMenus::where('raiz', $modulo)->where('tipo', 1)->first()->nombre;
         }
+        if(auth()->user()->master){
+            $menus = vMenus::where('raiz', $modulo)->where('tipo', 2)->where('estado', 1)->orderby('pos', 'asc')->get();
+            $sub_menus = vMenus::where('raiz', $modulo)->where('tipo', 3)->where('estado', 1)->orderby('pos', 'asc')->get();
+        }else{
+            $ap_menus = vMenus::join('role_menus as rm', 'rm.menu_id', 'menu.id')
+                ->join('roles as r', 'r.id', 'rm.role_id')
+                ->join('role_user as ru', 'r.id', 'ru.role_id')
+                ->select('menu.id', 'menu.nombre', 'menu.icon', 'menu.vista', 'menu.pos', 'menu.tipo', 'menu.raiz', 'menu.color', 'menu.estado', 'menu.privado')
+                ->where('menu.raiz', $modulo)
+                ->where('menu.estado', 1)
+                ->where('ru.user_id', auth()->user()->id)
+                ->orderby('menu.pos', 'asc')
+                ->get();
+     
+            $menus = $ap_menus->where('tipo', 2);
+            $sub_menus = $ap_menus->where('tipo', 3);
+        }
         
-        $menus = vMenus::where('raiz', $modulo)->where('tipo', 2)->where('estado', 1)->orderby('pos', 'asc')->get();
-        $sub_menus = vMenus::where('raiz', $modulo)->where('tipo', 3)->where('estado', 1)->orderby('pos', 'asc')->get();
         foreach ($menus as $menu) {
             $this->menus[$menu->id] = ['nombre' => $menu->nombre, 'icon' => $menu->icon, 'vista' => $menu->vista];
             $c = 0;

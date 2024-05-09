@@ -1,0 +1,20 @@
+@extends('layouts.master')
+@section('title')
+    Usuarios
+@endsection
+@section('css')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+@endsection
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            Configuracion
+        @endslot
+        @slot('title')
+            Usuarios
+        @endslot
+    @endcomponent
+    @livewire('configuracion.usuarios.filtro')
+    @livewire('configuracion.usuarios.table')
+    @livewire('configuracion.usuarios.components.ver-detalles')
+@endsection

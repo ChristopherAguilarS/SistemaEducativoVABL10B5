@@ -16,6 +16,7 @@ class Menus extends Model
         'icon',
         'vista',
         'pos',
+        'modulo',
         'tipo',
         'raiz',
         'color',

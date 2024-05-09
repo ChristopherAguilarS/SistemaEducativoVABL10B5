@@ -80,3 +80,4 @@ Route::middleware('auth')->group(__DIR__ . '/modulos/expedientes.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/patrimonio.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/financiero-contable.php');
 Route::middleware('auth')->group(__DIR__ . '/modulos/administracion.php');
+Route::middleware('auth')->group(__DIR__ . '/modulos/configuracion.php');
