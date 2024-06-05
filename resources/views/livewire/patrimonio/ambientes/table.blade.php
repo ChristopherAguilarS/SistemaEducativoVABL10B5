@@ -8,7 +8,6 @@
                                 <tr>
                                     <th style="width: 10px;">Cód.</th>
                                     <th>Nombre</th>
-                                    <th>Descripcion</th>
                                     <th>Tipo</th>
                                     <th>Ubicacion</th>
                                     <th style="width: 10px;">Estado</th>
@@ -21,7 +20,6 @@
                                         <tr>
                                             <td>{{$data->id}}</td>
                                             <td>{{$data->nombre}}</td>
-                                            <td>{{$data->descripcion}}</td>
                                             <td>{{$data->tipo}}</td>
                                             <td>{{$data->ubicacion}}</td>
                                             <td>

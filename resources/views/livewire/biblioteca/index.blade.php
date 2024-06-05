@@ -14,7 +14,7 @@
             Inicio
         @endslot
     @endcomponent
-    @livewire('expedientes.inicio.cards')
+    @livewire('biblioteca.cards')
 @endsection
 @section('script')
 @endsection

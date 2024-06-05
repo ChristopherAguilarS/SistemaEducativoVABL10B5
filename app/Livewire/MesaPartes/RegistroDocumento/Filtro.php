@@ -9,7 +9,7 @@ use App\Models\RecursosHumanos\Persona;
 use Livewire\WithFileUploads;
 class Filtro extends Component{
     use WithFileUploads;
-    public $tipos, $state = [], $pdf, $areas, $personas, $guardado = false;
+    public $tipos, $state = [], $pdf, $areas, $personas, $guardado = false, $numero;
     public function buscar(){
         $class = new FuncionesCtrl();
         $data = $class->remitenteDoc($this->state['tipo_remitente'], $this->state['remitente_documento']);
@@ -21,7 +21,12 @@ class Filtro extends Component{
             $this->dispatch('alert_danger', ['mensaje' => 'Remitente No Encontrado']);
         }
     }
+    public function correlativo(){
+        $num = Expediente::max('id');
+        $this->numero = $num+1;
+    }
     public function mount(){
+        $this->correlativo();
         $this->limpiar();
     }
     public function updatedStateCatalogoAreaId($id){
@@ -58,17 +63,24 @@ class Filtro extends Component{
                 'state.catalogo_area_id' => 'required|not_in:0',
                 'state.persona_id' => 'required|not_in:0',
             ]);
-            $this->state['estado'] = 1;
-            $this->state['created_by'] = auth()->user()->id;
-            $this->state['created_at'] = date('Y-m-d H:i:s');
-            $sav = Expediente::Create($this->state);
-            if($this->pdf){
-                $ruta = 'pdf/expedientes/';
-                $nombre = $sav->id.'.pdf';
-                $this->pdf->storeAs($ruta, $nombre, 'public');
+            $existe = Expediente::where('id', $this->numero)->first();
+            if($existe){
+                $this->dispatch('info', ['mensaje' => 'Correlativo #'.$this->numero.", ya existe."]);
+            }else{
+                $this->state['estado'] = 1;
+                $this->state['created_by'] = auth()->user()->id;
+                $this->state['created_at'] = date('Y-m-d H:i:s');
+                $sav = Expediente::Create($this->state);
+                if($this->pdf){
+                    $ruta = 'pdf/expedientes/';
+                    $nombre = $sav->id.'.pdf';
+                    $this->pdf->storeAs($ruta, $nombre, 'public');
+                }
+                $this->guardado = $sav->id;
+                $this->dispatch('info', ['mensaje' => 'Expediente Guardado, Nro:'.$this->guardado]);
             }
-            $this->guardado = $sav->id;
-            $this->dispatch('info', ['mensaje' => 'Expediente Guardado, Nro:'.$this->guardado]);
+            
+            
         }
         
     }

@@ -7,13 +7,14 @@
                         <thead class="gridjs-thead">
                             <tr class="gridjs-tr">
                                 <th class="gridjs-th gridjs-th-sort text-muted" style="width: 4px; text-align:center"><div class="gridjs-th-content">Código</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 360px; text-align:center"><div class="gridjs-th-content">Libro</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 94px; text-align:center"><div class="gridjs-th-content">Editorial</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 5px; text-align:center"><div class="gridjs-th-content">Publicacion</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="text-align:center"><div class="gridjs-th-content">Libro</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 120px; text-align:center"><div class="gridjs-th-content">Editorial</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 120px; text-align:center"><div class="gridjs-th-content">Publicacion</div></th>
                                 <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 5px; text-align:center"><div class="gridjs-th-content">Tipo</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 5px; text-align:center"><div class="gridjs-th-content">Valoracion</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 220px; text-align:center"><div class="gridjs-th-content">Creado</div></th>
-                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 5px; text-align:center"><div class="gridjs-th-content">Acciones</div></th></tr>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 120px; text-align:center"><div class="gridjs-th-content">Valoracion</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 5px; text-align:center"><div class="gridjs-th-content">Creado</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 120px; text-align:center"><div class="gridjs-th-content">Estado</div></th>
+                                <th  class="gridjs-th gridjs-th-sort text-muted" style="width: 120px; text-align:center"><div class="gridjs-th-content">Acciones</div></th></tr>
                         </thead>
                         <tbody class="gridjs-tbody">
                             @if($posts->count()>0)
@@ -35,21 +36,23 @@
                                             </span>
                                         </td>
                                         <td  class="gridjs-td">
-                                            <span>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-shrink-0 me-3">
-                                                        <div class="avatar-sm bg-light rounded p-1">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <div class="bg-light rounded p-1" style="    width: 3rem;">
                                                             <img src="/images/libros/{{$rImagen}}" alt="" class="img-fluid d-block">
                                                         </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h5 class="fs-14 mb-1">
-                                                            <a href="apps-ecommerce-product-details.html" class="text-body">{{$data->nombre}}</a>
-                                                        </h5>
-                                                        <p class="text-muted mb-0">Autor : <span class="fw-medium">{{$data->autor->descripcion}}</span></p>
-                                                    </div>
-                                                </div>
-                                            </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="fs-14 mb-1">
+                                                                <a href="apps-ecommerce-product-details.html" class="text-body">{{$data->nombre}}</a>
+                                                            </h5>
+                                                            <p class="text-muted mb-0">Autor : <span class="fw-medium"></span></p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                         <td  class="gridjs-td">
                                             {{$data->editorial->descripcion}}
@@ -59,12 +62,21 @@
                                         <td style="text-align:center" class="gridjs-td">
                                             <span>
                                                 <span class="badge bg-light text-body fs-12 fw-medium">
-                                                    <i class="mdi mdi-star text-warning me-1"></i>4.2
+                                                    <i class="mdi mdi-star text-warning me-1"></i>{{$data->valoracion?$data->valoracion:'0'}}
                                                 </span>
                                             </span>
                                         </td>
                                         <td  class="gridjs-td">
-                                            <span>{{date('d/m/Y', strtotime($data->ingreso->created_at))}}<small class="text-muted ms-1">{{date('h:i a', strtotime($data->ingreso->created_at))}}</small></span>
+                                            <span>{{date('d/m/Y', strtotime($data->ingreso->created_at))}}<small class="text-muted ms-1"><br>{{date('h:i a', strtotime($data->ingreso->created_at))}}</small></span>
+                                        </td>
+                                        <td style="text-align:center" class="gridjs-td">
+                                            @if($data->estado == 1)
+                                                <span class="badge bg-success text-white fs-12 fw-medium">Bueno</span>
+                                            @elseif($data->estado == 2)
+                                                <span class="badge bg-danger text-white fs-12 fw-medium">Dañado</span>
+                                            @else
+                                                <span class="badge bg-warning text-white fs-12 fw-medium">No Disponible</span>
+                                            @endif
                                         </td>
                                         <td  style="text-align:Center" class="gridjs-td">
                                             <span>

@@ -329,13 +329,13 @@
                         }
                     ?>
                     <button type="button" class="@if($ver==2) hidden @endif btn btn-{{$color}} " wire:click="{{$fun}}" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="{{$fun}}" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="{{$fun}}" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <i class="bx bx-{{$icon}}" wire:loading.remove="" wire:target="{{$fun}}"></i>
                         {{$nom}}
                     </button>
 
                     <button type="button" class="@if($estado!=2) hidden @endif btn btn-info " wire:click="$emit('verArchivo', {{$idSel}})" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <i class="bx bx-print" wire:loading.remove="" wire:target="guardar"></i>
                         Imprimir
                     </button>

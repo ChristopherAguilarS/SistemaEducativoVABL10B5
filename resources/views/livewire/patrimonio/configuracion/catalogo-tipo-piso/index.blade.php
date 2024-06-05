@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    Catalogo de Condiciones de Ambientes
+    Catalogo de Tipos de Piso
 @endsection
 @section('css')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -11,10 +11,10 @@
             Patrimonio
         @endslot
         @slot('title')
-            Catalogo de Condiciones de Ambientes
+            Catalogo de Tipos de Piso
         @endslot
     @endcomponent
-    @livewire('patrimonio.configuracion.catalogo-condiciones.filtro')
-    @livewire('patrimonio.configuracion.catalogo-condiciones.table')
-    @livewire('patrimonio.configuracion.catalogo-condiciones.components.ver-detalles')
+    @livewire('patrimonio.configuracion.catalogo-tipo-piso.filtro')
+    @livewire('patrimonio.configuracion.catalogo-tipo-piso.table')
+    @livewire('patrimonio.configuracion.catalogo-tipo-piso.components.ver-detalles')
 @endsection

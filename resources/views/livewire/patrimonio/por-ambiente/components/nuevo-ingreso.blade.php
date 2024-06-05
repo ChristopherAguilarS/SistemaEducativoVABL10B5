@@ -63,7 +63,7 @@
                                                 <span class="text-danger-emphasis">(*)Obligatorio</span>
                                             @enderror
                                         </div> 
-                                    </div>   
+                                    </div>  
                                 @endif
                                 <div class="col-lg-4">
                                     <div class="mb-3">

@@ -90,7 +90,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                         Guardar
                     </button>

@@ -17,4 +17,5 @@
     @livewire('biblioteca.reservas-entregas.filtro')
     @livewire('biblioteca.reservas-entregas.table')
     @livewire('biblioteca.reservas-entregas.components.ver-detalles')
+    @livewire('biblioteca.reservas-entregas.components.devolver')
 @endsection

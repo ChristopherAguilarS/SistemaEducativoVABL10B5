@@ -1,10 +1,10 @@
 <?php
-namespace App\Livewire\Patrimonio\Configuracion\CatalogoCondiciones\Components;
+namespace App\Livewire\Patrimonio\Configuracion\CatalogoTipoTecho\Components;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
-use App\Models\Patrimonio\CatalogoCondicion;
+use App\Models\Patrimonio\CatalogoTipoTecho;
 class VerDetalles extends Component {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -22,7 +22,7 @@ class VerDetalles extends Component {
             $this->titulo = "Edición de Catalogo de Condiciones del Ambiente";
         }
         if($id){
-            $this->catalogo = CatalogoCondicion::find($id);
+            $this->catalogo = CatalogoTipoTecho::find($id);
             $this->state['descripcion'] = $this->catalogo->descripcion;
             $this->state['estado'] = $this->catalogo->estado;
             if($tipo == 3){
@@ -40,7 +40,7 @@ class VerDetalles extends Component {
     }
     #[On('brCat')]
     public function brCat(){
-        $del1 = CatalogoCondicion::where('id', $this->idDel)->delete();
+        $del1 = CatalogoTipoTecho::where('id', $this->idDel)->delete();
         $this->dispatch('rTabla2');
         $this->render();
         $this->dispatch('alert_info', ['mensaje' => 'Eliminado Correctamente']);
@@ -55,13 +55,13 @@ class VerDetalles extends Component {
         }else{
             $this->state['created_by'] = auth()->user()->id;
             $this->state['created_at'] = date('Y-m-d H:i:s');
-            $sav2 = CatalogoCondicion::create($this->state);
+            $sav2 = CatalogoTipoTecho::create($this->state);
             $this->dispatch('alert_info', ['mensaje' => 'Catalogo creado correctamente']);
         }
         $this->dispatch('rTabla2');
         $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'hide']);
     }
     public function render(){
-        return view('livewire.patrimonio.configuracion.catalogo-condiciones.components.ver-detalles');
+        return view('livewire.patrimonio.configuracion.catalogo-tipo-techo.components.ver-detalles');
     }
 }

@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <iframe id="vIframe" src="/biblioteca/{{$idPers}}" width="100%" height="600"></iframe>
+                            <iframe id="vIframe" src="/biblioteca/carnet/{{$idPers}}" width="100%" height="600"></iframe>
                         </div>
                     </div>                
                 </div>

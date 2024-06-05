@@ -19,5 +19,8 @@ class CatalogoCategoria extends Model
         'created_at',
         'updated_by',
         'updated_at'
-    ];  
+    ];
+    public function libros() {
+        return $this->hasMany(Libro::class, 'catalogo_categoria_id'); // Asegúrate de que 'autor_id' es la clave foránea correcta
+    }
 }

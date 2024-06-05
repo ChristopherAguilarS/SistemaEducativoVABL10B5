@@ -20,6 +20,14 @@ class LibroReserva extends Model
         'valoracion',
         'opinion',
         'estado',
+        'entrega_by',
+        'entrega_observaciones',
+        'entrega_at',
+        'recojo_by',
+        'recojo_observaciones',
+        'recojo_at',
+        'canceled_by',
+        'canceled_at',
         'created_by',
         'created_at'
     ];  

@@ -1,5 +1,5 @@
 <div>
-    <div wire:ignore.self id="form1" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div wire:ignore.self id="form2" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog  modal-l">
             <div class="modal-content">
                 <div class="modal-header">
@@ -7,47 +7,65 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <hr>
-                <div class="modal-body">
+                <div class="modal-body" style="padding:0px">
                     <div class="row">
-                        <div class="col-xxl-12">
-                            
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre del Autor</label>
-                                        <input type="text" class="form-control" wire:model.live="state.descripcion">
-                                        @error('state.descripcion')
-                                            <small style="color:red">(*) Obligatorio</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-lg-6"></div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Estado</label>
-                                        <select wire:model="state.estado" class="form-select">
-                                            <option value="1">Activo</option>
-                                            <option value="0">Inactivo</option>
-                                        </select>
-                                        @error('state.estado')
-                                            <small style="color:red">(*) Obligatorio</small>
-                                        @enderror
-                                    </div>
-                                </div>
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <center><h4>"{{$state['libro']}}"</h4><h6>{{$state['autor']}}</h6></center>
+                                <?php 
+                                    if($state['imagen']){
+                                        $rImagen = $state['idi'].'.'.$state['imagen'];
+                                    }else{
+                                        $rImagen = 'sin_foto.jpeg';
+                                    }
+                                ?>
                             </div>
                         </div>
+                        <div class="col-lg-4 p-4">
+                            <div class="bg-light rounded p-1" style="    width: 10rem;">
+                                <img src="/images/libros/{{$rImagen}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 p-4">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label><b>Fecha y Hora de Solicitud</b></label>
+                                    <input type="text" class="form-control" wire:model="entrega.fecha" disabled>
+                                </div>
+                                @if($state['estado'] == 0)
+                                    <div class="col-lg-12 mt-2">
+                                        <label><b>Fecha y Hora de Cancelación</b></label>
+                                        <input type="text" class="form-control" wire:model="entrega.cancelacion" disabled>
+                                    </div>
+                                @endif
+                                @if($state['estado'] == 2 || $state['estado'] == 3)
+                                    <div class="col-lg-12 mt-2">
+                                        <label><b>Fecha y Hora de Recepción</b></label>
+                                        <input type="text" class="form-control" wire:model="entrega.recojo" disabled>
+                                    </div>
+                                @endif
+                                @if($state['estado'] == 3)
+                                    <div class="col-lg-12 mt-2">
+                                        <label><b>Fecha y Hora de Devolución</b></label>
+                                        <input type="text" class="form-control" wire:model="entrega.devolucion" disabled>
+                                    </div>
+                                @endif
+                            </div>
+                            
+                        </div>
+                        
                     </div>
                 </div>
                 <hr>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                    @if($tipo == 1 || $tipo == 3)
+                   
                         <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                             <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                             Guardar
                         </button>
-                    @endif
+            
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

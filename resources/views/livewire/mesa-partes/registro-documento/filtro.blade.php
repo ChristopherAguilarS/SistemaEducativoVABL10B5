@@ -10,7 +10,7 @@
                         <div class="col-lg-4" style="text-align:right">
                             <label><b>Tipo Documento:</b></label>    
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-2">
                             <select class="form-select" wire:model="state.catalogo_tipo_documento_id">
                                 <option value="0">Seleccione</option>
                                 @foreach($tipos as $tipo)
@@ -18,6 +18,16 @@
                                 @endforeach
                             </select>
                             @error('state.catalogo_tipo_documento_id') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group">
+                                <input type="text" wire:model="numero" class="form-control" placeholder="numero" style="text-align:center">
+                                <button type="button" class="btn btn-info " wire:click="correlativo" wire:loading.attr="disabled">
+                                    <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="correlativo" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
+                                    <i class="bx bx-search-alt-2" wire:loading.remove="" wire:target="correlativo"></i>
+                                </button>
+                            </div>
+                            @error('numero') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
                         </div>
                         <div class="col-lg-12"></div>
                         <div class="col-lg-4" style="text-align:right">
@@ -83,7 +93,7 @@
                                         <div class="input-group">
                                             <input type="text" wire:model="state.remitente_documento" class="form-control">
                                             <button type="button" class="btn btn-info " wire:click="buscar" wire:loading.attr="disabled">
-                                                <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="buscar" style="display:none"></span>
+                                                <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="buscar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                                                 <i class="bx bx-search-alt-2" wire:loading.remove="" wire:target="buscar"></i>
                                             </button>
                                         </div>
@@ -181,7 +191,7 @@
                     <button type="button" class="btn btn-light" wire:click="limpiar">Limpiar</button>
                     
                     <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                         @if($guardado)
                             Ver Codigo

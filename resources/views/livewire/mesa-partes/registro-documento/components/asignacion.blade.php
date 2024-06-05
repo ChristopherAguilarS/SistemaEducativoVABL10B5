@@ -50,7 +50,7 @@
                         @else
                             <div class="col-xxl-12" style="text-align: center;">
                                 <button type="button" class="btn btn-info " wire:click="devolver" wire:loading.attr="disabled">
-                                    <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="devolver" style="display:none"></span>
+                                    <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="devolver" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                                     <i class="bx bx-download" style="font-size:20px" wire:loading.remove="" wire:target="devolver"></i>
                                     <b>ENTREGADO</b>
                                 </button>
@@ -63,7 +63,7 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                     @if(!$prestado)
                         <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                             <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                             Guardar
                         </button>

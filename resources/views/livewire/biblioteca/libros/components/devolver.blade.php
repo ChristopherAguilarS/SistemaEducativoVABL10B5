@@ -44,7 +44,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal"><b>CANCELAR</b></button>
                     <button type="button" class="btn btn-warning " wire:click="guardar" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <b>GUARDAR VALORACIÓN</b>
                     </button>
                 </div>

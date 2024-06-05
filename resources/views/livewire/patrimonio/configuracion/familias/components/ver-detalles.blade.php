@@ -3,8 +3,7 @@
         <div class="modal-dialog  modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Detalle de Familia
-</h5>
+                    <h5 class="modal-title" id="myModalLabel">Detalle de Familia</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <div class="modal-body">
@@ -44,7 +43,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                        <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                         <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                         Guardar
                     </button>

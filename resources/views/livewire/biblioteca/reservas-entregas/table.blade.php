@@ -8,10 +8,10 @@
                                 <tr>
                                     <th rowspan="2" style="width: 10px;">Código</th>
                                     <th>Libro</th>
-                                    <th>Valoracion</th>
-                                    <th>Usuario</th>
+                                    <th style="width:120px">Valoracion</th>
                                     <th style="width:5px">Solicitado</th>
-                                    <th style="width:5px">Entregado</th>
+                                    <th style="width:5px">Recibido</th>
+                                    <th style="width:5px">Devolucion</th>
                                     <th style="width:5px">Estado</th>
                                     <th rowspan="2" style="width: 10px;">Acc</th>
                                 </tr>
@@ -21,75 +21,102 @@
                                     @foreach ($posts as $data)
                                         <?php 
                                             if($data->imagen){
-                                                $rImagen = $data->id.'.'.$data->imagen;
+                                                $rImagen = $data->idi.'.'.$data->imagen;
                                             }else{
                                                 $rImagen = 'sin_foto.jpeg';
                                             }
                                             
                                         ?>
                                         <tr>
-                                            <td>{{$data->id}}</td>
+                                            <td style="vertical-align: middle;"><b>{{str_pad($data->id, 6, "0", STR_PAD_LEFT)}}</b></td>
                                             <td>
-                                                <span>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-sm bg-light rounded p-1">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="bg-light rounded p-1" style="    width: 3rem;">
                                                                 <img src="/images/libros/{{$rImagen}}" alt="" class="img-fluid d-block">
                                                             </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
+                                                        </td>
+                                                        <td>
+                                                            <div class="flex-grow-1">
                                                             <h5 class="fs-14 mb-1">
                                                                 <a href="apps-ecommerce-product-details.html" class="text-body">{{$data->nombre}}</a>
                                                             </h5>
-                                                            <p class="text-muted mb-0">Autor : <span class="fw-medium"></span></p>
+                                                            <p class="text-muted mb-0">Autor : <span class="fw-medium">{{$data->autor}}</span></p>
                                                         </div>
-                                                    </div>
-                                                </span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
-                                            <td>
+                                            <td style="vertical-align: middle;">
                                                 <span>
                                                     <span class="badge bg-light text-body fs-12 fw-medium">
-                                                        <i class="mdi mdi-star text-warning me-1"></i>4.2
+                                                        <i class="mdi mdi-star text-warning me-1"></i>{{$data->valoracion?$data->valoracion:'Pendiente'}}
                                                     </span>
                                                 </span>
                                             </td>
-                                            <td>{{$data->usuario}}</td>
-                                            <td>{{date('d/m/Y', strtotime($data->solicitado))}} <br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->solicitado))}}</small></td>
-                                            <td>
-                                                @if($data->estado == 3)
-                                                    {{date('d/m/Y', strtotime($data->devuelto))}} <br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->devuelto))}}</small>
+                                            <td style="vertical-align: middle;">{{date('d/m/Y', strtotime($data->solicitado))}} <br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->solicitado))}}</small></td>
+                                            <td style="text-align:center;vertical-align: middle;">
+                                                @if($data->estado == 2 || $data->estado == 3)
+                                                    {{date('d/m/Y', strtotime($data->recojo_at))}} <br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->recojo_at))}}</small>
                                                 @else
                                                     -
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td style="text-align:center;vertical-align: middle;">
+                                                @if($data->estado == 3)
+                                                    {{date('d/m/Y', strtotime($data->entrega_at))}} <br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->devuelto))}}</small>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td style="vertical-align: middle; text-align:center">
                                                 @if($data->estado == 1)
                                                     <h4><div class="badge bg-warning">Reservado</div></h4>
                                                 @elseif($data->estado == 2)
-                                                    <h4><div class="badge bg-success">Entregado</div></h4>
+                                                    <h4><div class="badge bg-info">&nbsp;&nbsp;Recibido&nbsp;&nbsp;</div></h4>
                                                 @elseif($data->estado == 3)
-                                                    <h4><div class="badge bg-info">Devuelto</div></h4>
-                                                @elseif($data->estado == 4)
+                                                    <h4><div class="badge bg-success">&nbsp;&nbsp;Devuelto&nbsp;&nbsp;</div></h4>
+                                                @elseif($data->estado == 0)
                                                     <h4><div class="badge bg-danger">Cancelado</div></h4>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <div class="btn-group material-shadow">
-                                                    <button class="btn btn-primary btn-sm dropdown-toggle material-shadow-none show" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        ...
+                                            <td style="vertical-align: middle;">
+                                    
+                                                <div class="dropdown">
+                                                    <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="ri-more-fill"></i>
                                                     </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('nuevo', [{{$data->id}}, 2])"><i class="mdi mdi-microsoft-xbox-controller-view" style="font-size:20px"></i> <b>VER</b></a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item cursor-pointer"  wire:click="$dispatch('delCat', [{{$data->id}}])"><i class="mdi mdi-elevator-passenger-off-outline" style="font-size:20px"></i><b> CANCELAR</b></a>
-                                                    </div>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li>
+                                                            <a class="dropdown-item cursor-pointer" wire:click="$dispatch('ver', [{{$data->id}}])">
+                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Trazabilidad
+                                                            </a>
+                                                        </li>
+                                                        @if($data->estado == 2 || $data->estado == 3)
+                                                        <li>
+                                                            <a class="dropdown-item cursor-pointer" wire:click="$dispatch('dev', [{{$data->id}}])">
+                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i> Calificar
+                                                            </a>
+                                                        </li>
+                                                        @endif
+                                                        @if($data->estado == 1)
+                                                        <li class="dropdown-divider"></li>
+                                                        <li>
+                                                            <a class="dropdown-item remove-list cursor-pointer" wire:click="$dispatch('delCat', [{{$data->id}}])">
+                                                                <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> Cancelar
+                                                            </a>
+                                                        </li>
+                                                        @endif
+                                                    </ul>
                                                 </div>
+                                    
                                             </td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="4"><center><i><b>Sin Informacion Disponible</b></i></center></td>
+                                        <td colspan="8"><center><i><b>Sin Informacion Disponible</b></i></center></td>
                                     </tr>
                                 @endif
                             </tbody>

@@ -2,7 +2,8 @@
 //Dashboard Principal
 
 Route::prefix('/biblioteca')->group(function () {
-        Route::get('/index', function () { return view('livewire.expedientes.index'); })->name('biblioteca/index');
+        
+        Route::get('/index', function () { return view('livewire.biblioteca.index'); })->name('biblioteca/index');
         Route::get('/configuracion/catalogo-editoriales', function () { return view('livewire.biblioteca.configuracion.catalogo-editoriales.index'); })->name('biblioteca/configuracion/catalogo-editoriales');
         Route::get('/configuracion/catalogo-autores', function () { return view('livewire.biblioteca.configuracion.catalogo-autores.index'); })->name('biblioteca/configuracion/catalogo-autores');
         Route::get('/configuracion/catalogo-materias', function () { return view('livewire.biblioteca.configuracion.catalogo-materias.index'); })->name('biblioteca/configuracion/catalogo-materias');
@@ -15,4 +16,4 @@ Route::prefix('/biblioteca')->group(function () {
         Route::get('/entrega-libros', function () { return view('livewire.biblioteca.entrega-libros.index'); })->name('biblioteca/entrega-libros');
         Route::get('/fotochecks', function () { return view('livewire.biblioteca.fotochecks.index'); })->name('biblioteca/fotochecks');
 });
-Route::get('/biblioteca/{id}', [App\Livewire\Biblioteca\Fotochecks\Filtro::class, 'verFotocheck'])->name('ver-fotocheck');
+Route::get('/biblioteca/carnet/{id}', [App\Livewire\Biblioteca\Fotochecks\Filtro::class, 'verFotocheck'])->name('ver-fotocheck');

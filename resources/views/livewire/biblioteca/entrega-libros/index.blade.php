@@ -17,4 +17,6 @@
     @livewire('biblioteca.entrega-libros.filtro')
     @livewire('biblioteca.entrega-libros.table')
     @livewire('biblioteca.entrega-libros.components.ver-detalles')
+    @livewire('biblioteca.entrega-libros.components.recepcion')
+    @livewire('biblioteca.entrega-libros.components.entrega')
 @endsection

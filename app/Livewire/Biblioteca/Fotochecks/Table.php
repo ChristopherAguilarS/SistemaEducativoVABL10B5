@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Biblioteca\Fotochecks;
 
+use App\Models\Biblioteca\Carne;
 use App\Models\RecursosHumanos\VinculoLaboral;
 use App\Models\SubGenericaNivel2;
 use Livewire\Attributes\On;
@@ -45,10 +46,7 @@ class Table extends Component
         $this->r_val = "(".$d.")";
     }
     public function render(){
-        $especificas = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
-            ->leftjoin('rrhh_catalogo_condiciones as cc', 'cc.id', 'rrhh_vinculo_laboral.catalogo_condiciones_id')
-            ->leftjoin('rrhh_catalogo_areas as ca', 'ca.id', 'rrhh_vinculo_laboral.catalogo_area_id')
-            ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'p.id', 'rrhh_vinculo_laboral.fecha_inicio', 'ca.descripcion as area', 'catalogo_tipo_trabajador_id');
+        $especificas = Carne::query();
         if($this->r_val){
             $especificas = $especificas->whereRaw($this->r_val);
         }

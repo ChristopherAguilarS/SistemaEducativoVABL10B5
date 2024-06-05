@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/biblioteca', function () { return view('livewire.biblioteca.inicio.index'); });
+Route::get('/biblioteca/ver-libros', function () { return view('livewire.biblioteca.inicio.ver-libros'); });
+Route::get('/biblioteca/ver-libros/{categoria}/{autor}', function () { return view('livewire.biblioteca.inicio.ver-libros'); });
 Auth::routes();
 //Language Translation
 Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang']);

@@ -17,8 +17,10 @@ Route::prefix('/patrimonio')->group(function () {
         Route::get('/configuracion/tipos-ambientes', function () { return view('livewire.patrimonio.configuracion.catalogo-tipos-ambientes.index'); })->name('patrimonio/configuracion/tipos-ambientes');
         Route::get('/configuracion/ubicaciones', function () { return view('livewire.patrimonio.configuracion.catalogo-ubicaciones.index'); })->name('patrimonio/configuracion/ubicaciones');
         Route::get('/configuracion/usos-ambientes', function () { return view('livewire.patrimonio.configuracion.catalogo-uso-ambientes.index'); })->name('patrimonio/configuracion/usos-ambientes');
-        Route::get('/configuracion/condiciones', function () { return view('livewire.patrimonio.configuracion.catalogo-condiciones.index'); })->name('patrimonio/configuracion/condiciones');
+        Route::get('/configuracion/catalogo-tipo-techo', function () { return view('livewire.patrimonio.configuracion.catalogo-tipo-techo.index'); })->name('patrimonio/configuracion/catalogo-tipo-techo');
+        Route::get('/configuracion/catalogo-tipo-piso', function () { return view('livewire.patrimonio.configuracion.catalogo-tipo-piso.index'); })->name('patrimonio/configuracion/catalogo-tipo-piso');
         Route::get('/configuracion/pisos', function () { return view('livewire.patrimonio.configuracion.catalogo-pisos.index'); })->name('patrimonio/configuracion/pisos');
+        Route::get('/configuracion/catalogo-pabellones', function () { return view('livewire.patrimonio.configuracion.catalogo-pabellones.index'); })->name('patrimonio/configuracion/catalogo-pabellones');
 });
 Route::get('/inventariado/{anio}/{persona}', [App\Livewire\Patrimonio\PorPersona\Filtro::class, 'verInventariado'])->name('ver-inventariado');
 Route::get('/qr/equipo/{id}', function () { return view('livewire.patrimonio.qr.index'); })->name('qr/equipo');

@@ -30,6 +30,7 @@ class Libro extends Model
         'valoracion',
         'imagen',
         'reservado_por',
+        'estado',
         'created_by',
         'created_at',
         'updated_by',

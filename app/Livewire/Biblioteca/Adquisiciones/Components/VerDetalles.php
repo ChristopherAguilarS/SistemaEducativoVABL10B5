@@ -18,7 +18,7 @@ class VerDetalles extends Component {
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     public $titulo,  $editar = false, $state = ['descripcion' =>'', 'estado' =>1], $catalogo, $tipo, $idDel, $selMat = 0;
-    public $autores, $editoriales, $idiomas, $ingresos, $preview = false, $Foto, $libroSel, $categorias, $vMaterias, $materias, $idSel;
+    public $autores, $editoriales, $idiomas, $ingresos, $preview = false, $Foto, $libroSel, $categorias, $vMaterias, $materias, $idSel, $existe;
     public $urlFoto = 'sin_foto.jpeg';
     public function mount(){
         $this->autores = CatalogoAutor::where('estado', 1)->get();
@@ -66,8 +66,10 @@ class VerDetalles extends Component {
             if($this->state['imagen']){
                 $rutaCompleta = public_path('images/libros/'.$this->editar.'.'.$this->state['imagen']);
                 if (!file_exists($rutaCompleta)) {
+                    $this->existe = false;
                     $this->urlFoto = 'sin_foto.jpeg';
-                }else{;
+                }else{
+                    $this->existe = true;
                     $this->urlFoto = $this->editar.'.'.$this->state['imagen'];
                 }
             }else{
@@ -75,7 +77,7 @@ class VerDetalles extends Component {
             }
             $this->idSel = $id;
         }else{
-            $this->state = ['nombre' =>'', 'descripcion' =>'', 'catalogo_autor_id' =>0, 'catalogo_editorial_id' =>0, 'catalogo_idioma_id' =>0, 'catalogo_tipo_ingreso_id' =>0, 'catalogo_categoria_id'=>0, 'anio' =>'', 'ISBN' =>'', 'imagen' =>''];
+            $this->state = ['nombre' =>'', 'descripcion' =>'', 'catalogo_autor_id' =>0, 'catalogo_editorial_id' =>0, 'catalogo_idioma_id' =>0, 'catalogo_tipo_ingreso_id' =>0, 'catalogo_categoria_id'=>0, 'anio' =>'', 'ISBN' =>'', 'estado' =>1, 'imagen' =>''];
         }
         $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'show']);
     }
@@ -130,11 +132,15 @@ class VerDetalles extends Component {
             $file = $this->Foto->getClientOriginalName();
             $extension = pathinfo($file, PATHINFO_EXTENSION);
         }else{
-            $extension = null;
+            if(!$this->existe){
+                $extension = null;
+            }
         }
         if($this->editar){
-            $nombre = $this->editar.'.'.$extension;
+            
             if ($this->Foto) {
+                $nombre = $this->editar.'.'.$extension;
+                $this->libroSel->imagen = $extension;
                 $this->Foto->storeAs($ruta, $nombre, 'public');
             }
             $this->libroSel->catalogo_tipo_ingreso_id = $this->state['catalogo_tipo_ingreso_id'];
@@ -146,9 +152,10 @@ class VerDetalles extends Component {
             $this->libroSel->catalogo_categoria_id = $this->state['catalogo_categoria_id'];
             $this->libroSel->anio = $this->state['anio'];
             $this->libroSel->ISBN = $this->state['ISBN'];
+            $this->libroSel->estado = $this->state['estado'];
             $this->libroSel->updated_by = auth()->user()->id;
             $this->libroSel->updated_at =date('Y-m-d H:i:s');
-            $this->libroSel->imagen = $extension;
+            
             $this->libroSel->save();
             $this->dispatch('alert_info', ['mensaje' => 'Libro editado correctamente']);
         }else{

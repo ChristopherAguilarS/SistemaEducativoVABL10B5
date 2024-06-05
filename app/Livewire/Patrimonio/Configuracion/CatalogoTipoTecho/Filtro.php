@@ -1,5 +1,5 @@
 <?php
-namespace App\Livewire\Patrimonio\Configuracion\CatalogoCondiciones;
+namespace App\Livewire\Patrimonio\Configuracion\CatalogoTipoTecho;
 use Livewire\Component;
 class Filtro extends Component{
     public $estado = 1;
@@ -7,6 +7,6 @@ class Filtro extends Component{
         $this->dispatch('rTabla', $this->estado);
     }
     public function render(){
-        return view('livewire.patrimonio.configuracion.catalogo-condiciones.filtro');
+        return view('livewire.patrimonio.configuracion.catalogo-tipo-techo.filtro');
     }
 }

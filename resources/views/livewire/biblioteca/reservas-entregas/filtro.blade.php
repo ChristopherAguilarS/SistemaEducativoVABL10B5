@@ -15,8 +15,11 @@
                                 <div class="col-lg-4">
                                     <b>Estado</b>
                                     <select class="form-select  mb-3 mt-2" wire:model="estado">
-                                        <option value="1">Activo</option>
-                                        <option value="0">Inactivo</option>
+                                        <option value="9">Todos</option>
+                                        <option value="0">Cancelados</option>
+                                        <option value="1">Reservados</option>
+                                        <option value="2">Recibido</option>
+                                        <option value="3">Devuelto</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-2" style="margin-top:34px">

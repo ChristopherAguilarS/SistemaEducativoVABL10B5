@@ -157,6 +157,17 @@
                                         <input type="number" class="form-control" wire:model="state.ISBN">
                                     </div>
                                 </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Estado<font style="color:red">(*)</font></label>
+                                        <select wire:model="state.estado" class="form-select">
+                                            <option value="1">Bueno</option>
+                                            <option value="2">Dañado</option>
+                                            <option value="0">No Disponible</option>
+                                        </select>
+                                        @error('state.catalogo_idioma_id') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

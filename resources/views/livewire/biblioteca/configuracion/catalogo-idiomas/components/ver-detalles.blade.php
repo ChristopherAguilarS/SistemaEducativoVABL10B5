@@ -43,7 +43,7 @@
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
                     @if($tipo == 1 || $tipo == 3)
                         <button type="button" class="btn btn-info " wire:click="guardar" wire:loading.attr="disabled">
-                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none"></span>
+                            <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="guardar" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                             <i class="bx bx-save" wire:loading.remove="" wire:target="guardar"></i>
                             Guardar
                         </button>

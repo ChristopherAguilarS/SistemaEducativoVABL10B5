@@ -59,10 +59,14 @@
                                             <span wire:loading.remove><b>Reservar</b></span>
                                         </button>
                                     @else
-                                        <button type="button" style="width:80px; padding: 4px;" wire:click="devolver({{ $post->id }})" wire:loading.attr="disabled" class="btn btn-outline-info waves-effect waves-light material-shadow-none">
-                                            <span class="spinner-border spinner-border-sm flex-shrink-0" wire:loading  style="display:none"></span>
-                                            <span wire:loading.remove><b>Devolver</b></span>
-                                        </button>
+                                        @if($post->reservado_por == auth()->user()->id)
+                                            <button type="button" style="width:80px; padding: 4px;" wire:click="devolver({{ $post->id }})" wire:loading.attr="disabled" class="btn btn-outline-danger waves-effect waves-light material-shadow-none">
+                                                <span class="spinner-border spinner-border-sm flex-shrink-0" wire:loading  style="display:none"></span>
+                                                <span wire:loading.remove><b>Cancelar</b></span>
+                                            </button>
+                                        @else
+                                            Reservado
+                                        @endif
                                     @endif
                                 </div>
                             </div>

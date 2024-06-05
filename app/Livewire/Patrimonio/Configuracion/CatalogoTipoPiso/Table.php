@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Patrimonio\Configuracion\CatalogoCondiciones;
+namespace App\Livewire\Patrimonio\Configuracion\CatalogoTipoPiso;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Patrimonio\CatalogoCondicion;
+use App\Models\Patrimonio\CatalogoTipoPiso;
 class Table extends Component
 {
     use WithPagination;
@@ -19,7 +19,7 @@ class Table extends Component
         $this->render();
     }
     public function render(){
-        $data = CatalogoCondicion::orderby('descripcion', 'asc')->get();
-        return view('livewire.patrimonio.configuracion.catalogo-condiciones.table',['posts' => $data]);
+        $data = CatalogoTipoPiso::orderby('descripcion', 'asc')->get();
+        return view('livewire.patrimonio.configuracion.catalogo-tipo-piso.table',['posts' => $data]);
     }
 }

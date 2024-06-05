@@ -11,7 +11,11 @@
                         </div>
                         <div class="col-xxl-8">
                             <div class="row g-2">
-                                <div class="col-lg-6"></div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-4">
+                                    <b>Buscar por</b>
+                                    <input type="text" wire:model="search" class="form-control mt-2" placeholder="Libro, autor">
+                                </div>
                                 <div class="col-lg-4">
                                     <b>Estado</b>
                                     <select class="form-select  mb-3 mt-2" wire:model="estado">

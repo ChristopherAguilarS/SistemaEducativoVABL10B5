@@ -4,7 +4,6 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div class="row align-items-center g-3">
-                        
                            <div class="card-body">
                                 <ul class="nav nav-tabs nav-justified mb-3" role="tablist">
                                     <li class="nav-item" role="presentation">
@@ -26,12 +25,19 @@
                                 <div class="tab-content  text-muted">
                                     <div class="tab-pane active show" id="base-justified-home" role="tabpanel">
                                         <div class="row align-items-center g-3">
-                                            <div class="col-lg-4">
-                                                <label><b>Tipo</b></label>
-                                                <select class="form-select mb-3" wire:model.live="f_tipo" wire:change="updTable" aria-label="Default select example">
-                                                    <option value="0" selected="">Todos </option>
-                                                    <option value="1">Docente</option>
-                                                    <option value="2">Administrativo</option>
+                                            <div class="col-lg-2" style="text-align:center">
+                                                <button title="Agregar Persona" @click="$dispatch('nuevo')" type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                                    <i class="bx bx-folder-plus" style="font-size:30px"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label><b>Periodo</b></label>
+                                                <select class="form-select mb-3" wire:model.live="anio" wire:change="updTable" aria-label="Default select example">
+                                                    <?php
+                                                        for ($i=2024; $i <= date('Y'); $i++) { 
+                                                            ?><option value="{{$i}}">{{$i}}</option><?php
+                                                        }
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4">

@@ -10,11 +10,11 @@ class Table extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $esado = 0, $perPage = 20;
+    public $pabellon = 0, $estado = 0, $perPage = 20;
     #[On('rTabla')]
-    public function rtabla($grupo, $clase){
-        $this->grupo = $grupo;
-        $this->clase = $clase;
+    public function rtabla($estado, $pabellon){
+        $this->estado = $estado;
+        $this->pabellon = $pabellon;
     }
     #[On('rTabla2')]
     public function rTabla2(){
@@ -22,9 +22,16 @@ class Table extends Component
     }
     public function render(){
         $data = Ambiente::leftjoin('log_catalogo_tipos_ambientes as ct', 'ct.id', 'log_ambientes.catalogo_tipo_ambiente_id')
-            ->leftjoin('log_catalogo_ubicaciones as u', 'u.id', 'log_ambientes.catalogo_ubicacion_id')
-            ->select('log_ambientes.id', 'log_ambientes.nombre', 'log_ambientes.descripcion', 'ct.descripcion as tipo', 'u.descripcion as ubicacion', 'log_ambientes.estado')
-            ->paginate($this->perPage);
-        return view('livewire.patrimonio.ambientes.table',['posts' => $data]);
+            ->leftjoin('log_catalogo_pabellones as u', 'u.id', 'log_ambientes.catalogo_pabellon_id')
+            ->select('log_ambientes.id', 'log_ambientes.nombre', 'ct.descripcion as tipo', 'u.descripcion as ubicacion', 'log_ambientes.estado');
+        if($this->estado == 1){
+            $data = $data->where('log_ambientes.estado', 1);
+        }elseif($this->estado == 2){
+            $data = $data->where('log_ambientes.estado', 0);
+        }
+        if($this->pabellon){
+            $data = $data->where('log_ambientes.catalogo_pabellon_id', $this->pabellon);
+        }
+        return view('livewire.patrimonio.ambientes.table',['posts' => $data->paginate($this->perPage)]);
     }
 }

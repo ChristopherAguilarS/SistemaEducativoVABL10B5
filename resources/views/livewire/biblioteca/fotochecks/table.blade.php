@@ -23,22 +23,22 @@
                                                 {{ $loop->iteration}}
                                             </td>
                                             <td class="align-middle">
-                                                {{ $especifica->dni }}
+                                                {{ $especifica->documento }}
                                             </td>
                                             <td class="align-middle">
                                                 {{ $especifica->nombres }} 
                                                 <br>  
-                                                @if($especifica->catalogo_tipo_trabajador_id == 1)
-                                                    <span style="margin-top:5px" class="badge bg-success">Docente</span>
-                                                @else
-                                                    <span class="badge bg-danger">Administrativo</span>
+                                                @if($especifica->tipo == 1)
+                                                    <span style="margin-top:5px" class="badge bg-success">Alumno</span>
+                                                @elseif($especifica->tipo == 2)
+                                                    <span class="badge bg-danger">Docente</span>
                                                 @endif
                                             </td>
                                             <td class="align-middle">
-                                                {{ $especifica->area }} 
+                                                {{ $especifica->etiqueta }} 
                                             </td>
                                             <td class="align-middle">
-                                                {{ date('d/m/Y', strtotime($especifica->fecha_inicio)) }} 
+                                                {{ $especifica->periodo }} 
                                             </td>
                                             <td class="text-center align-middle"> 
                                                 <button type="button" @click="$dispatch('verResumen', [{{ $especifica->id }}])" class="btn btn-info btn-sm"><i class="ri-contacts-book-line"></i> Ver</button>

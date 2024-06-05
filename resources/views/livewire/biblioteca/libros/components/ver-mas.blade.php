@@ -120,12 +120,12 @@
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal"><b>CANCELAR</b></button>
                         @if(!$state->reservado_por)
                             <button type="button" class="btn btn-warning " @click="$dispatch('reservar', [{{$state->id}}])" wire:loading.attr="disabled">
-                                <span class="spinner-border flex-shrink-0" wire:loading=""  style="display:none"></span>
+                                <span class="spinner-border flex-shrink-0" wire:loading=""  style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                                 <b>RESERVAR</b>
                             </button>
                         @else
                             <button type="button" style="width:80px; padding: 4px;" @click="$dispatch('devolver', [{{$state->id}}])" wire:loading.attr="disabled" class="btn btn-outline-info waves-effect waves-light material-shadow-none">
-                                <span class="spinner-border spinner-border-sm flex-shrink-0" wire:loading  style="display:none"></span>
+                                <span class="spinner-border spinner-border-sm flex-shrink-0" wire:loading  style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
                                 <span wire:loading.remove><b>DEVOLVER</b></span>
                             </button>
                         @endif
