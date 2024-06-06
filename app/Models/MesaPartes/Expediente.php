@@ -13,6 +13,7 @@ class Expediente extends Model
     protected $primaryKey = 'id';
     protected $fillable=[
         'id',
+        'correlativo',
         'catalogo_tipo_documento_id',
         'folios',
         'asunto',

@@ -32,6 +32,8 @@ class VerDetalles extends Component
             $this->editar = $id;
         }else{
             $this->titulo = "Nuevo Personal";
+            $this->urlFoto = 'images/1.jpeg';
+            $this->foto = null;
             $this->state = ['tipoDocumento' => 0, 'numeroDocumento' => '', 'sexo' => 1, 'nombres' => '', 'apellidoPaterno' => '', 'apellidoMaterno' => '', 'fechaNacimiento' => '', 'estadoCivil' => 0, 'telefonos' => '', 'lugar_nacimiento' => '', 'email' => '', 'direccion' => ''];
             $this->editar = false;
         }

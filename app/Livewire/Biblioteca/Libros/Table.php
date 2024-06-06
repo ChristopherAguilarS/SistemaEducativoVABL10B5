@@ -58,7 +58,7 @@ class Table extends Component
         $this->dispatch('dev', [$id]);
     }
     public function render(){
-        $data = Libro::with(['autor'])->whereRaw('(reservado_por = 0 or reservado_por = '.auth()->user()->id.')');
+        $data = Libro::with(['autor'])->where('estado', 1)->whereRaw('(reservado_por = 0 or reservado_por = '.auth()->user()->id.')');
         if($this->categoria){
             $data = $data->where('catalogo_categoria_id', $this->categoria);
         }

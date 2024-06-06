@@ -12,7 +12,7 @@ class Asignacion extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $titulo,  $urlFoto = '', $Foto, $preview, $equipo, $codigo, $descripcion, $idSel, $selTab = 0, $prestado, $search;
+    public $titulo,  $urlFoto = '', $Foto, $preview, $equipo, $codigo, $descripcion, $idSel, $selTab = 0, $prestado, $search, $observaciones;
 
     #[On('Asignacion')]
     public function ver($equipo, $codigo, $descripcion){
@@ -37,6 +37,7 @@ class Asignacion extends Component
         $sav2 = EquipoPrestado:: create([
             'equipo_id' => $this->idSel,
             'persona_id' => $this->selTab,
+            'observaciones_entrega' => $this->observaciones,
             'estado' => 1,
             'created_by' =>auth()->user()->id,
             'created_at' => date('Y-m-d H:i:s')
@@ -49,6 +50,7 @@ class Asignacion extends Component
         $sav = Equipo::where('id', $this->idSel)->update(['prestamo_persona_id' => 0]);
         $sav2 = EquipoPrestado::where('equipo_id', $this->idSel)->where('estado', 1)->update([
             'fecha_devolucion' => date('Y-m-d H:i:s'),
+            'observaciones_devolucion' => $this->observaciones,
             'estado' => 0
         ]);
         $this->dispatch('rTabla2');

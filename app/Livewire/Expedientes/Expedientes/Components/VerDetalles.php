@@ -11,7 +11,7 @@ use App\Models\Patrimonio\CatalogoUbicacion;
 class VerDetalles extends Component {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $titulo,  $editar = false, $documento, $estado, $tipo, $observaciones, $areas, $personas, $area, $persona, $expediente;
+    public $titulo,  $editar = false, $correlativo, $estado, $tipo, $observaciones, $areas, $personas, $area, $persona, $expediente, $fecha_recibido, $hora_recibido;
     public function updatedArea($id){
         $this->personas = Persona::join('rrhh_vinculo_laboral as vl', 'rrhh_personas.id', 'vl.persona_id')
             ->select('rrhh_personas.id', 'apellidoPaterno', 'apellidoMaterno', 'nombres')
@@ -20,20 +20,25 @@ class VerDetalles extends Component {
     #[On('nuevo')]
     public function ver($id, $tipo){
         $this->tipo = $tipo;
-        $this->documento = $id;
-        $this->expediente = Expediente::find($this->documento);
+        
+        $this->expediente = Expediente::find($id);
         if(!$tipo){
             $this->dispatch('verModal', ['id' => 'form1', 'accion' => 'show']);
             $this->titulo = "Detalle de Expediente";
-            if($tipo == 1){
-                $this->estado = "ATENDER";
+            if($tipo == 0){
+                $this->estado = "PENDIENTE";
+            }elseif($tipo == 1){
+                $this->estado = "ATENDIDO";
+                $this->areas = CatalogoArea::where('estado', 1)->get()->toArray();
             }elseif($tipo == 2){
                 $this->estado = "DERIVADO";
-                $this->areas = CatalogoArea::where('estado', 1)->get()->toArray();
             }elseif($tipo == 3){
-                $this->estado = "DENEGAR";
+                $this->estado = "DENEGADO";
             }
+            $this->correlativo = $this->expediente->correlativo;
             $this->observaciones = $this->expediente->observaciones;
+            $this->fecha_recibido = date('Y-m-d', strtotime($this->expediente->created_at));
+            $this->hora_recibido = date('h:i a', strtotime($this->expediente->created_at));
         }else{
             if($this->expediente->estado == 2){
                 $this->dispatch('alert_danger', ['mensaje' => 'El expediente ya fue Atendido']);
@@ -69,7 +74,7 @@ class VerDetalles extends Component {
     }
     public function guardar(){
         if($this->tipo == 1){
-            $this->expediente ->estado=2;
+            $this->expediente ->estado=1;
             $this->expediente ->observaciones=$this->observaciones;
             $this->expediente ->save();
             $this->dispatch('alert_info', ['mensaje' => 'Expediente atendido correctamente']);
@@ -81,7 +86,7 @@ class VerDetalles extends Component {
             $this->expediente ->observaciones=$this->observaciones;
             $this->expediente ->save();
             $copia->origen_id = $this->documento;
-            $copia->estado = 1;
+            $copia->estado = 2;
             $copia->created_by = auth()->user()->id;
             $copia->created_at = date('Y-m-d H:i:s');
             $copia->save();

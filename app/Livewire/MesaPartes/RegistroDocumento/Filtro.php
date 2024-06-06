@@ -22,8 +22,12 @@ class Filtro extends Component{
         }
     }
     public function correlativo(){
-        $num = Expediente::max('id');
-        $this->numero = $num+1;
+        $num = Expediente::max('correlativo');
+        if($num){
+            $this->numero = $num+1;
+        }else{
+            $this->numero = 1;
+        }
     }
     public function mount(){
         $this->correlativo();
@@ -36,6 +40,7 @@ class Filtro extends Component{
     }
     public function limpiar(){
         $this->guardado = false;
+        $this->correlativo();
         $this->state = [
             'catalogo_tipo_documento_id' => 0,
             'folios' => '',
@@ -62,12 +67,14 @@ class Filtro extends Component{
                 'state.catalogo_tipo_documento_id' => 'required|not_in:0',
                 'state.catalogo_area_id' => 'required|not_in:0',
                 'state.persona_id' => 'required|not_in:0',
+                'numero' => 'required|not_in:0',
             ]);
-            $existe = Expediente::where('id', $this->numero)->first();
+            $existe = Expediente::where('correlativo', $this->numero)->first();
             if($existe){
                 $this->dispatch('info', ['mensaje' => 'Correlativo #'.$this->numero.", ya existe."]);
             }else{
-                $this->state['estado'] = 1;
+                $this->state['estado'] = 0;
+                $this->state['correlativo'] = $this->numero;
                 $this->state['created_by'] = auth()->user()->id;
                 $this->state['created_at'] = date('Y-m-d H:i:s');
                 $sav = Expediente::Create($this->state);
@@ -77,7 +84,7 @@ class Filtro extends Component{
                     $this->pdf->storeAs($ruta, $nombre, 'public');
                 }
                 $this->guardado = $sav->id;
-                $this->dispatch('info', ['mensaje' => 'Expediente Guardado, Nro:'.$this->guardado]);
+                $this->dispatch('info', ['mensaje' => 'Expediente Guardado, Nro:'.$this->numero]);
             }
             
             

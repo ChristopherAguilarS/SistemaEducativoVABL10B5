@@ -18,7 +18,7 @@ class FuncionesCtrl extends BaseController{
             if($tipo == 1){
                 $res = Http::get('https://api.apis.net.pe/v1/dni?numero='.$doc);
                 $r1 = json_decode($res);
-                if($r1->nombre){
+                if(isset($r1->nombre) && $r1->nombre){
                     $sav = Remitente::firstOrCreate([
                         'tipo_remitente' => $tipo,
                         'documento' => $doc,

@@ -13,7 +13,7 @@ class Categorias extends Component{
 
     public function render(){
         $this->libros = Libro::join('biblioteca_catalogo_autores as ca', 'ca.id', 'biblioteca_libros.catalogo_autor_id')
-            ->select('biblioteca_libros.id', 'biblioteca_libros.nombre', 'biblioteca_libros.imagen', 'ca.descripcion as autor', 'valoracion')->inRandomOrder()->take(12)->get();
+            ->select('biblioteca_libros.id', 'biblioteca_libros.nombre', 'biblioteca_libros.imagen', 'ca.descripcion as autor', 'valoracion')->where('biblioteca_libros.estado', 1)->inRandomOrder()->take(12)->get();
         return view('livewire.biblioteca.inicio.components.categorias');
     }
 }

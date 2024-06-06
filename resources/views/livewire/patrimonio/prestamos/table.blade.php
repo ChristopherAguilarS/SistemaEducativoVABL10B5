@@ -6,13 +6,15 @@
                         <table class="table table-nowrap table-striped-columns mb-4">
                             <thead>
                                 <tr>
-                                    <th style="width: 10px;">Nro.</th>
-                                    <th style="width: 10px;">Codigo</th>
-                                    <th>Denominación</th>
-                                    <th>Ubicacion</th>
-                                    <th style="width: 10px;">Estado</th>
-                                    <th style="width: 10px;">Asig.</th>
-                                    <th style="width: 10px;">Det.</th>
+                                    <th style="width: 10px; vertical-align:middle;">Nro.</th>
+                                    <th style="width: 10px; vertical-align:middle">Codigo</th>
+                                    <th style="vertical-align:middle;">Denominación</th>
+                                    <th style="vertical-align:middle;">Serie</th>
+                                    <th style="vertical-align:middle;">Ubicacion</th>
+                                    <th style="vertical-align:middle;">Observaciones</th>
+                                    <th style="width: 10px;text-align:center">Fecha/Hora <br>Prestamo</th>
+                                    <th style="width: 10px;vertical-align:middle;text-align:center">Estado</th>
+                                    <th style="width: 10px;vertical-align:middle;">Prestamo/Devolucion</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -22,6 +24,7 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>{{$data->CODIGO_ACTIVO}}</td>
                                             <td>{{$data->DESCRIPCION}}</td>
+                                            <td>{{$data->NRO_SERIE}}</td>
                                             <td>
                                                 <?php
                                                     if($data->prestado){
@@ -31,18 +34,23 @@
                                                     }
                                                 ?>
                                             </td>
-                                            <td>
+                                            <td>{{$data->observaciones_entrega}}</td>
+                                            <td style="text-align:center">
+                                                @if($data->estado)
+                                                    {{date('d/m/Y', strtotime($data->created_at))}}<br><small class="text-muted ms-1">{{date('h:i a', strtotime($data->created_at))}}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td style="text-align:center">
                                                 @if($data->prestado)
                                                     <h4><span class="badge bg-danger">Prestado</span></h4>
                                                 @else
                                                     <h4><span style="margin-top:5px" class="badge bg-success">Disponible</span></h4>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td style="text-align:center">
                                                 <button type="button" wire:click="$dispatch('Asignacion', [{{$data->equipo_id}}, '{{$data->CODIGO_ACTIVO}}', '{{$data->DESCRIPCION}}'])" class="btn btn-info"><i class="mdi mdi-account-convert-outline"></i></button>
-                                            </td>
-                                            <td>
-                                                <button type="button" wire:click="$dispatch('ver', [{{$data->id}}, '{{$data->denominacion}}'])" class="btn btn-primary"><i class="mdi mdi-badge-account-horizontal"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach

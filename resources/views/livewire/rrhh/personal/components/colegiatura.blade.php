@@ -1,4 +1,4 @@
-<div>
+
     <div wire:ignore.self id="form4" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog  modal-xl">
             <div class="modal-content">

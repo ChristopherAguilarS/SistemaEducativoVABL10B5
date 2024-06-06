@@ -11,8 +11,8 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label">Documento</label>
-                                <input type="text" class="form-control" wire:model="documento" disabled>
+                                <label class="form-label">Expediente</label>
+                                <input type="text" class="form-control" wire:model="correlativo" style="text-align:center" disabled>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -53,6 +53,18 @@
                             <div class="mb-3">
                                 <label class="form-label">Observaciones</label>
                                 <textarea wire:model="observaciones" class="form-control" rows="3" @if(!$tipo) disabled @endif></textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <div class="mb-3">
+                                <label class="form-label">Recibido Fecha</label>
+                                <input type="date" class="form-control" wire:model="fecha_recibido" disabled>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-3">
+                            <div class="mb-3">
+                                <label class="form-label">Recibido Hora</label>
+                                <input type="text" class="form-control" wire:model="hora_recibido" disabled>
                             </div>
                         </div>
                     </div>

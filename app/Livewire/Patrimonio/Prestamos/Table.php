@@ -22,8 +22,11 @@ class Table extends Component
         $this->render();
     }
     public function render(){
-        $data = Equipo::leftjoin('rrhh_personas as rp', 'rp.id', 'log_equipos.prestamo_persona_id')
-            ->select('log_equipos.id', 'log_equipos.CODIGO_ACTIVO', 'log_equipos.DESCRIPCION', 'log_equipos.id as equipo_id', 'rp.id as prestado', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ' ', nombres) as nombres"))
+        $data = Equipo::leftjoin('log_equipos_prestados as ep', function ($join) {
+            $join->on('ep.equipo_id', '=', 'log_equipos.id')
+                ->on('ep.estado', '=', DB::raw('1'));
+            })->leftjoin('rrhh_personas as rp', 'rp.id', 'log_equipos.prestamo_persona_id')
+            ->select('log_equipos.id', 'ep.estado', 'NRO_SERIE', 'ep.observaciones_entrega', 'ep.created_at','log_equipos.CODIGO_ACTIVO', 'log_equipos.DESCRIPCION', 'log_equipos.id as equipo_id', 'rp.id as prestado', DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ' ', nombres) as nombres"))
             ->where('prestamo', 1)
             ->paginate($this->perPage);
         return view('livewire.patrimonio.prestamos.table',['posts' => $data]);

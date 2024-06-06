@@ -31,13 +31,13 @@
                                                 </a>
                                             </td>
                                             <td style="vertical-align:middle">
-                                                @if($data->estado == 1)
+                                                @if($data->estado == 0)
                                                     <h4><div class="badge bg-danger">Pendiente</div></h4>
-                                                @elseif($data->estado == 2)
+                                                @elseif($data->estado == 1)
                                                     <h4><div class="badge bg-success">Atendido</div></h4>
-                                                @elseif($data->estado == 3)
+                                                @elseif($data->estado == 2)
                                                     <h4><div class="badge bg-warning">Derivado</div></h4>
-                                                @elseif($data->estado == 4)
+                                                @elseif($data->estado == 3)
                                                     <h4><div class="badge bg-dark">Denegado</div></h4>
                                                 @endif
                                             </td>

@@ -16,7 +16,7 @@
     @endcomponent
     <div class="row">
         <div class="col-xl-3 col-md-6">
-            <a href="/qr/equipo/0" class="card card-animate" style="background-color:#f95900">
+            <a href="/mesa-partes/registro-documento" class="card card-animate" style="background-color:#f95900">
                 <div class="card-body text-center">
                     <i class="mdi mdi-bookmark-box-multiple" style="font-size:60px; color:white"></i>
                     <br>
@@ -25,7 +25,7 @@
             </a><!-- end card -->
         </div>
         <div class="col-xl-3 col-md-6">
-            <a href="/qr/equipo/0" class="card card-animate" style="background-color:#f95900">
+            <a href="/mesa-partes/busqueda-documento" class="card card-animate" style="background-color:#f95900">
                 <div class="card-body text-center">
                     <i class="mdi mdi-archive-search-outline" style="font-size:60px; color:white"></i>
                     <br>

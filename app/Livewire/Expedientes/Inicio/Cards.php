@@ -7,10 +7,10 @@ class Cards extends Component{
     public function render(){
         $tt = Expediente::where('persona_id', auth()->user()->id)->get();
         $this->total = $tt->count();
-        $this->pendientes = $tt->where('estado', 1)->count();
-        $this->atendidos = $tt->where('estado', 2)->count();
-        $this->tramite = $tt->where('estado', 3)->count();
-        $this->denegados = $tt->where('estado', 4)->count();
+        $this->pendientes = $tt->where('estado', 0)->count();
+        $this->atendidos = $tt->where('estado', 1)->count();
+        $this->tramite = $tt->where('estado', 2)->count();
+        $this->denegados = $tt->where('estado', 3)->count();
         return view('livewire.expedientes.inicio.cards');
     }
 }

@@ -7,7 +7,8 @@ Route::prefix('/patrimonio')->group(function () {
         Route::get('/inventariado/por-ambiente', function () { return view('livewire.patrimonio.por-ambiente.index'); })->name('patrimonio/inventariado/por-ambiente');
         Route::get('/inventariado/por-persona', function () { return view('livewire.patrimonio.por-persona.index'); })->name('patrimonio/inventariado/por-persona');
         Route::get('/inventariado/por-equipo', function () { return view('livewire.patrimonio.por-equipo.index'); })->name('patrimonio/inventariado/por-equipo');
-        Route::get('/reportes/equipos-situacion', function () { return view('livewire.rrhh.index'); })->name('patrimonio/reportes/equipos-situacion');
+        Route::get('/reportes/equipos-situacion', function () { return view('livewire.patrimonio.reportes.equipos-situacion.index'); })->name('patrimonio/reportes/equipos-situacion');
+        Route::get('/reportes/equipos-prestados', function () { return view('livewire.patrimonio.reportes.equipos-prestados.index'); })->name('patrimonio/reportes/equipos-prestados');
         Route::get('/patrimonio/impresion', function () { return view('livewire.rrhh.index'); })->name('patrimonio/impresion');
         Route::get('/patrimonio/prestamos', function () { return view('livewire.patrimonio.prestamos.index'); })->name('patrimonio/prestamos');
         Route::get('/patrimonio/ambientes', function () { return view('livewire.patrimonio.ambientes.index'); })->name('patrimonio/ambientes');

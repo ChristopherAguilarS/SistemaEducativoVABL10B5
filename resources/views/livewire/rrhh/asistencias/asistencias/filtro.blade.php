@@ -30,8 +30,8 @@
                                 <div class="col-lg-3">
                                     <b>Estado</b>
                                     <select wire:model="mes" class="form-select  mb-3 mt-2">
-                                        <option value="1">Real</option>
-                                        <option value="2">Procesado</option>
+                                        <option value="1">Activo</option>
+                                        <option value="2">Cesado</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-6">
@@ -44,15 +44,28 @@
                                 <div class="col-lg-3">
                                     <b>Mes</b>
                                     <select wire:model="mes" class="form-select  mb-3 mt-2">
-                                        <option value="1">Real</option>
-                                        <option value="2">Procesado</option>
+                                        <option value="01">Enero</option>
+                                        <option value="02">Febrero</option>
+                                        <option value="03">Marzo</option>
+                                        <option value="04">Abril</option>
+                                        <option value="05">Mayo</option>
+                                        <option value="06">Junio</option>
+                                        <option value="07">Julio</option>
+                                        <option value="08">Agosto</option>
+                                        <option value="09">Setiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-3">
                                     <b>Año</b>
                                     <select wire:model="mes" class="form-select  mb-3 mt-2">
-                                        <option value="1">Real</option>
-                                        <option value="2">Procesado</option>
+                                        <?php
+                                            for ($i=2024; $i <= date('Y') ; $i++) { 
+                                                ?><option value="{{$i}}">{{$i}}</option><?php
+                                            }
+                                        ?>
                                     </select>
                                 </div>
                                 <div class="col-lg-6" style="text-align:center; margin-top:20px">

@@ -16,6 +16,8 @@ class EquipoPrestado extends Model
         'equipo_id',
         'persona_id',
         'fecha_devolucion',
+        'observaciones_entrega',
+        'observaciones_devolucion',
         'estado',
         'created_by',
         'created_at',

@@ -10,7 +10,7 @@
                                                         <i class="ri-space-ship-line display-6 text-muted cfs-22"></i>
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$pendientes}}">0</span></h2>
+                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$reservados}}">0</span></h2>
                                                     </div>
                                                 </div>
                                             </div>
@@ -23,7 +23,7 @@
                                                         <i class="ri-exchange-dollar-line display-6 text-muted cfs-22"></i>
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$atendidos}}">0</span></h2>
+                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$pendientes}}">0</span></h2>
                                                     </div>
                                                 </div>
                                             </div>
@@ -36,7 +36,7 @@
                                                         <i class="ri-pulse-line display-6 text-muted cfs-22"></i>
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$tramite}}">0</span></h2>
+                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$total}}">0</span></h2>
                                                     </div>
                                                 </div>
                                             </div>
@@ -49,7 +49,7 @@
                                                         <i class="ri-trophy-line display-6 text-muted cfs-22"></i>
                                                     </div>
                                                     <div class="flex-grow-1 ms-3">
-                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="0">{{$denegados}}</span></h2>
+                                                        <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{$daniados}}">0</span></h2>
                                                     </div>
                                                 </div>
                                             </div>

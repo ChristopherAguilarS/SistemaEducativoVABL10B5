@@ -24,7 +24,7 @@
                                 <input type="text" wire:model="numero" class="form-control" placeholder="numero" style="text-align:center">
                                 <button type="button" class="btn btn-info " wire:click="correlativo" wire:loading.attr="disabled">
                                     <span class="spinner-border flex-shrink-0" wire:loading="" wire:target="correlativo" style="display:none; --vz-spinner-width: 1rem; --vz-spinner-height: 1rem;"></span>
-                                    <i class="bx bx-search-alt-2" wire:loading.remove="" wire:target="correlativo"></i>
+                                    <i class="bx bx-refresh" style="font-size: 16px;" wire:loading.remove="" wire:target="correlativo"></i>
                                 </button>
                             </div>
                             @error('numero') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
@@ -34,7 +34,7 @@
                             <label><b>Folios:</b></label>    
                         </div>
                         <div class="col-lg-4">
-                            <input type="text" wire:model="state.folios" class="form-control">
+                            <input type="number" wire:model="state.folios" class="form-control">
                             @error('state.folios') <span class="text-danger-emphasis">(*)Obligatorio</span> @enderror
                         </div>
                         <div class="col-lg-12"></div>

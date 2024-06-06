@@ -1,16 +1,18 @@
 <?php
 namespace App\Livewire\Biblioteca;
+use App\Models\Biblioteca\Libro;
+use App\Models\Biblioteca\LibroReserva;
 use Livewire\Component;
-use App\Models\MesaPartes\Expediente;
+
 class Cards extends Component{
-    public $pendientes = 0, $atendidos = 0, $tramite = 0, $denegados = 0, $total = 0;
+    public $total = 0, $daniados = 0, $reservados = 0, $pendientes = 0;
     public function render(){
-        $tt = Expediente::where('persona_id', auth()->user()->id)->get();
+        $tt = Libro::get();
+        $tt2 = LibroReserva::where('estado', 2)->count();
         $this->total = $tt->count();
-        $this->pendientes = $tt->where('estado', 1)->count();
-        $this->atendidos = $tt->where('estado', 2)->count();
-        $this->tramite = $tt->where('estado', 3)->count();
-        $this->denegados = $tt->where('estado', 4)->count();
+        $this->daniados = $tt->where('estado', 2)->count();
+        $this->reservados = $tt->where('reservado_por', '!=', 0)->count();
+        $this->pendientes = $this->reservados-$tt2;
         return view('livewire.biblioteca.cards');
     }
 }

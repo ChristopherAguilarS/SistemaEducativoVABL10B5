@@ -15,7 +15,7 @@ class NuevoComisiones extends Component
 {
     use WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $titulo = "Nueva Licencia", $tipo = 0, $motivo, $fecha_inicio, $fecha_fin, $idPers, $lugar, $existe = false, $archivo, $observaciones, $nombres, $documento;
+    public $titulo = "Nueva Comision", $tipo = 0, $motivo, $fecha_inicio, $fecha_fin, $idPers, $lugar, $existe = false, $archivo, $observaciones, $nombres, $documento;
     #[On('nuevoComisiones')]
     public function nuevoComisiones($id = 0){
         $this->state = [];
