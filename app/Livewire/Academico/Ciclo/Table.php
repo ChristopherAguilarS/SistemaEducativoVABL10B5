@@ -124,8 +124,10 @@ class Table extends Component
                 ],
                 [
                     'descripcion' => $this->form->descripcion,
-                    'tipo_ciclo_id' => $this->form->tipo_ciclo_id,
-                    'año_academico_id' => $this->form->año_academico_id,
+                    'tipo_ciclo_id' => 2,
+                    'año_academico_id' => 2,
+                    'vacantes' => 30,
+                    'libres' => 0,
                     'fecha_inicio' => $this->form->fecha_inicio,
                     'fecha_fin' => $this->form->fecha_fin,
                     'estado' => 1,

@@ -11,14 +11,16 @@ class MovimientoCajaChica extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'comprobante',
-        'fecha',
-        'cuenta_id',
+        'caja_chica_id',
         'descripcion',
-        'categoria_id',
-        'descripcion_categoria',
-        'tipo',
+        'fecha',
+        'tipo_movimiento',        
+        'categoria_movimiento_id',
         'monto',
+        'indicador_id',        
+        'responsable_id',
+        'tipo_desembolso',
+        'nro_desembolso',
         'estado',
         'created_by',
         'updated_by'
@@ -55,5 +57,10 @@ class MovimientoCajaChica extends Model
         return Attribute::make(
             get: fn () => $resultado,
         );
+    }
+
+    public function caja_chica(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\CajaChica', 'caja_chica_id', 'id');
     }
 }

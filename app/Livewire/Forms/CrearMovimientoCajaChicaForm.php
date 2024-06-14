@@ -8,21 +8,26 @@ use Livewire\Form;
 
 class CrearMovimientoCajaChicaForm extends Form
 {
-    #[Rule('required_if:tipo,2')]
-    public $comprobante = null;
+    public $caja_chica_id = null;
     #[Rule('required')]
     public $fecha = null;
-    #[Rule('required_unless:categoria_id,8')]
-    public $cuenta_id = null;
-    #[Rule('required')]
-    public $descripcion = null;    
-    #[Rule('required')]
-    public $categoria_id = null;
-    public $descripcion_categoria = null;
+    #[Rule('required_if:tipo,2')]
+    public $comprobante = null;
     #[Rule('required|integer')]
-    public $tipo = null;
-    #[Rule('required_unless:categoria_id,8')]
+    public $tipo_movimiento = null;
+    #[Rule('required')]
+    public $descripcion = null;
+    #[Rule('required|integer')]
+    public $categoria_movimiento_id = null;
+    #[Rule('required')]
     public $monto = null;
+    #[Rule('required_unless:categoria_id,8')]
+    public $indicador_id = null;
+    #[Rule('required')]
+    public $responsable_id = null;
+    public $categoria_id = null;
+    public $tipo_desembolso = null;
+    public $nro_desembolso = null;
     
     public function limpiarCampos(){
         $this->reset(); 

@@ -16,6 +16,8 @@
                                 <tr>
                                 <th scope="col">N°</th>
                                 <th scope="col">Descripcion</th>
+                                <th scope="col">Fecha Inicio</th>
+                                <th scope="col">Fecha Fin</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col" class="!text-center">Acciones</th>
                                 </tr>
@@ -28,6 +30,12 @@
                                         </td>
                                         <td>
                                             {{ $añoAcademico->descripcion }}
+                                        </td>                                        
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($añoAcademico->fecha_inicio)->format('d/m/y') }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($añoAcademico->fecha_fin)->format('d/m/y') }}
                                         </td>
                                         <td>
                                             @if($añoAcademico->estado == 1)

@@ -22,9 +22,9 @@ class Cards extends Component
     #[On('actualizarCards')]
     public function render()
     {
-        $fondos = MovimientoCajaChica::where('tipo',1)->whereIn('categoria_id',[1,2,3])->where('estado',1)
+        $fondos = MovimientoCajaChica::where('tipo_movimiento',1)->whereIn('categoria_movimiento_id',[1,2,3])->where('estado',1)
         ->sum('monto');
-        $egresos = MovimientoCajaChica::where('tipo',2)->where('estado',1)->sum('monto');  
+        $egresos = MovimientoCajaChica::where('tipo_movimiento',2)->where('estado',1)->sum('monto');  
         $saldo = $fondos - $egresos;
         return view('livewire.financiero-contable.contabilidad.caja-chica.cards',['fondos'=>$fondos,'egresos'=>$egresos,'saldo'=>$saldo]);
     }

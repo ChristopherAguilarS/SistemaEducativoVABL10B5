@@ -10,8 +10,12 @@ class CrearObjetivoEstrategicoForm extends Form
 {
     #[Rule('required')]
     public $descripcion  = null;
-    #[Rule('required')]
     public $codigo = null;
+    #[Rule('required')]
+    public $monto_asignado = null;
+    #[Rule('required')]
+    public $plan_anual_trabajo_id = null;
+    
 
     public function limpiarCampos(){
         $this->reset(); 

@@ -15,6 +15,7 @@
                             <thead>
                                 <tr>
                                 <th scope="col">N°</th>
+                                <th scope="col">Codigo</th>
                                 <th scope="col">Descripcion</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col" class="!text-center">Acciones</th>
@@ -25,6 +26,9 @@
                                     <tr>                
                                         <td class="font-medium">
                                             {{ $loop->index+1 }}
+                                        </td>
+                                        <td>
+                                            {{ $cuenta->codigo }}
                                         </td>
                                         <td>
                                             {{ $cuenta->descripcion }}

@@ -11,7 +11,7 @@
             Modulo Financiero y Contable
         @endslot
         @slot('title')
-            Asientos Contables
+           Asientos Contables
         @endslot
     @endcomponent
     @livewire('financiero-contable.contabilidad.asientos-contables.filtro')
@@ -19,9 +19,8 @@
 @endsection
 @section('script')
 <!--jquery cdn-->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-<!--select2 cdn-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="{{ URL::asset('build/js/pages/select2.init.js') }}"></script>
@@ -32,5 +31,5 @@
         placeholder: 'Seleccione una opcion',
         dropdownParent: '#myModal'
     })
-</script>
+</script> --}}
 @endsection

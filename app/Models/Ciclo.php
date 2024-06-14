@@ -14,6 +14,8 @@ class Ciclo extends Model
         'descripcion',
         'tipo_ciclo_id',
         'año_academico_id',
+        'vacantes',
+        'libres',
         'fecha_inicio',
         'fecha_fin',
         'estado',

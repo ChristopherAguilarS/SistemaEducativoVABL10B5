@@ -5,40 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AsientoContable extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'codigo',
-        'fecha',
-        'cuenta_id',
         'descripcion',
-        'tipo',
-        'monto',
+        'fecha',
         'estado',
         'created_by',
         'updated_by'
     ];
 
-    protected function nTipo(): Attribute
+    public function detalle_debe(): HasMany
     {
-        $resultado = null;
-        if($this->tipo == 1){
-            $resultado =  'Deudor';
-        }
-        else{
-            $resultado = 'Acreedor';
-        }
-        return Attribute::make(
-            get: fn () => $resultado,
-        );
+        return $this->hasMany('App\Models\DetalleAsientoContable', 'asiento_id', 'id')->where('tipo',0);
     }
 
-    public function cuenta(): BelongsTo
+    public function detalle_haber(): HasMany
     {
-        return $this->belongsTo('App\Models\Cuenta', 'cuenta_id', 'id');
+        return $this->hasMany('App\Models\DetalleAsientoContable', 'asiento_id', 'id')->where('tipo',1);
     }
 
     protected function nEstado(): Attribute

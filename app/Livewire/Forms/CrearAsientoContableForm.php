@@ -8,17 +8,14 @@ use Livewire\Form;
 
 class CrearAsientoContableForm extends Form
 {
-    public $codigo  = null;
     #[Rule('required')]
-    public $cuenta_id = null;
-    #[Rule('required')]
-    public $descripcion = null;
+    public $descripcion  = null;
     #[Rule('required')]
     public $fecha = null;
-    #[Rule('required')]
-    public $tipo = null;
-    #[Rule('required')]
-    public $monto = null;
+    #[Rule('required|array|min:1')]
+    public $detalleDebe = [];
+    #[Rule('required|array|min:1')]
+    public $detalleHaber = [];
 
     public function limpiarCampos(){
         $this->reset(); 

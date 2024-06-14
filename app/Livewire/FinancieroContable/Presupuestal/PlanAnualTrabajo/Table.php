@@ -3,6 +3,7 @@
 namespace App\Livewire\FinancieroContable\Presupuestal\PlanAnualTrabajo;
 
 use App\Livewire\Forms\CrearPlanAnualTrabajoForm;
+use App\Models\AñoAcademico;
 use App\Models\PlanAnualTrabajo;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Js;
@@ -19,7 +20,12 @@ class Table extends Component
     public $planAnualTrabajoT;
     public $planAnualTrabajoId;
     public $mensaje;
-    public $años = ['2023','2024','2025','2026','2027','2028','2029','2030','2031','2032','2033'];
+    public $años;
+    // public $años = ['2023','2024','2025','2026','2027','2028','2029','2030','2031','2032','2033'];
+
+    public function mount(){
+        $this->años = AñoAcademico::where('estado',1)->get();
+    }
 
     #[On('agregar')]
     public function agregar(){
@@ -32,14 +38,14 @@ class Table extends Component
         $planAnualTrabajo = PlanAnualTrabajo::find($id);
         $this->titulo = 'Editar Plan Anual de Trabajo -'.optional($this->planAnualTrabajoT)->descripcion;
         $this->planAnualTrabajoId = $id;
-        $this->form->año = $planAnualTrabajo->año;
+        $this->form->año_academico_id = $planAnualTrabajo->año_academico_id;
         $this->form->nombre = $planAnualTrabajo->nombre;
-        $this->form->ruc = $planAnualTrabajo->ruc;
+        /* $this->form->ruc = $planAnualTrabajo->ruc;
         $this->form->resolucion = $planAnualTrabajo->resolucion;
         $this->form->tipo_gestion = $planAnualTrabajo->tipo_gestion;
         $this->form->direccion = $planAnualTrabajo->direccion;
         $this->form->lista_servicios = $planAnualTrabajo->lista_servicios;
-        $this->form->nombre_director = $planAnualTrabajo->nombre_director;
+        $this->form->nombre_director = $planAnualTrabajo->nombre_director; */
     }
 
     public function cambiarEstado($id){
@@ -113,14 +119,14 @@ class Table extends Component
                     'id'=>$this->planAnualTrabajoId,
                 ],
                 [
-                    'año' => $this->form->año,                    
+                    'año_academico_id' => $this->form->año_academico_id,                    
                     'nombre' => $this->form->nombre,                    
-                    'ruc' => $this->form->ruc,                    
+                    /* 'ruc' => $this->form->ruc,                    
                     'resolucion' => $this->form->resolucion,                    
                     'tipo_gestion' => $this->form->tipo_gestion,                    
                     'direccion' => $this->form->direccion,                    
                     'lista_servicios' => $this->form->lista_servicios,
-                    'nombre_director' => $this->form->nombre_director,
+                    'nombre_director' => $this->form->nombre_director, */
                     'estado' => 1,
                     'created_by' => Auth::user()->id
                 ]);

@@ -66,6 +66,9 @@ Route::prefix('/configuracion')->group(function () {
         Route::get('/cuentas', function () {
             return view('livewire.configuracion.contable.cuentas.index');
         })->name('configuracion/contabilidad/cuentas');
+        Route::get('/saldo-inicial', function () {
+            return view('livewire.configuracion.contable.saldo-inicial.index');
+        })->name('configuracion/contabilidad/saldo-inicial');
     });
 });
 Route::prefix('/contable')->group(function () {

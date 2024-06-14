@@ -24,7 +24,7 @@ class PedidoDetalle extends Authenticatable
         'item_id',
         'item_tipo',
         'item_equipo_id',
-        'partida_id',
+        'indicador_id',
         'precio',
         'almacen_id',
         'cantidad',

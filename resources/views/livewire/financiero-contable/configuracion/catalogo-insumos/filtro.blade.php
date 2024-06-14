@@ -7,11 +7,8 @@
                         <div class="col-xxl-6">
                             <div class="row g-2 text-center">
                                 <div class="col-lg-12 text-center">
-                                    <button title="Agregar Persona" @click="$dispatch('nuevo', 0)" type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
-                                        <i class="bx bx-user-plus" style="font-size:30px"></i>
-                                    </button>
-                                    <button title="Estudios de Pre Grado" @click="$dispatch('preGrado', 0)" type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
-                                        <i class="bx bxs-graduation" style="font-size:30px"></i>
+                                    <button title="Agregar Insumo" @click="$dispatch('nuevo', 0)" type="button" class="btn btn-outline-primary waves-effect waves-light material-shadow-none">
+                                        <i class='bx bx-message-alt-add' style="font-size:30px"></i>
                                     </button>
                                 </div>
                             </div>
@@ -21,14 +18,6 @@
                         <div class="col-xxl-5">
                             <div class="row g-2 text-center">
                                 <div class="col-lg-6">
-                                </div>
-                                <div class="col-lg-6">
-                                    <select wire:model="estado" wire:change="cEstado" class="form-select  mb-3 mt-2">
-                                        <option value="0">Todos</option>
-                                        <option value="1">Con Contrato Activo</option>
-                                        <option value="2">Nuevos Ingresos</option>
-                                        <option value="3">Cesados</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>

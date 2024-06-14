@@ -12,16 +12,17 @@ use App\Http\Controllers\FinancieroContable\FuncionesCtrl as logis;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
-use DB;
 use App\Models\FinancieroContable\Insumo;
-use App\Models\FinancieroContable\Tarea;
+use App\Models\Indicador;
 use App\Models\RecursosHumanos\VinculoLaboral;
+use Illuminate\Support\Facades\DB;
+
 class VerDetalles extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $titulo, $monedas ,$items = [], $loc_monedas, $userCreacion, $userFecha, $cod, $todo = 0, $cant = [],$almacen_tipo,$nomAlm, $nomAlmDes, $state = ['almacen_id' => 0, 'tipo_id' => 1, 'almacen_destino' =>0], $ver = 0, $editar = false, $idR, $idSel, $codProy, $nomProy, $codTrab, $nomTrab, $aprobar, $ap = [], $tpp, $almacen_id = 0;
-    public $revisadoPor, $revisadoEl, $partidas, $prod = [],  $trabajadores;
+    public $revisadoPor, $revisadoEl, $partidas, $prod = [], $selCorr,$solicitantes, $trabajadores;
     #[On('savItem')]
     public function savItem($arr){
         $this->items[$arr['id']] = $arr;
@@ -180,7 +181,7 @@ class VerDetalles extends Component
                                 'item_tipo' => $this->almacen_tipo,
                                 'cantidad' => $item['cantidad'],
                                 'almacen_id' => $this->state['almacen_id'],
-                                'tarea_id' => $item['tarea_id'],
+                                'indicador_id' => $item['indicador_id'],
                                 'precio' => $item['precio'],
                                 'estado'=>1,
                                 'created_by' => auth()->user()->id,
@@ -212,8 +213,8 @@ class VerDetalles extends Component
                         }
                         $sav = Pedido::create($this->state);
                         if($sav){
-                            $sav2 = DB::statement("INSERT INTO log_pedidos_detalles(pedido_id, item_id, item_tipo, tarea_id, precio, almacen_id, cantidad, estado, created_by, created_at) 
-                                        SELECT ".$sav->id.", item_id, ".$this->almacen_tipo.", tarea_id, precio, almacen_id, cantidad, 1, ".auth()->user()->id.", '".date('Y-m-d H:i')."'
+                            $sav2 = DB::statement("INSERT INTO log_pedidos_detalles(pedido_id, item_id, item_tipo, indicador_id, precio, almacen_id, cantidad, estado, created_by, created_at) 
+                                        SELECT ".$sav->id.", item_id, ".$this->almacen_tipo.", indicador_id, precio, almacen_id, cantidad, 1, ".auth()->user()->id.", '".date('Y-m-d H:i')."'
                                         FROM log_pedidos_detalles_temp WHERE created_by = ".auth()->user()->id." and almacen_tipo = ".$this->almacen_tipo."
                                         ");
                         }
@@ -294,12 +295,12 @@ class VerDetalles extends Component
                 $prods = PedidoDetalle::leftjoin('log_compras as c','c.id', 'log_pedidos_detalles.compra_id')
                     ->join('log_insumos as l', 'l.id', 'log_pedidos_detalles.item_id')
                     ->leftjoin('log_catalogo_unidad_medida as um', 'um.id', 'l.catalogoUnidadMedida_id')
-                    ->select('log_pedidos_detalles.estado','c.correlativo', 'um.nombre as medida', 'item_id', 'com_sin_igv', 'compra_id', 'tarea_id', 'l.nombre as nom', 'aprobacionUser_id', 'log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("'1' as tpp"), 'eliminar', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
+                    ->select('log_pedidos_detalles.estado','c.correlativo', 'um.nombre as medida', 'item_id', 'com_sin_igv', 'compra_id', 'indicador_id', 'l.nombre as nom', 'aprobacionUser_id', 'log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("'1' as tpp"), 'eliminar', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
                     ->where('pedido_id', $this->idSel)->get();
                 if($this->ver == 4){
                     $temps= PedidoDetalleTemp::join('log_insumos as l', 'l.id', 'log_pedidos_detalles_temp.item_id')
                         ->leftjoin('log_catalogo_unidad_medida as um', 'um.id', 'l.catalogoUnidadMedida_id')
-                        ->select(DB::raw("'1' as estado"), 'um.nombre as medida', 'item_id', 'precio as com_sin_igv', DB::raw("'0' as compra_id"), 'tarea_id', 'l.nombre as nom', DB::raw("'0' as aprobacionUser_id"), 'log_pedidos_detalles_temp.id', 'cantidad', DB::raw("'0' as cantidad_aprobada"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
+                        ->select(DB::raw("'1' as estado"), 'um.nombre as medida', 'item_id', 'precio as com_sin_igv', DB::raw("'0' as compra_id"), 'indicador_id', 'l.nombre as nom', DB::raw("'0' as aprobacionUser_id"), 'log_pedidos_detalles_temp.id', 'cantidad', DB::raw("'0' as cantidad_aprobada"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
                         ->where('log_pedidos_detalles_temp.created_by', auth()->user()->id)->get();
                         $items = $prods->merge($temps);
                 }else{
@@ -311,17 +312,17 @@ class VerDetalles extends Component
                     $prods = PedidoDetalle::leftjoin('log_compras as c','c.id', 'log_pedidos_detalles.compra_id')
                         ->join('log_equipos as e', 'e.id', 'log_pedidos_detalles.item_id')
                         ->join('log_catalogo_equipos as lc', 'lc.id', 'e.catalogoEquipos_id')
-                        ->select('log_pedidos_detalles.estado', 'c.correlativo', DB::raw("'Unidad' as medida"),'log_pedidos_detalles.compra_id', 'tarea_id', 'log_pedidos_detalles.com_con_igv as precio','item_id', 'com_con_igv', 'lc.nombre as nom', DB::raw("'1' as tpp"), DB::raw("'0' as eliminar"), 'aprobacionUser_id','log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
+                        ->select('log_pedidos_detalles.estado', 'c.correlativo', DB::raw("'Unidad' as medida"),'log_pedidos_detalles.compra_id', 'indicador_id', 'log_pedidos_detalles.com_con_igv as precio','item_id', 'com_con_igv', 'lc.nombre as nom', DB::raw("'1' as tpp"), DB::raw("'0' as eliminar"), 'aprobacionUser_id','log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
                         ->where('pedido_id', $this->idSel)->get();
                 }else{
                     $prods = PedidoDetalle::leftjoin('log_compras as c','c.id', 'log_pedidos_detalles.compra_id')
                         ->join('log_catalogo_equipos as lc', 'lc.id', 'log_pedidos_detalles.item_id')
-                        ->select('log_pedidos_detalles.estado', 'c.correlativo', DB::raw("'Unidad' as medida"),'compra_id', 'tarea_id', 'log_pedidos_detalles.com_con_igv as precio','item_id', 'com_con_igv', 'lc.nombre as nom', DB::raw("'1' as tpp"), DB::raw("'0' as eliminar"), 'aprobacionUser_id','log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
+                        ->select('log_pedidos_detalles.estado', 'c.correlativo', DB::raw("'Unidad' as medida"),'compra_id', 'indicador_id', 'log_pedidos_detalles.com_con_igv as precio','item_id', 'com_con_igv', 'lc.nombre as nom', DB::raw("'1' as tpp"), DB::raw("'0' as eliminar"), 'aprobacionUser_id','log_pedidos_detalles.id', 'cantidad', 'cantidad_aprobada', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles.item_id  and st.almacen_id=log_pedidos_detalles.almacen_id) as en_almacen"))
                         ->where('pedido_id', $this->idSel)->get();
                 }
                 if($this->ver == 4){
                     $temps= PedidoDetalleTemp::join('log_catalogo_equipos as lc', 'lc.id', 'log_pedidos_detalles_temp.item_id')
-                        ->select('lc.nombre as nom',  DB::raw("'0' as cantidad_aprobada"), 'tarea_id', 'item_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
+                        ->select('lc.nombre as nom',  DB::raw("'0' as cantidad_aprobada"), 'indicador_id', 'item_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
                         ->where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
                         ->where('log_pedidos_detalles_temp.almacen_tipo', $this->almacen_tipo)
                         ->get();
@@ -347,7 +348,7 @@ class VerDetalles extends Component
             if($this->almacen_tipo == 1 || $this->almacen_tipo == 2){
                 $this->items = PedidoDetalleTemp::join('log_insumos as l', 'l.id', 'log_pedidos_detalles_temp.item_id')
                     ->leftjoin('log_catalogo_unidad_medida as um', 'um.id', 'l.catalogoUnidadMedida_id')
-                    ->select('l.nombre as nom', 'tarea_id', 'log_pedidos_detalles_temp.precio', 'um.nombre as medida', DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), DB::raw('0 as compra_id'), DB::raw('1 as estado'),'log_pedidos_detalles_temp.id', 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
+                    ->select('l.nombre as nom', 'indicador_id', 'log_pedidos_detalles_temp.precio', 'um.nombre as medida', DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), DB::raw('0 as compra_id'), DB::raw('1 as estado'),'log_pedidos_detalles_temp.id', 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
                     ->where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
                     ->where('log_pedidos_detalles_temp.almacen_tipo', $this->almacen_tipo)
                     ->get();
@@ -356,14 +357,14 @@ class VerDetalles extends Component
                 if($this->state['tipo_id'] == 2){
                     $this->items = PedidoDetalleTemp::join('log_equipos as e', 'e.id', 'log_pedidos_detalles_temp.item_id')
                         ->join('log_catalogo_equipos as lc', 'lc.id', 'e.catalogoEquipos_id')
-                        ->select('lc.nombre as nom', 'tarea_id', 'p.nombre as partida', 'tarea_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
+                        ->select('lc.nombre as nom', 'indicador_id', 'p.nombre as partida', 'indicador_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
                         ->where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
                         ->where('log_pedidos_detalles_temp.almacen_tipo', $this->almacen_tipo)
                         ->where('tipo_movimiento', '=', 2)
                         ->get();
                 }else{
                     $this->items = PedidoDetalleTemp::join('log_catalogo_equipos as lc', 'lc.id', 'log_pedidos_detalles_temp.item_id')
-                        ->select('lc.nombre as nom', 'tarea_id', 'p.nombre as partida', 'tarea_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
+                        ->select('lc.nombre as nom', 'indicador_id', 'p.nombre as partida', 'indicador_id', 'log_pedidos_detalles_temp.precio', DB::raw("'Unidad' as medida"), DB::raw("'0' as tpp"), DB::raw("'0' as eliminar"), 'log_pedidos_detalles_temp.id', DB::raw('0 as compra_id'), DB::raw('1 as estado'), 'cantidad', DB::raw("(SELECT stockActual from log_insumos_stock st where st.insumo_id =log_pedidos_detalles_temp.item_id  and st.almacen_id=log_pedidos_detalles_temp.almacen_id) as en_almacen"))
                         ->where('log_pedidos_detalles_temp.created_by', auth()->user()->id)
                         ->where('log_pedidos_detalles_temp.almacen_tipo', $this->almacen_tipo)
                         ->where('tipo_movimiento', '!=', 2)
@@ -382,7 +383,7 @@ class VerDetalles extends Component
         $this->validate(['prod.item_id' => 'required|not_in:0', 'prod.partida' => 'required|not_in:0', 'prod.cantidad' => 'required|not_in:0']);
         $data = [
             'item_id' => $this->prod['item_id'],
-            'tarea_id' => $this->prod['partida'],
+            'indicador_id' => $this->prod['partida'],
             'cantidad' => $this->prod['cantidad'],
             'almacen_tipo' => $this->almacen_tipo,
             'almacen_id' => $this->almacen_id, 
@@ -404,7 +405,7 @@ class VerDetalles extends Component
             $this->vItems();
     }
     public function render(){
-        $this->partidas = Tarea::get();
+        $this->partidas = Indicador::get();
         $this->trabajadores = VinculoLaboral::join('rrhh_personas as p', 'rrhh_vinculo_laboral.persona_id', 'p.id')
         ->select(DB::raw("CONCAT(apellidoPaterno, ' ', apellidoMaterno, ', ', nombres) as nombres"), 'numeroDocumento AS dni', 'p.id')
         ->where('rrhh_vinculo_laboral.estado', 1)->get();

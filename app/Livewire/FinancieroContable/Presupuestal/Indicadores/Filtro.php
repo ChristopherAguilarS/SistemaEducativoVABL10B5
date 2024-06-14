@@ -2,6 +2,7 @@
 
 namespace App\Livewire\FinancieroContable\Presupuestal\Indicadores;
 
+use App\Models\ActividadOperativa;
 use App\Models\MovimientoCajaChica;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,17 +11,20 @@ class Filtro extends Component
 {
     public $fecha_inicio;
     public $fecha_fin;
-    public $apertura = false;
-    public $cierre = false;
+    public $actividades_operativas;
+    public $actividad_operativa_id;
+    public $busqueda;
 
     public function mount(){
-        $apertura = MovimientoCajaChica::where('estado', 1)->where('tipo',1)->first();
-        if($apertura == null){
-            $this->apertura = true;
-        }
-        else{
-            $this->apertura = false;
-        }
+        $this->actividades_operativas = ActividadOperativa::where('estado', 1)->get();
+    }
+
+    public function updatedActividadOperativaId(){
+        $this->dispatch('enviarActividadOperativaId',$this->actividad_operativa_id);
+    }
+
+    public function updatedBusqueda(){
+        $this->dispatch('enviarBusqueda',$this->busqueda);
     }
 
     public function updatedFechaInicio(){

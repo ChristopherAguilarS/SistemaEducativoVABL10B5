@@ -32,7 +32,6 @@ class Table extends Component
         $añoAcademico = AñoAcademico::find($id);
         $this->titulo = 'Editar Año Academico -'.optional($this->añoAcademicoT)->descripcion;
         $this->añoAcademicoId = $id;
-        $this->form->codigo = $añoAcademico->codigo;
         $this->form->descripcion = $añoAcademico->descripcion;
     }
 

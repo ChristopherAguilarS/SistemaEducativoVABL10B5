@@ -15,7 +15,7 @@ class PedidoDetalleTemp extends Authenticatable
     protected $primaryKey = 'id';
     protected $fillable=[
         'item_id',
-        'tarea_id',
+        'indicador_id',
         'almacen_id',
         'almacen_tipo',
         'cantidad',

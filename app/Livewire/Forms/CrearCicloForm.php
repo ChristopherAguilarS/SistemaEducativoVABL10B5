@@ -10,9 +10,7 @@ class CrearCicloForm extends Form
 {
     #[Rule('required')]
     public $descripcion  = null;
-    #[Rule('required')]
     public $tipo_ciclo_id = null;
-    #[Rule('required')]
     public $año_academico_id = null;
     #[Rule('required')]
     public $fecha_inicio = null;

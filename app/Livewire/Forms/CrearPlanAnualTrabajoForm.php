@@ -10,25 +10,22 @@ class CrearPlanAnualTrabajoForm extends Form
 {
     
     #[Rule('required')]
-    public $año = null;
+    public $año_academico_id = null;
     #[Rule('required')]
     public $nombre  = null;
-    #[Rule('required')]
+
     public $ruc  = null;
-    #[Rule('required')]
+
     public $resolucion  = null;
-    #[Rule('required')]
+
     public $tipo_gestion  = null;
-    #[Rule('required')]
+
     public $direccion  = null;
-    #[Rule('required')]
+
     public $lista_servicios  = null;
-    #[Rule('required')]
+
     public $nombre_director  = null;
-    #[Rule('required')]
-    public $fecha_inicio = null;
-    #[Rule('required')]
-    public $fecha_fin = null;
+
 
     public function limpiarCampos(){
         $this->reset(); 

@@ -10,12 +10,12 @@ class CrearActividadOperativaForm extends Form
 {
     #[Rule('required')]
     public $descripcion  = null;
-    #[Rule('required')]
     public $codigo = null;
     #[Rule('required')]
-    public $plan_anual_trabajo_id = null;
+    public $accion_estrategica_priorizada_id = null;
     #[Rule('required')]
-    public $objetivo_estrategico_id = null;
+    public $monto_asignado = null;
+    public $monto_ejecutado = null;
 
     public function limpiarCampos(){
         $this->reset(); 

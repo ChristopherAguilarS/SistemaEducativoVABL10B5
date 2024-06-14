@@ -3,6 +3,7 @@
 namespace App\Livewire\FinancieroContable\Presupuestal\ActividadesOperativas;
 
 use App\Livewire\Forms\CrearActividadOperativaForm;
+use App\Models\AccionEstrategicaPriorizada;
 use App\Models\ActividadOperativa;
 use App\Models\ObjetivoEstrategico;
 use App\Models\PlanAnualTrabajo;
@@ -22,11 +23,10 @@ class Table extends Component
     public $actividadOperativaId;
     public $mensaje;
     public $plan_anuales;
-    public $objetivos_estrategicos;
+    public $acciones_estrategicas_priorizadas;
 
     public function mount(){
-        $this->plan_anuales = PlanAnualTrabajo::where('estado',1)->get();
-        $this->objetivos_estrategicos = ObjetivoEstrategico::where('estado',1)->get();
+        $this->acciones_estrategicas_priorizadas = AccionEstrategicaPriorizada::where('estado',1)->get();
     }
 
     #[On('agregar')]
@@ -40,10 +40,9 @@ class Table extends Component
         $actividadOperativa = ActividadOperativa::find($id);
         $this->titulo = 'Editar Actividad Operativa -'.optional($this->actividadOperativaT)->descripcion;
         $this->actividadOperativaId = $id;
-        $this->form->codigo = $actividadOperativa->codigo;
         $this->form->descripcion = $actividadOperativa->descripcion;
-        $this->form->plan_anual_trabajo_id = $actividadOperativa->plan_anual_trabajo_id;
-        $this->form->objetivo_estrategico_id = $actividadOperativa->objetivo_estrategico_id;
+        $this->form->accion_estrategica_priorizada_id = $actividadOperativa->accion_estrategica_priorizada_id;
+        $this->form->monto_asignado = $actividadOperativa->monto_asignado;
     }
 
     public function cambiarEstado($id){
@@ -110,16 +109,37 @@ class Table extends Component
     }
 
     public function guardar(){
+        if($this->actividadOperativaId != null){
+            $actividad = ActividadOperativa::find($this->actividadOperativaId);
+            if($actividad != null){
+                $saldo = $actividad->saldo;
+            }
+            else{
+                $saldo =0;
+            }
+        }
+        else{
+            $saldo = 0;
+        }
         try {
+            $nro_actividad = ActividadOperativa::where('accion_estrategica_priorizada_id', $this->form->accion_estrategica_priorizada_id)->max('codigo');
+            if($nro_actividad == null){
+                $nro_actividad = 1;
+            }
+            else{
+                $nro_actividad = $nro_actividad+1;
+            }
             $tipo = ActividadOperativa::updateOrCreate(
                 [
                     'id'=>$this->actividadOperativaId,
                 ],
                 [
                     'descripcion' => $this->form->descripcion,
-                    'codigo' => $this->form->codigo,
-                    'plan_anual_trabajo_id' => $this->form->plan_anual_trabajo_id,
-                    'objetivo_estrategico_id' => 1,
+                    'codigo' => $nro_actividad,
+                    'accion_estrategica_priorizada_id' => $this->form->accion_estrategica_priorizada_id,
+                    'monto_asignado' => $this->form->monto_asignado,
+                    'monto_ejecutado' => 0,
+                    'saldo' => $this->form->monto_asignado,
                     'estado' => 1,
                     'created_by' => Auth::user()->id
                 ]);

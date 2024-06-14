@@ -9,7 +9,6 @@
                         </div>
                     </div>
                 </div><!-- end card header -->
-                @livewire('financiero-contable.contabilidad.asientos-contables.cards')
                 <div class="card-body">
                     <div class="table-responsive table-card">
                         <table class="table table-nowrap table-striped-columns mb-4">
@@ -17,10 +16,9 @@
                                 <tr>
                                 <th scope="col">N°</th>
                                 <th scope="col">Descripcion</th>
-                                <th scope="col">Cuenta</th>
                                 <th scope="col">Fecha</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Monto</th>
+                                <th scope="col">Monto Debe</th>
+                                <th scope="col">Monto Haber</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col" class="!text-center">Acciones</th>
                                 </tr>
@@ -33,20 +31,17 @@
                                         </td>
                                         <td>
                                             {{ $asiento->descripcion }}
-                                        </td>
-                                        <td>
-                                            {{ $asiento->cuenta->descripcion }}
-                                        </td>
+                                        </td>                                        
                                         <td>
                                             @if(optional($asiento)->fecha != null)
                                                 {{ Carbon\Carbon::parse($asiento->fecha)->format('d/m/Y') }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $asiento->nTipo }}
+                                            {{ Illuminate\Support\Number::currency($asiento->detalle_debe->sum('monto'), in: 'S/.', locale: 'en') }}
                                         </td>
                                         <td>
-                                            {{ Illuminate\Support\Number::currency($asiento->monto, in: 'S/.', locale: 'en') }}
+                                            {{ Illuminate\Support\Number::currency($asiento->detalle_haber->sum('monto'), in: 'S/.', locale: 'en') }}
                                         </td>
                                         <td>
                                             @if($asiento->estado == 1)
@@ -81,8 +76,8 @@
         <!--end col-->
     </div>
     <!-- Default Modals -->
-    <div wire:ignore.self id="myModal" class="modal fade" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
+    <div wire:ignore.self class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">{{ $titulo }}</h5>
@@ -104,18 +99,6 @@
                                 @error('form.descripcion') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                        <div class="mb-3" wire:ignore>
-                            <label for="cuenta_id" class="col-form-label">Cuenta:</label>
-                            <select class="js-example-basic-single" id="cuenta_id" name="state" wire:model='form.cuenta_id'>
-                                <option value="">Seleccionar Opcion</option>
-                                @foreach ($cuentas as $cuenta)
-                                    <option value="{{ $cuenta->id }}">{{ $cuenta->codigo }} - {{ $cuenta->descripcion }}</option>
-                                @endforeach
-                            </select>
-                        </div>                        
-                        <div>
-                            @error('form.cuenta_id') <span class="error">{{ $message }}</span> @enderror
-                        </div>
                         <div class="mb-3">
                             <label for="fecha" class="form-label">Fecha</label>
                             <input type="date" class="form-control" id="fecha" wire:model='form.fecha'>
@@ -123,7 +106,125 @@
                                 @error('form.fecha') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                Debe
+                                            </div>
+                                            <div class="col-5">
+                                            </div>
+                                            <div class="col-3">
+                                                {{ Illuminate\Support\Number::currency($totalDebe, in: 'S/.', locale: 'en') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="live-preview">
+                                            <button type="button" class="btn btn-success bg-gradient waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModalCuenta" wire:click='agregarDebe'>
+                                                <i class="mdi mdi-plus">Agregar Cuenta Contable</i>
+                                            </button>                                            
+                                            <hr>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Cuenta Contable</th>
+                                                        <th>Monto</th>
+                                                        <th>Accion</th>
+                                                    </tr>                                                    
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($form->detalleDebe as $detalle)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $loop->iteration }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $detalle['cuenta'] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $detalle['monto'] }}
+                                                            </td>
+                                                            <td>
+                                                                <button wire:click='eliminarCuentaDebe({{ $loop->iteration }})' type="button" class="btn btn-danger">
+                                                                    <i class="mdi mdi-trash-can"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <div>
+                                                @error('form.detalleDebe') <span class="error">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                Haber
+                                            </div>
+                                            <div class="col-5">
+                                            </div>
+                                            <div class="col-3">
+                                                {{ Illuminate\Support\Number::currency($totalHaber, in: 'S/.', locale: 'en') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="live-preview">
+                                            <button type="button" class="btn btn-success bg-gradient waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModalCuenta" wire:click='agregarHaber'>
+                                                <i class="mdi mdi-plus">Agregar Cuenta Contable</i>
+                                            </button>
+                                            <hr>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Cuenta Contable</th>
+                                                        <th>Monto</th>
+                                                        <th>Accion</th>
+                                                    </tr>                                                    
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($form->detalleHaber as $detalle)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $loop->iteration }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $detalle['cuenta'] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $detalle['monto'] }}
+                                                            </td>
+                                                            <td>
+                                                                <button wire:click='eliminarCuentaHaber({{ $loop->iteration }})' type="button" class="btn btn-danger">
+                                                                    <i class="mdi mdi-trash-can"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            <div>
+                                                @error('form.detalleHaber') <span class="error">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                                           
+                        
+                        
+                        {{-- <div class="mb-3">
                             <label for="tipo" class="col-form-label">Tipo:</label>
                             <select class="form-control" id="tipo" name="state" wire:model='form.tipo'>
                                 <option value="">Seleccionar Opcion</option>
@@ -133,14 +234,7 @@
                             <div>
                                 @error('form.fecha') <span class="error">{{ $message }}</span> @enderror
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" placeholder="Monto" id="monto" wire:model='form.monto'>
-                            <div>
-                                @error('form.monto') <span class="error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>     
+                        </div> --}}    
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -150,15 +244,59 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <!-- Default Modals -->
+    <div wire:ignore.self class="modal fade" id="myModalCuenta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">{{ $tituloCuenta }}</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        {{-- <div class="mb-3">
+                            <label for="codigo" class="col-form-label">Codigo:</label>
+                            <input type="text" class="form-control" id="codigo" wire:model='form.codigo'>
+                            <div>
+                                @error('form.codigo') <span class="error">{{ $message }}</span> @enderror
+                            </div>
+                        </div> --}}
+                        <div class="mb-3" wire:ignore>
+                            <label for="cuenta_id" class="col-form-label">Cuenta:</label>
+                            <select class="js-example-basic-single" id="cuenta_id" name="state" wire:model='dform.cuenta_id'>
+                                <option value="">Seleccionar Opcion</option>
+                                @foreach ($cuentas as $cuenta)
+                                    <option value="{{ $cuenta->id }}">{{ $cuenta->codigo }} - {{ $cuenta->descripcion }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            @error('dform.cuenta_id') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto" class="form-label">Monto</label>
+                            <input type="number" class="form-control" id="monto" wire:model='dform.monto'>
+                            <div>
+                                @error('dform.monto') <span class="error">{{ $message }}</span> @enderror
+                            </div>
+                        </div>                                       
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light bg-gradient waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" wire:click='guardarCuenta'>Guardar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     @script()
         <script>
             $('#cuenta_id').select2({
                 placeholder: 'Seleccione una opcion',
-                dropdownParent: '#myModal'
+                dropdownParent: '#myModalCuenta'
             });
             $('#cuenta_id').on('change',function(){
                 let a = document.getElementById("cuenta_id").value;
-                $wire.set('form.cuenta_id',a);
+                $wire.set('dform.cuenta_id',a);
             })
             $wire.on('cambiarSeleccion', (event) => {
                 $('#cuenta_id').val(event.id);

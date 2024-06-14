@@ -17,6 +17,8 @@
                                 <th scope="col">N°</th>
                                 <th scope="col">Año</th>
                                 <th scope="col">Nombre</th>
+                                <th scope="col">Fec. Inicio</th>
+                                <th scope="col">Fec. Fin</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col" class="!text-center">Acciones</th>
                                 </tr>
@@ -28,10 +30,16 @@
                                             {{ $loop->index+1 }}
                                         </td>
                                         <td>
-                                            {{ $planAnualTrabajo->año }}
+                                            {{ $planAnualTrabajo->año_academico->descripcion }}
                                         </td>
                                         <td>
                                             {{ $planAnualTrabajo->nombre }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($planAnualTrabajo->año_academico->fecha_inicio)->format('d/m/y') }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($planAnualTrabajo->año_academico->fecha_fin)->format('d/m/y') }}
                                         </td>
                                         <td>
                                             @if($planAnualTrabajo->estado == 1)
@@ -75,37 +83,20 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="mb-3">
-                            <label for="año" class="col-form-label">Año:</label>
-                            <select class="form-control" id="año" name="state" wire:model='form.año'>
+                        <div class="mb-3" wire:ignore>
+                            <label for="año_academico_id" class="col-form-label">Año Academico:</label>
+                            <select class="js-example-basic-single" id="año_academico_id" name="state" wire:model='form.año_academico_id'>
                                 <option value="">Seleccionar Opcion</option>
                                 @foreach ($años as $año)
-                                    <option value="{{ $año }}">{{ $año }}</option>    
+                                    <option value="{{ $año->id }}">{{ $año->descripcion }}</option>
                                 @endforeach
                             </select>
-                            <div>
-                                @error('form.fecha') <span class="error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
+                        </div>      
                         <div class="mb-3">
-                            <label for="descripcion" class="col-form-label">Descripcion:</label>
-                            <input type="text" class="form-control" id="descripcion" wire:model='form.descripcion'>
+                            <label for="nombre" class="col-form-label">Descripcion:</label>
+                            <input type="text" class="form-control" id="nombre" wire:model='form.nombre'>
                             <div>
-                                @error('form.descripcion') <span class="error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_inicio" class="col-form-label">Fecha Inicio:</label>
-                            <input type="date" class="form-control" wire:model='form.fecha_inicio'>
-                            <div>
-                                @error('form.fecha_inicio') <span class="error">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_fin" class="col-form-label">Fecha Fin:</label>
-                            <input type="date" class="form-control" wire:model='form.fecha_fin'>
-                            <div>
-                                @error('form.fecha_fin') <span class="error">{{ $message }}</span> @enderror
+                                @error('form.nombre') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </form>
@@ -117,5 +108,23 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    @script()
+        <script>
+            $('#año_academico_id').select2({
+                placeholder: 'Seleccione una opcion',
+                dropdownParent: '#myModal'
+            });
+            $('#año_academico_id').on('change',function(){
+                let a = document.getElementById("año_academico_id").value;
+                $wire.set('form.año_academico_id',a);
+            })
+            $wire.on('cambiarSeleccion', (event) => {
+                $('#año_academico_id').val(event.id);
+                $('#año_academico_id').trigger('change');
+            });
+            $wire.on('anularSeleccion', (event) => {
+                $('#año_academico_id').val(null).trigger('change');
+            });
+        </script>
+    @endscript
 </div>
-
